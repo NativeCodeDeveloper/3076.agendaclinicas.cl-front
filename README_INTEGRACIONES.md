@@ -372,4 +372,187 @@ y el AppointmentCard lo mostrará automáticamente — sin más cambios en el fr
 
 ---
 
-*Generado por NativeCode — AgendaClínica 1.0.2 — 2026*
+## Sesión de mejoras — AgendaClínica 1.0.3 (2026-05-15)
+
+### Cambios aplicados en esta sesión
+
+---
+
+### A. RUT — Contrato limpio en todo el proyecto
+
+**Problema resuelto:** el RUT se enviaba al backend en distintos formatos (con y sin puntos/guión) según el lugar del código, lo que podía generar pacientes duplicados al tener el mismo RUT almacenado de formas distintas.
+
+**Regla implementada:**
+- **Display (frontend):** siempre usar `formatRut(rut)` → `19.168.408-7`
+- **API / BD:** siempre usar `cleanRut(rut)` o `normalizarRut(rut)` → `191684087`
+
+**Archivos corregidos:**
+
+| Archivo | Función corregida | Problema que tenía |
+|---|---|---|
+| `src/app/dashboard/page.jsx` | `crearPacienteDesdeReserva()` | Enviaba `rutFormateado` (con puntos) a `pacientesInsercion` |
+| `src/app/dashboard/page.jsx` | `buscarPorRut()` | Enviaba el RUT sin limpiar al API de reservas |
+| `src/app/dashboard/agendaCitas/page.jsx` | `buscarPorRut()` | Ídem |
+| `src/app/dashboard/FichaClinica/page.jsx` | `buscarRutSimilar()` | Ídem |
+| `src/app/dashboard/GestionPaciente/page.jsx` | `buscarRutSimilar()` | Ídem |
+| `src/app/dashboard/listaPacientes/page.jsx` | `buscarRutSimilar()` | Ídem |
+| `src/app/dashboard/calendario/page.jsx` | `ingresarPacienteDesdeAgenda()` | Usaba `rutLimpio` (solo `.trim()`) en inserción, en vez de `rutNormalizado` |
+| `src/app/dashboard/calendario/page.jsx` | `insertarNuevaReserva()` | No normalizaba el RUT antes de enviarlo al API |
+| `src/app/dashboard/calendario/page.jsx` | `actualizarInformacionReserva()` | Ídem |
+
+**`cleanRut` ya existía en `src/lib/designTokens.js`** — solo faltaba usarlo consistentemente.
+
+---
+
+### B. Dropdown de servicios en agenda pública
+
+**Ruta:** `/agendaEspecificaProfersional/[id_profesional]`
+
+**Cambio:** la lista de servicios del profesional pasó de mostrarse siempre desplegada (todos los ítems visibles) a un **dropdown que se cierra automáticamente** al seleccionar una opción. También se cierra al hacer clic fuera.
+
+**Archivos modificados:**
+- `src/app/(public)/agendaEspecificaProfersional/[id_profesional]/page.jsx`
+  - Agregado estado `dropdownServicios` y `dropdownRef`
+  - `useEffect` para cerrar al hacer clic fuera
+  - `seleccionarServicio()` ahora llama `setDropdownServicios(false)`
+  - La tarjeta contenedora tiene `relative z-10` para evitar que el calendario renderizado debajo tape el dropdown (fix de stacking context creado por `backdrop-blur`)
+
+---
+
+### C. Campos comentados — pendientes de migración BD
+
+Dos bloques de UI fueron comentados (no eliminados) porque dependen de migraciones de BD no aplicadas aún. Cada bloque tiene la instrucción SQL exacta para reactivarlo.
+
+| Componente | Campo comentado | Archivo |
+|---|---|---|
+| `AppointmentDrawer` | Tipo de consulta + Modalidad (presencial/online) | `src/Componentes/AppointmentDrawer.jsx` |
+| Profesionales | Modalidad de atención del profesional | `src/app/dashboard/profesionales/page.jsx` |
+
+Para reactivar: buscar el comentario `PENDIENTE BD` en cada archivo y descomentar el bloque JSX.
+
+---
+
+### D. Fix de hidratación — SidebarNav
+
+**Error:** React lanzaba advertencia de hydration mismatch porque el `useState` del sidebar leía `sessionStorage` en su inicializador, que el servidor no puede ejecutar, generando HTML distinto entre servidor y cliente.
+
+**Fix en `src/app/dashboard/SidebarNav.jsx`:**
+- El `useState` inicial ahora solo calcula el acordeón activo (seguro para SSR)
+- Un `useEffect` separado restaura los acordeones guardados en `sessionStorage` **después del montaje**
+
+---
+
+### E. Drawer de calendario — orden de campos
+
+**Ruta:** `/dashboard/calendario`
+
+**Cambio:** en el formulario lateral de nueva reserva (`AppointmentDrawer`), los campos Teléfono y Correo estaban en un `grid-cols-2` (lado a lado), lo que reducía el espacio disponible para escribir. Ahora están apilados verticalmente, Teléfono primero y Correo después, cada uno con ancho completo.
+
+**Archivo:** `src/Componentes/AppointmentDrawer.jsx`
+
+---
+
+### F. Rediseño visual — páginas del dashboard
+
+Se unificó el estilo de todas las páginas del dashboard con el sistema de diseño establecido. Las reglas del sistema son:
+
+- Fondo: `bg-[#FAFAFB]`
+- Tarjetas: `rounded-[28px]`, `border border-slate-200`, `shadow-sm`
+- Color primario: `#6E56CF` (violeta) — botones, labels de sección, íconos de sección
+- Sin gradientes oscuros, sin `backdrop-blur` en headers de página
+- Sin sombras pesadas (`shadow-[0_18px_50px_...]`)
+- Tabla headers: fondo `bg-slate-50`, texto `text-slate-400`
+
+**Páginas rediseñadas:**
+
+| Página | Ruta | Cambios principales |
+|---|---|---|
+| Ficha de Paciente | `/dashboard/paciente/[id]` | Eliminado hero oscuro; avatar con iniciales en violeta claro; datos en grid de celdas blancas |
+| Nueva Ficha Clínica | `/dashboard/NuevaFicha/[id]` | Fondo limpio, tarjeta de paciente sin gradiente, formulario con headers de sección consistentes, botón con `#6E56CF` |
+| Receta del Paciente | `/dashboard/recetaPacientes/[id]` | Eliminado fondo radial, headers oscuros y colores cyan; resumen lateral en celdas blancas; tabla sin header degradado |
+| Solicitud de Exámenes | `/dashboard/examenDocumento` | Chips de resumen en slate, headers de sección con ícono, botones gradiente → sólido |
+| Receta de Lentes | `/dashboard/recetaLentes` | Sombras pesadas → `shadow-sm`, fondos con gradiente → `bg-slate-50/50` |
+| Servicios de Agendamiento | `/dashboard/serviciosAgendamiento` | Sombras, bordes y botón "Seleccionar" corregidos |
+| Tarifas por Profesional | `/dashboard/tarifaServicio` | Tabla header oscuro → `bg-slate-50`, fila hover indigo → slate, botón → violeta |
+| Profesionales | `/dashboard/profesionales` | Fondo radial-gradient → `bg-[#FAFAFB]`, sombras y bordes corregidos, botón → violeta |
+| Receta Rápida | `/dashboard/recetaRapida` | Sombras pesadas → `shadow-sm`, fondos de sección corregidos |
+
+---
+
+### G. Lista rápida actualizada
+
+| Feature | Estado | Requiere BD | Detalle |
+|---|---|---|---|
+| RUT limpio en toda la app (BD + API) | ✅ Completo | No | `cleanRut()` en todas las funciones que envían al backend |
+| Dropdown de servicios en agenda pública | ✅ Completo | No | Se cierra al seleccionar y al hacer clic fuera |
+| Tipo de consulta en drawer | ⏸ Comentado | **Sí** | Descomentar en AppointmentDrawer cuando BD esté migrada |
+| Modalidad en drawer | ⏸ Comentado | **Sí** | Ídem |
+| Modalidad en formulario de profesional | ⏸ Comentado | **Sí** | Descomentar en profesionales/page.jsx |
+| Fix hidratación SidebarNav | ✅ Completo | No | sessionStorage leído solo en useEffect post-montaje |
+| Teléfono antes que correo en drawer | ✅ Completo | No | Campos apilados verticalmente con ancho completo |
+| Rediseño visual dashboard | ✅ Completo | No | 9 páginas unificadas al sistema de diseño |
+
+---
+
+---
+
+### H. Servicio y precio en el flujo completo de reserva pública
+
+**Objetivo:** que el nombre del servicio y su precio aparezcan en todos los puntos del flujo: formulario, comprobante, correo y WhatsApp.
+
+#### Estado antes de este cambio
+
+| Punto del flujo | Servicio | Precio |
+|---|---|---|
+| Sección "Servicio" del formulario | ✅ Visible | ✅ Visible |
+| Sección "Resumen de tu cita" del formulario | ❌ No mostraba nombre | ✅ Visible |
+| Comprobante `/reserva-hora` | ✅ Visible | ❌ No llegaba |
+| Correo de confirmación | ❌ No incluido | ❌ No incluido |
+| WhatsApp de confirmación | ❌ No incluido | ❌ No incluido |
+
+#### Cambios aplicados en frontend
+
+**`src/app/(public)/formularioReservaProfesional/[id_profesional]/page.jsx`**
+1. Sección "Resumen de tu cita": agregada fila con el **nombre del servicio** (se muestra si `servicioNombre` tiene valor).
+2. `irAlComprobante()`: ahora pasa `precio` en los query params hacia `/reserva-hora`.
+3. `agendarSinPago()`: ahora incluye `precio_prestacion: totalPago || null` en el body del API — el backend ya lo recibe, solo falta usarlo.
+
+**`src/app/(public)/reserva-hora/page.jsx`**
+1. Lee el query param `precio` desde la URL.
+2. Si `precio > 0`, muestra una fila "Valor del servicio" en verde en el card de confirmación.
+
+#### Cambios pendientes en backend (Node/PHP) — sin modificar BD
+
+El endpoint `POST /reservaPacientes/insertarReservaPacienteFicha` ya recibe en el body:
+
+```json
+{
+  "nombre_prestacion": "Depilación láser",
+  "precio_prestacion": 100000
+}
+```
+
+El equipo de backend debe leer estos campos y usarlos en los templates de notificación:
+
+**Template correo:**
+```
+Servicio reservado: {{nombre_prestacion}}
+Valor del servicio:   ${{precio_prestacion | formato_clp}}
+```
+
+**Template WhatsApp:**
+```
+✅ Reserva confirmada
+📋 Servicio: {{nombre_prestacion}}
+💰 Valor:    ${{precio_prestacion | formato_clp}}
+📅 Fecha:    {{fechaInicio}} {{horaInicio}}
+👨‍⚕️ Profesional: {{nombreProfesional}}
+```
+
+> Estos campos **no necesitan guardarse en BD** para aparecer en el correo/WhatsApp. Basta con leerlos del request y pasarlos al template en el mismo flujo de inserción.
+
+> Cuando se aplique la migración de BD (`nombre_prestacion` en tabla `reservaciones`), el backend pasará a leerlo desde la BD en vez del request — sin cambiar el frontend.
+
+---
+
+*Actualizado por NativeCode — AgendaClínica 1.0.3 — 2026-05-15*

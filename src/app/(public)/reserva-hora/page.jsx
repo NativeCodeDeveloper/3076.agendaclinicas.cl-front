@@ -12,6 +12,12 @@ function ReservaHoraContent() {
     const profesional   = searchParams.get('profesional') || '';
     const servicio      = searchParams.get('servicio')    || '';
     const duracion      = searchParams.get('duracion')    || '';
+    const precio        = searchParams.get('precio')      || '';
+
+    const formatoCLP = new Intl.NumberFormat("es-CL", {
+        style: "currency", currency: "CLP",
+        minimumFractionDigits: 0, maximumFractionDigits: 0,
+    });
 
     function formatearFechaHora(fecha, hora) {
         if (!fecha) return hora || "";
@@ -137,6 +143,23 @@ function ReservaHoraContent() {
                     <p className="text-sm text-slate-600">{duracion || "60"} Minutos</p>
                   </div>
                 </div>
+
+                {Number(precio) > 0 && (
+                  <>
+                    <div className="h-px w-full bg-slate-100" />
+                    <div className="flex items-start gap-3">
+                      <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 border border-emerald-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-slate-900">Valor del servicio</p>
+                        <p className="text-sm font-bold text-emerald-600">{formatoCLP.format(Number(precio))}</p>
+                      </div>
+                    </div>
+                  </>
+                )}
 
                 <div className="h-px w-full bg-slate-100" />
 

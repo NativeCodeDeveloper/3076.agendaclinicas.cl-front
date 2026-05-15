@@ -115,6 +115,7 @@ export default function FormularioReservaProfesional() {
             profesional: profesionalNombre,
             servicio:   servicio?.nombre  || servicioNombre || "",
             duracion:   String(servicio?.duracion_min || 60),
+            precio:     String(servicio?.precio || totalPago || ""),
         });
         router.push(`/reserva-hora?${params.toString()}`);
     }
@@ -152,8 +153,9 @@ export default function FormularioReservaProfesional() {
                     horaFinalizacion:  horaFin,
                     estadoReserva:     "reservada",
                     id_profesional,
-                    // Campos pendientes de migración BD (se envían, backend los ignora hasta la migración)
+                    // Campos de servicio — el backend los usa para correo/WhatsApp aunque no los persista en BD aún
                     nombre_prestacion: servicioNombre || null,
+                    precio_prestacion: totalPago      || null,
                     modalidad:         "presencial",
                 }),
             });
@@ -298,12 +300,23 @@ export default function FormularioReservaProfesional() {
                         Muestra fecha, hora (con duración real)
                         y valor. Solo aparece si hay datos.
                     ════════════════════════════════ */}
-                    {(fechaInicio || horaInicio || totalPago) && (
+                    {(fechaInicio || horaInicio || totalPago || servicioNombre) && (
                         <div>
                             <h2 className="text-sm font-semibold uppercase tracking-wider text-slate-400">Resumen de tu cita</h2>
                             <div className="mt-1 h-px w-full bg-gradient-to-r from-slate-200 via-slate-100 to-transparent"/>
                             <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50/80 p-4">
                                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    {/* Servicio */}
+                                    {servicioNombre && (
+                                        <div className="flex items-center gap-3 sm:col-span-2">
+                                            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xs text-white font-bold">S</div>
+                                            <div>
+                                                <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Servicio</p>
+                                                <p className="text-sm font-semibold text-slate-800">{servicioNombre}</p>
+                                            </div>
+                                        </div>
+                                    )}
+                                    {/* Fecha */}
                                     {fechaInicio && (
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-xs text-white">D</div>
@@ -313,16 +326,17 @@ export default function FormularioReservaProfesional() {
                                             </div>
                                         </div>
                                     )}
+                                    {/* Horario */}
                                     {horaInicio && horaFin && (
                                         <div className="flex items-center gap-3">
                                             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-slate-900 text-xs text-white">H</div>
                                             <div>
                                                 <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Horario</p>
-                                                {/* horaFin refleja la duración real del servicio elegido */}
                                                 <p className="text-sm font-semibold text-slate-800">{horaInicio} – {horaFin}</p>
                                             </div>
                                         </div>
                                     )}
+                                    {/* Valor */}
                                     {Number(totalPago) > 0 && (
                                         <div className="flex items-center gap-3 sm:col-span-2">
                                             <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-600 text-xs font-bold text-white">$</div>
