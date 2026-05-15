@@ -317,48 +317,42 @@ function FormSection({
               onChange={(clean) => onPopupFormChange("rut", clean)}
             />
           </div>
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className={labelClass}>Teléfono</label>
-              <PhoneInput
-                value={popupForm.telefono}
-                onChange={(full) => onPopupFormChange("telefono", full)}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>Correo (opcional)</label>
-              <input
-                type="email"
-                value={popupForm.email}
-                onChange={(e) => onPopupFormChange("email", e.target.value)}
-                className={inputClass} style={{ colorScheme: "light" }}
-                placeholder="No indicado"
-              />
-            </div>
+          <div>
+            <label className={labelClass}>Teléfono</label>
+            <PhoneInput
+              value={popupForm.telefono}
+              onChange={(full) => onPopupFormChange("telefono", full)}
+            />
+          </div>
+          <div>
+            <label className={labelClass}>Correo (opcional)</label>
+            <input
+              type="email"
+              value={popupForm.email}
+              onChange={(e) => onPopupFormChange("email", e.target.value)}
+              className={inputClass} style={{ colorScheme: "light" }}
+              placeholder="No indicado"
+            />
           </div>
         </div>
       )}
 
-      {/* ── Tipo de consulta + Modalidad ── */}
-      {/* NOTA BACKEND: Para que estos campos persistan en la base de datos se requiere:
+      {/* ── Tipo de consulta + Modalidad ── PENDIENTE BD ──
+          Descomentar cuando estén aplicadas las migraciones:
           1. ALTER TABLE reservaciones ADD COLUMN nombre_prestacion VARCHAR(255) NULL;
           2. ALTER TABLE reservaciones ADD COLUMN modalidad VARCHAR(20) DEFAULT 'presencial';
-          3. Actualizar endpoint POST /reservaPacientes/insertarReserva para aceptar estos campos.
-          4. Actualizar endpoint POST /reservaPacientes/actualizarReservacion ídem.
-          5. Retornar ambos campos en todos los endpoints de consulta (seleccionarReservados,
-             seleccionarPorProfesional, seleccionarEspecifica).
-          Ver guía completa en el comentario del archivo calendario/page.jsx. */}
+          3. Actualizar endpoints insertarReserva y actualizarReservacion para aceptar estos campos.
+          4. Retornar ambos campos en todos los SELECTs de reservas.
+
       {mode !== "bloqueo" && (
         <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3 space-y-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
             Consulta
           </p>
 
-          {/* Tipo de consulta / Prestación */}
           <div>
             <label className={labelClass}>Tipo de consulta</label>
             {listaPrestaciones.length > 0 ? (
-              /* Dropdown cuando hay prestaciones cargadas desde BD */
               <select
                 value={popupForm.prestacion ?? ""}
                 onChange={(e) => onPopupFormChange("prestacion", e.target.value)}
@@ -373,7 +367,6 @@ function FormSection({
                 ))}
               </select>
             ) : (
-              /* Input libre como fallback cuando no hay servicios cargados */
               <input
                 value={popupForm.prestacion ?? ""}
                 onChange={(e) => onPopupFormChange("prestacion", e.target.value)}
@@ -384,7 +377,6 @@ function FormSection({
             )}
           </div>
 
-          {/* Modalidad: Presencial / Online */}
           <div>
             <label className={labelClass}>Modalidad</label>
             <div className="flex gap-2">
@@ -429,6 +421,7 @@ function FormSection({
           </div>
         </div>
       )}
+      ── Fin bloque comentado ── */}
 
       {/* Bloqueo rápido */}
       {mode === "create" && (

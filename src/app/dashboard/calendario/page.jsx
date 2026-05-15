@@ -911,7 +911,8 @@ function CalendarioContent() {
     // prestacion y modalidad vienen del popupForm — se envían al backend cuando esté migrado
     async function insertarNuevaReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, id_profesional, prestacion = "", modalidad = "presencial") {
         try {
-            if (!nombrePaciente || !apellidoPaciente || !rut || !telefono || !fechaInicio || !horaInicio || !horaFinalizacion || !id_profesional) {
+            const rutLimpio = normalizarRut(rut);
+            if (!nombrePaciente || !apellidoPaciente || !rutLimpio || !telefono || !fechaInicio || !horaInicio || !horaFinalizacion || !id_profesional) {
                 toast.error('Debe llenar todos los campos');
                 return false;
             }
@@ -943,7 +944,7 @@ function CalendarioContent() {
                     mode: "cors",
                     // NOTA: nombre_prestacion y modalidad se envían pero el backend
                     // debe tener la migración de BD aplicada para persistirlos.
-                    body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva: "reservada", id_profesional, nombre_prestacion: prestacion || null, modalidad: modalidad || "presencial" })
+                    body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva: "reservada", id_profesional, nombre_prestacion: prestacion || null, modalidad: modalidad || "presencial" })
                 });
                 const respuestaBackend = await res.json();
                 if (!res.ok && respuestaBackend.message === "conflicto") {
@@ -1009,7 +1010,7 @@ function CalendarioContent() {
                 body: JSON.stringify({
                     nombre,
                     apellido,
-                    rut: rutLimpio,
+                    rut: rutNormalizado,
                     nacimiento: "1900-01-01",
                     sexo: "No especifica",
                     prevision_id: 1,
@@ -1444,7 +1445,8 @@ function CalendarioContent() {
 
     async function actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva) {
         try {
-            if (!nombrePaciente || !apellidoPaciente || !rut || !telefono || !fechaInicio || !horaInicio || !fechaFinalizacion || !horaFinalizacion || !estadoReserva || !id_profesional || !id_reserva) {
+            const rutLimpio = normalizarRut(rut);
+            if (!nombrePaciente || !apellidoPaciente || !rutLimpio || !telefono || !fechaInicio || !horaInicio || !fechaFinalizacion || !horaFinalizacion || !estadoReserva || !id_profesional || !id_reserva) {
                 toast.error("Debe llenar todos los campos para poder actualizar la reserva");
                 return false;
             }
@@ -1453,7 +1455,7 @@ function CalendarioContent() {
                 method: "POST",
                 headers: { Accept: "application/json", "Content-Type": "application/json" },
                 mode: "cors",
-                body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva })
+                body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva })
             });
             const respuestaBackend = await res.json();
             if (!res.ok && respuestaBackend.message === "conflicto") {

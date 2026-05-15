@@ -235,142 +235,122 @@ export default function NuevaFicha() {
         listarPlantillas();
     }, [id_paciente]);
 
+    const paciente = dataPaciente[0] ?? null;
+
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.14),_transparent_32%),radial-gradient(circle_at_right,_rgba(6,182,212,0.12),_transparent_28%),linear-gradient(180deg,_#f1f5f9_0%,_#f8fafc_55%,_#f1f5f9_100%)]">
+        <div className="min-h-screen bg-[#FAFAFB]">
             <ToasterClient/>
 
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
 
-                {/* Header */}
+                {/* ── Header ── */}
                 <div className="mb-8">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                        <div>
-                            <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700">Nuevo registro</p>
-                            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
-                                Nueva Ficha Cl&iacute;nica
-                            </h1>
-                            <p className="text-sm text-slate-600 mt-1">
-                                Complete los campos para registrar la atenci&oacute;n del paciente
-                            </p>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <Link href={"/dashboard"}>
-                                <button className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-slate-100 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all duration-150 hover:border-slate-400 hover:bg-slate-200 shadow-sm">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-                                    </svg>
-                                    <span className="hidden sm:inline">Volver a Reservaciones</span>
-                                </button>
-                            </Link>
-
-                            {dataPaciente.map((ficha, index) => (
-                                <button
-                                    key={index}
-                                    onClick={() => retroceder(ficha.id_paciente)}
-                                    className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl shadow-sm transition-all duration-150 hover:shadow-md hover:scale-[1.01]"
-                                    style={{ background: "linear-gradient(135deg, #6E56CF 0%, #8B5CF6 100%)" }}
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
-                                    </svg>
-                                    Carpeta del Paciente
-                                </button>
-                            ))}
-                        </div>
-                    </div>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Fichas Clínicas</p>
+                    <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">Nueva Ficha Clínica</h1>
+                    <p className="mt-1 text-[13px] text-slate-500">Complete los campos para registrar la atención del paciente</p>
                 </div>
 
-                {/* Tarjeta datos paciente */}
-                {dataPaciente.map((paciente) => (
-                    <div
-                        key={paciente.id_paciente}
-                        className="mb-8 overflow-hidden rounded-[24px] border border-slate-300 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.12)]"
-                    >
-                        <div className="bg-[linear-gradient(135deg,#0f172a_0%,#312e81_58%,#0891b2_100%)] px-5 py-3.5">
-                            <h2 className="text-sm font-semibold text-white tracking-wide uppercase">
-                                Datos del Paciente
-                            </h2>
-                        </div>
-                        <div className="p-5 md:p-6">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">ID</span>
-                                    <span className="text-sm font-semibold text-indigo-700">#{paciente.id_paciente}</span>
+                {/* ── Acciones ── */}
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                    {paciente && (
+                        <button
+                            onClick={() => retroceder(paciente.id_paciente)}
+                            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-[#6E56CF] hover:bg-[#5B47B0] shadow-sm transition-all"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
+                            </svg>
+                            Carpeta del Paciente
+                        </button>
+                    )}
+                    <Link href="/dashboard">
+                        <button className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-50">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                            </svg>
+                            Volver
+                        </button>
+                    </Link>
+                </div>
+
+                {/* ── Tarjeta del paciente ── */}
+                {paciente && (
+                    <div className="mb-6 rounded-[28px] border border-slate-200 bg-white shadow-sm overflow-hidden">
+                        {/* Identidad */}
+                        <div className="flex items-center gap-4 px-6 py-5 border-b border-slate-100">
+                            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#EDE9FE] text-base font-bold text-[#6E56CF]">
+                                {paciente.nombre?.charAt(0)}{paciente.apellido?.charAt(0)}
+                            </div>
+                            <div className="min-w-0">
+                                <div className="flex flex-wrap items-center gap-2 mb-0.5">
+                                    <span className="text-[11px] font-semibold text-[#6E56CF] bg-[#F3F0FF] border border-[#DDD6FE] rounded-lg px-2 py-0.5 uppercase tracking-wide">
+                                        ID #{paciente.id_paciente}
+                                    </span>
                                 </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">Nombre</span>
-                                    <span className="text-sm font-medium text-slate-800">{paciente.nombre}</span>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">Apellido</span>
-                                    <span className="text-sm font-medium text-slate-800">{paciente.apellido}</span>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">RUT</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap font-mono">{formatRut(paciente.rut)}</span>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">Tel&eacute;fono</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap">{paciente.telefono || "-"}</span>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">Correo</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap">{paciente.correo || "-"}</span>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">Apoderado</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap">{paciente.apoderado || "-"}</span>
-                                </div>
-                                <div className="flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">RUT Apoderado</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap">{paciente.apoderado_rut || "-"}</span>
-                                </div>
-                                <div className="sm:col-span-2 lg:col-span-4 flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">Medicamentos Usados</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap">{paciente.medicamentosUsados || "-"}</span>
-                                </div>
-                                <div className="sm:col-span-2 lg:col-span-2 flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">H&aacute;bitos</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap">{paciente.habitos || "-"}</span>
-                                </div>
-                                <div className="sm:col-span-2 lg:col-span-2 flex flex-col gap-1">
-                                    <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-[0.18em]">Comentarios Adicionales</span>
-                                    <span className="text-sm font-medium text-slate-800 break-words whitespace-pre-wrap">{paciente.comentariosAdicionales || "-"}</span>
-                                </div>
+                                <p className="text-base font-bold text-slate-900">{paciente.nombre} {paciente.apellido}</p>
+                                <p className="text-[13px] text-slate-500 font-mono">RUT {formatRut(paciente.rut)}</p>
                             </div>
                         </div>
+                        {/* Datos rápidos */}
+                        <div className="grid grid-cols-2 gap-px bg-slate-100 md:grid-cols-4">
+                            {[
+                                { label: "Teléfono",   value: paciente.telefono },
+                                { label: "Correo",     value: paciente.correo },
+                                { label: "Apoderado",  value: paciente.apoderado },
+                                { label: "RUT apoderado", value: paciente.apoderado_rut },
+                            ].map(({ label, value }) => (
+                                <div key={label} className="bg-white px-5 py-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-1">{label}</p>
+                                    <p className="text-[13px] font-medium text-slate-800 break-words">{value || "---"}</p>
+                                </div>
+                            ))}
+                        </div>
+                        {/* Antecedentes */}
+                        {(paciente.medicamentosUsados || paciente.habitos || paciente.comentariosAdicionales) && (
+                            <div className="grid grid-cols-1 gap-px bg-slate-100 md:grid-cols-3 border-t border-slate-100">
+                                {[
+                                    { label: "Medicamentos usados",     value: paciente.medicamentosUsados },
+                                    { label: "Hábitos",                 value: paciente.habitos },
+                                    { label: "Comentarios adicionales", value: paciente.comentariosAdicionales },
+                                ].map(({ label, value }) => value ? (
+                                    <div key={label} className="bg-white px-5 py-4">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-1">{label}</p>
+                                        <p className="text-[13px] text-slate-700 leading-relaxed break-words whitespace-pre-wrap">{value}</p>
+                                    </div>
+                                ) : null)}
+                            </div>
+                        )}
                     </div>
-                ))}
+                )}
 
-                {/* Formulario principal */}
-                <div className="bg-white border border-slate-300 rounded-[24px] shadow-[0_18px_50px_rgba(15,23,42,0.12)] overflow-hidden">
+                {/* ── Formulario de ficha ── */}
+                <div className="rounded-[28px] border border-slate-200 bg-white shadow-sm overflow-hidden">
 
-                    {/* Secci&oacute;n: Informaci&oacute;n General */}
-                    <div className="border-b border-slate-200 bg-slate-100/80 px-5 py-3">
-                        <h2 className="text-sm font-semibold text-slate-800 tracking-wide uppercase">
-                            Informaci&oacute;n de la Consulta
-                        </h2>
+                    {/* Sección: Información de la consulta */}
+                    <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-4 bg-slate-50/50">
+                        <div className="h-8 w-8 rounded-xl bg-[#EDE9FE] flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#6E56CF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                        </div>
+                        <h2 className="text-sm font-semibold text-slate-800">Información de la Consulta</h2>
                     </div>
 
-                    <div className="p-5 md:p-6 space-y-5">
-
-                        {/* Selector de Plantilla */}
+                    <div className="p-6 space-y-5">
+                        {/* Selector de plantilla */}
                         <div>
-                            <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                                Plantilla de Ficha <span className="text-red-500">*</span>
+                            <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                                Plantilla de ficha <span className="text-red-400 normal-case">*</span>
                             </label>
-                            <p className="text-xs text-slate-400 mb-2">Seleccione el tipo de ficha cl&iacute;nica a completar</p>
                             <select
                                 value={idPlantilla}
                                 onChange={(e) => seleccionarPlantilla(e.target.value)}
-                                className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-400 transition-all text-slate-700"
+                                className="w-full h-10 px-3.5 text-sm border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-violet-100 focus:border-[#6E56CF] transition-all text-slate-700"
+                                style={{ colorScheme: "light" }}
                             >
                                 <option value="">Seleccione una plantilla...</option>
                                 {plantillas.map((p) => (
-                                    <option key={p.id_plantilla} value={p.id_plantilla}>
-                                        {p.nombre}
-                                    </option>
+                                    <option key={p.id_plantilla} value={p.id_plantilla}>{p.nombre}</option>
                                 ))}
                             </select>
                         </div>
@@ -378,55 +358,42 @@ export default function NuevaFicha() {
                         {/* Fecha + Profesional */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                                    Fecha de Consulta
-                                </label>
-                                <ShadcnDatePicker
-                                    className="border-slate-300 focus:border-indigo-500"
-                                    label=""
-                                    value={fechaConsulta}
-                                    onChange={(fecha) => setFechaConsulta(fecha)}
-                                />
+                                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Fecha de consulta</label>
+                                <ShadcnDatePicker label="" value={fechaConsulta} onChange={(fecha) => setFechaConsulta(fecha)} />
                             </div>
-
                             <div>
-                                <label className="block text-sm font-medium text-slate-700 mb-1.5">
-                                    Profesional
-                                </label>
-                                <p className="text-xs text-slate-400 mb-2">Profesional a cargo de la atenci&oacute;n</p>
+                                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Profesional a cargo</label>
                                 <ShadcnInput
                                     value={observacionesPrecio}
-                                    placeholder="Ej: Dra. Andrea Moran"
+                                    placeholder="Ej: Dra. Andrea Morán"
                                     onChange={(e) => setObservacionesPrecio(e.target.value)}
                                 />
                             </div>
                         </div>
                     </div>
 
-                    {/* Campos din&aacute;micos de la plantilla */}
+                    {/* Campos dinámicos de la plantilla */}
                     {plantillaCompleta && plantillaCompleta.categorias.map(categoria => (
                         <div key={categoria.id_categoria}>
-                            {/* Header de categor&iacute;a */}
-                            <div className="border-t border-b border-slate-200 bg-slate-100/80 px-5 py-3">
-                                <h2 className="text-sm font-semibold text-slate-800 tracking-wide uppercase">
-                                    {categoria.nombre}
-                                </h2>
+                            <div className="flex items-center gap-3 border-t border-b border-slate-100 px-6 py-4 bg-slate-50/50">
+                                <div className="h-8 w-8 rounded-xl bg-slate-100 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h7"/>
+                                    </svg>
+                                </div>
+                                <h3 className="text-sm font-semibold text-slate-800">{categoria.nombre}</h3>
                             </div>
-
-                            <div className="p-5 md:p-6 space-y-5">
+                            <div className="p-6 space-y-5">
                                 {categoria.campos.map(campo => (
                                     <div key={campo.id_campo}>
-                                        <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                        <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
                                             {campo.nombre}
-                                            {campo.requerido === 1 && <span className="text-red-500 ml-1">*</span>}
+                                            {campo.requerido === 1 && <span className="text-red-400 ml-1 normal-case">*</span>}
                                         </label>
                                         <Textarea
-                                            className="min-h-[100px] resize-y border-slate-300 focus:border-indigo-500 focus:ring-indigo-500/20"
+                                            className="min-h-[100px] resize-y border-slate-200 focus:border-[#6E56CF] focus:ring-violet-100"
                                             value={datosDinamicos[campo.id_campo] || ""}
-                                            onChange={(e) => setDatosDinamicos(prev => ({
-                                                ...prev,
-                                                [campo.id_campo]: e.target.value
-                                            }))}
+                                            onChange={(e) => setDatosDinamicos(prev => ({ ...prev, [campo.id_campo]: e.target.value }))}
                                             placeholder={`Ingrese ${campo.nombre.toLowerCase()}...`}
                                         />
                                     </div>
@@ -435,36 +402,36 @@ export default function NuevaFicha() {
                         </div>
                     ))}
 
-                    {/* Mensaje cuando no hay plantilla seleccionada */}
+                    {/* Estado vacío: sin plantilla seleccionada */}
                     {!plantillaCompleta && (
-                        <div className="p-8 text-center border-t border-slate-200">
-                            <div className="mx-auto mb-3 flex items-center justify-center h-12 w-12 rounded-xl bg-indigo-100">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                        <div className="border-t border-slate-100 p-10 text-center">
+                            <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#EDE9FE]">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#6E56CF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                                 </svg>
                             </div>
-                            <p className="text-sm text-slate-600 font-medium">Seleccione una plantilla para ver los campos del formulario</p>
+                            <p className="text-sm font-medium text-slate-600">Seleccione una plantilla para ver los campos del formulario</p>
+                            <p className="mt-1 text-xs text-slate-400">La plantilla determina qué datos clínicos se registrarán en esta ficha</p>
                         </div>
                     )}
-                </div>
 
-                {/* Bot&oacute;n de acci&oacute;n */}
-                <div className="mt-8 flex flex-col-reverse sm:flex-row justify-end gap-3">
-                    <Link href={"/dashboard/FichaClinica"}>
-                        <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-xl hover:bg-slate-100 hover:border-slate-400 transition-all duration-150 shadow-sm">
-                            Cancelar
+                    {/* Botones */}
+                    <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-slate-100 px-6 py-5 bg-slate-50/50">
+                        <Link href="/dashboard/FichaClinica">
+                            <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-semibold text-slate-700 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-all shadow-sm">
+                                Cancelar
+                            </button>
+                        </Link>
+                        <button
+                            onClick={() => insertarFicha()}
+                            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-[#6E56CF] hover:bg-[#5B47B0] rounded-xl transition-all shadow-sm"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Guardar Ficha Clínica
                         </button>
-                    </Link>
-
-                    <button
-                        onClick={() => insertarFicha()}
-                        className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-indigo-700 to-teal-600 rounded-xl hover:from-indigo-800 hover:to-teal-700 transition-all duration-150 shadow-md hover:shadow-lg"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        Guardar Ficha Cl&iacute;nica
-                    </button>
+                    </div>
                 </div>
 
             </div>

@@ -8,7 +8,7 @@ import {toast} from "react-hot-toast";
 import {useRouter} from "next/navigation";
 import {UserIcon} from "@heroicons/react/24/outline";
 import {InfoButton} from "@/Componentes/InfoButton";
-import { formatRut } from "@/lib/designTokens";
+import { formatRut, cleanRut } from "@/lib/designTokens";
 
 export default function ListaPacientes() {
     const API = process.env.NEXT_PUBLIC_API_URL;
@@ -28,7 +28,7 @@ export default function ListaPacientes() {
                 toast.error("Debe ingresar previamente un RUT para buscar similitudes.");
             }
 
-            const rut = rutBuscado;
+            const rut = cleanRut(rutBuscado);
 
             const res = await fetch(`${API}/pacientes/contieneRut`, {
                 method: "POST",

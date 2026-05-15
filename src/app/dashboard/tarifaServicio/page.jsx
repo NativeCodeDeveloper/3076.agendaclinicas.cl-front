@@ -303,9 +303,9 @@ export default function TarifaServicio() {
             <div className="mx-auto w-full max-w-6xl px-6 py-10">
 
                 {/* Header */}
-                <div className="mb-8 rounded-[28px] border border-slate-300/80 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm">
+                <div className="mb-8 rounded-[28px] border border-slate-200 bg-white/90 p-6 shadow-sm">
                     <div className="flex flex-col gap-1">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500">Configuración</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Configuración</p>
                         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                             Cobro por Consulta o Servicio
                         </h1>
@@ -317,7 +317,7 @@ export default function TarifaServicio() {
 
                 {/* Selectores */}
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div className="rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                    <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                         <div className="space-y-1 mb-5">
                             <h2 className="text-base font-semibold text-slate-900">Seleccionar Profesional</h2>
                             <p className="text-sm text-slate-500">Seleccione el profesional que imparte el servicio.</p>
@@ -341,7 +341,7 @@ export default function TarifaServicio() {
                         </div>
                     </div>
 
-                    <div className="rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                    <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                         <div className="space-y-1 mb-5">
                             <h2 className="text-base font-semibold text-slate-900">Seleccionar Servicio</h2>
                             <p className="text-sm text-slate-500">Seleccione un servicio para asignar tarifa.</p>
@@ -367,7 +367,7 @@ export default function TarifaServicio() {
                 </div>
 
                 {/* Form */}
-                <div className="mt-6 rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="mt-6 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="flex flex-col gap-6">
 
                         <div className="space-y-1">
@@ -446,19 +446,19 @@ export default function TarifaServicio() {
 
 
 
-                <div className="mt-8 rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="mt-8 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="space-y-1 mb-5">
                         <h2 className="text-base font-semibold text-slate-900">Tarifas registradas</h2>
                         <p className="text-sm text-slate-500">Lista de valores por consulta y profesional.</p>
                     </div>
                     <Table>
                         <TableHeader>
-                            <TableRow className="bg-[linear-gradient(135deg,#0f172a_0%,#312e81_60%,#6E56CF_100%)] hover:opacity-90">
-                                <TableHead className="text-sm font-semibold text-white">Profesional</TableHead>
-                                <TableHead className="text-sm font-semibold text-white">Servicio</TableHead>
-                                <TableHead className="text-sm font-semibold text-white">Duración</TableHead>
-                                <TableHead className="text-sm font-semibold text-white text-right">Valor</TableHead>
-                                <TableHead className="text-sm font-semibold text-white text-center">Acción</TableHead>
+                            <TableRow className="bg-slate-50 hover:bg-slate-50">
+                                <TableHead className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Profesional</TableHead>
+                                <TableHead className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Servicio</TableHead>
+                                <TableHead className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Duración</TableHead>
+                                <TableHead className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 text-right">Valor</TableHead>
+                                <TableHead className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 text-center">Acción</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -470,7 +470,7 @@ export default function TarifaServicio() {
                                 </TableRow>
                             ) : (
                                 listaTarifasProfesionales.map((tarifa, index) => (
-                                    <TableRow key={tarifa.id_tarifaProfesional || index} className="hover:bg-indigo-50/60 transition-colors">
+                                    <TableRow key={tarifa.id_tarifaProfesional || index} className="hover:bg-slate-50/50 transition-colors">
                                         <TableCell className="font-medium text-slate-900">{tarifa.nombreProfesional}</TableCell>
                                         <TableCell className="text-slate-600">{tarifa.nombreServicio}</TableCell>
                                         <TableCell className="text-slate-600">{tarifa.duracion_min} min</TableCell>
@@ -478,7 +478,7 @@ export default function TarifaServicio() {
                                         <TableCell className="text-center">
                                             <ButtonDinamic
                                                 onClick={() =>seleccionarTarifaProfesional(tarifa.id_tarifaProfesional)}
-                                                className="rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1 text-xs text-indigo-700 hover:bg-indigo-100"
+                                                className="rounded-lg border border-[#DDD6FE] bg-[#F3F0FF] px-3 py-1 text-xs text-[#6E56CF] hover:bg-[#EDE9FE]"
                                             >
                                                 Seleccionar
                                             </ButtonDinamic>

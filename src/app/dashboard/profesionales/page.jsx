@@ -218,15 +218,15 @@ export default function Profesionales() {
 
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.14),_transparent_32%),radial-gradient(circle_at_right,_rgba(6,182,212,0.12),_transparent_28%),linear-gradient(180deg,_#f1f5f9_0%,_#f8fafc_55%,_#f1f5f9_100%)]">
+        <div className="min-h-screen bg-[#FAFAFB]">
             <ToasterClient />
 
             <div className="mx-auto w-full max-w-6xl px-6 py-10">
 
                 {/* Header */}
-                <div className="mb-8 rounded-[28px] border border-slate-300/80 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm">
+                <div className="mb-8 rounded-[28px] border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm">
                     <div className="flex flex-col gap-1">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500">Configuración</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Configuración</p>
                         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                             Profesionales
                         </h1>
@@ -237,7 +237,7 @@ export default function Profesionales() {
                 </div>
 
                 {/* Form */}
-                <div className="rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="flex flex-col gap-6">
 
                         <div className="space-y-1">
@@ -274,7 +274,11 @@ export default function Profesionales() {
                                 />
                             </div>
 
-                            {/* Modalidad de atención */}
+                            {/* Modalidad de atención — PENDIENTE BD —
+                                Descomentar cuando esté aplicada la migración:
+                                ALTER TABLE profesionales ADD COLUMN modalidad_atencion VARCHAR(20) NOT NULL DEFAULT 'ambas';
+                                Y cuando los endpoints insertarProfesional / actualizarProfesional acepten el campo.
+
                             <div className="space-y-2">
                                 <label className="text-sm font-medium text-slate-700">Modalidad de atención</label>
                                 <p className="text-xs text-slate-400">Define cómo atiende este profesional. Esto se reflejará en el formulario de reserva online.</p>
@@ -300,6 +304,7 @@ export default function Profesionales() {
                                     ))}
                                 </div>
                             </div>
+                            — Fin bloque comentado — */}
                         </div>
 
                         <div className="flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row">
@@ -329,7 +334,7 @@ export default function Profesionales() {
                 </div>
 
                 {/* Selector */}
-                <div className="mt-8 rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="mt-8 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="space-y-1 mb-5">
                         <h2 className="text-base font-semibold text-slate-900">Seleccionar profesional</h2>
                         <p className="text-sm text-slate-500">Seleccione un profesional para editar o eliminar.</p>
@@ -350,7 +355,7 @@ export default function Profesionales() {
                         </div>
                         <ButtonDinamic
                             onClick={() => seleccionarProfesional(id_profesional)}
-                            className="rounded-xl border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
+                            className="rounded-xl border border-[#DDD6FE] bg-[#F3F0FF] text-[#6E56CF] hover:bg-[#EDE9FE]">
                             Seleccionar
                         </ButtonDinamic>
                     </div>

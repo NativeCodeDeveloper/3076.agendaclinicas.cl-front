@@ -15,7 +15,7 @@ import {InfoButton} from "@/Componentes/InfoButton";
 import {Textarea} from "@/components/ui/textarea";
 import { RutInput } from "@/Componentes/RutInput";
 import { PhoneInput } from "@/Componentes/PhoneInput";
-import { formatRut } from "@/lib/designTokens";
+import { formatRut, cleanRut } from "@/lib/designTokens";
 
 
 export default function GestionPaciente() {
@@ -54,7 +54,7 @@ export default function GestionPaciente() {
                 toast.error("Debe ingresar previamente un RUT para buscar similitudes.")
             }
 
-            let rut = rutBuscado;
+            const rut = cleanRut(rutBuscado);
 
             const res = await fetch(`${API}/pacientes/contieneRut`, {
                 method: "POST",

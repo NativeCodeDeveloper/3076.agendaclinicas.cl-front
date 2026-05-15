@@ -137,19 +137,25 @@ function NavAccordion({ id, label, icon, children, openAccordions, onToggle }) {
 export default function SidebarNav() {
     const pathname = usePathname();
 
-    // Inicializa con el acordeón de la ruta activa + los guardados en sessionStorage
+    // Inicializa solo con el acordeón activo — valor seguro para SSR (sin sessionStorage)
     const [openAccordions, setOpenAccordions] = useState(() => {
         const active = getActiveAccordion(pathname);
-        const initial = new Set(active ? [active] : ["agenda"]);
-        // Recuperar sesión anterior (si existe)
-        if (typeof window !== "undefined") {
-            try {
-                const saved = JSON.parse(sessionStorage.getItem("sidebar_open") || "[]");
-                saved.forEach(k => initial.add(k));
-            } catch {}
-        }
-        return initial;
+        return new Set(active ? [active] : ["agenda"]);
     });
+
+    // Tras el montaje en cliente, restaura los acordeones guardados en sessionStorage
+    useEffect(() => {
+        try {
+            const saved = JSON.parse(sessionStorage.getItem("sidebar_open") || "[]");
+            if (saved.length > 0) {
+                setOpenAccordions(prev => {
+                    const next = new Set(prev);
+                    saved.forEach(k => next.add(k));
+                    return next;
+                });
+            }
+        } catch {}
+    }, []);
 
     // Cuando cambia la ruta, asegura que el acordeón de la sección activa esté abierto
     useEffect(() => {

@@ -211,9 +211,9 @@ export default function ServiciosAgendamiento() {
                 <ToasterClient />
             <div className="mx-auto w-full max-w-6xl px-6 py-10">
                 {/* Header */}
-                <div className="mb-8 rounded-[28px] border border-slate-300/80 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm">
+                <div className="mb-8 rounded-[28px] border border-slate-200 bg-white/90 p-6 shadow-sm">
                     <div className="flex flex-col gap-1">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-slate-500">Configuración</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Configuración</p>
                         <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
                             Agendamiento con Cobro
                         </h1>
@@ -224,7 +224,7 @@ export default function ServiciosAgendamiento() {
                 </div>
 
                 {/* Form */}
-                <div className="rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="flex flex-col gap-6">
 
                         <div className="space-y-1">
@@ -283,7 +283,7 @@ export default function ServiciosAgendamiento() {
                 </div>
 
                 {/* Selector */}
-                <div className="mt-8 rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="mt-8 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="space-y-1 mb-5">
                         <h2 className="text-base font-semibold text-slate-900">Seleccionar servicio</h2>
                         <p className="text-sm text-slate-500">Seleccione un servicio para editar o eliminar.</p>
@@ -303,7 +303,7 @@ export default function ServiciosAgendamiento() {
                         </div>
                         <ButtonDinamic
                             onClick={() => seleccionarServicioProfesional(id_servicioProfesional)}
-                            className="rounded-xl border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100">
+                            className="rounded-xl border border-[#DDD6FE] bg-[#F3F0FF] text-[#6E56CF] hover:bg-[#EDE9FE]">
                             Seleccionar servicio
                         </ButtonDinamic>
                     </div>

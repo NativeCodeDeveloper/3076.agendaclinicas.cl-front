@@ -283,10 +283,10 @@ export default function ExamenDocumento() {
             <ToasterClient/>
 
             <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 md:py-10">
-                <div className="mb-8 rounded-[28px] border border-slate-200/80 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+                <div className="mb-8">
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                         <div>
-                            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-violet-600">Documentación clínica</p>
+                            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Documentación clínica</p>
                             <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                                 Solicitud de exámenes
                             </h1>
@@ -295,16 +295,16 @@ export default function ExamenDocumento() {
                             </p>
                         </div>
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                            <div className="rounded-2xl border border-violet-200 bg-violet-50/80 px-4 py-3">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-500">Catálogo</p>
+                            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Catálogo</p>
                                 <p className="mt-1 text-sm font-semibold text-slate-900">{listaExamenes.length}</p>
                             </div>
-                            <div className="rounded-2xl border border-cyan-200 bg-cyan-50/80 px-4 py-3">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Paciente</p>
+                            <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Paciente</p>
                                 <p className="mt-1 text-sm font-semibold text-slate-900">{nombrePaciente.trim() || "-"}</p>
                             </div>
                             <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Seleccionados</p>
+                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Seleccionados</p>
                                 <p className="mt-1 text-sm font-semibold text-slate-900">{totalExamenes}</p>
                             </div>
                         </div>
@@ -363,7 +363,7 @@ export default function ExamenDocumento() {
                                     <button
                                         type="button"
                                         onClick={generarDocumentoPDF}
-                                        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(79,70,229,0.28)] transition-all duration-150 hover:from-violet-700 hover:to-indigo-700"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-[#6E56CF] hover:bg-[#5B47B0] px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-8m0 8l-3-3m3 3l3-3M4 19h16"/>
@@ -382,29 +382,27 @@ export default function ExamenDocumento() {
                         </div>
 
                         <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
-                            <div className="border-b border-slate-100 bg-[linear-gradient(135deg,rgba(15,23,42,0.98)_0%,rgba(49,46,129,0.95)_100%)] px-5 py-4">
-                                <div className="flex items-center justify-between gap-3">
-                                    <div>
-                                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-violet-200">Paciente</p>
-                                        <h2 className="text-lg font-bold text-white">Resumen del documento</h2>
-                                    </div>
+                            <div className="flex items-center gap-3 border-b border-slate-100 px-5 py-4 bg-slate-50/50">
+                                <div className="h-8 w-8 rounded-xl bg-[#EDE9FE] flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#6E56CF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                 </div>
+                                <h2 className="text-sm font-semibold text-slate-800">Resumen del documento</h2>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-3 p-5 sm:grid-cols-2">
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 sm:col-span-2">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Nombre completo</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">
+                            <div className="grid grid-cols-1 gap-px bg-slate-100 sm:grid-cols-2">
+                                <div className="bg-white px-5 py-4 sm:col-span-2">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-1">Nombre completo</p>
+                                    <p className="text-[13px] font-semibold text-slate-900">
                                         {nombrePaciente.trim() || "-"}
                                     </p>
                                 </div>
-                                <div className="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-500">Rut</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{rutPaciente.trim() || "-"}</p>
+                                <div className="bg-white px-5 py-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-1">RUT</p>
+                                    <p className="text-[13px] font-semibold text-slate-900">{rutPaciente.trim() || "-"}</p>
                                 </div>
-                                <div className="rounded-2xl border border-cyan-200 bg-cyan-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Profesional</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{nombreProfesional.trim() || "-"}</p>
+                                <div className="bg-white px-5 py-4">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-1">Profesional</p>
+                                    <p className="text-[13px] font-semibold text-slate-900">{nombreProfesional.trim() || "-"}</p>
                                 </div>
                                 <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
                                     <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Fecha solicitud</p>
@@ -456,7 +454,7 @@ export default function ExamenDocumento() {
                                                             {examen.descripcion_examen || "Sin descripción registrada."}
                                                         </p>
                                                         <div className="flex flex-wrap items-center gap-2 pt-1">
-                                                            <span className="inline-flex items-center rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-semibold text-cyan-700">
+                                                            <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
                                                                 Ref. {formatoCLP.format(Number(examen.valor_examen || 0))}
                                                             </span>
                                                             <span className="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-600">
@@ -472,7 +470,7 @@ export default function ExamenDocumento() {
                                                         className={`inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-all duration-150 ${
                                                             yaAgregado
                                                                 ? "cursor-not-allowed border border-emerald-200 bg-emerald-50 text-emerald-700"
-                                                                : "bg-gradient-to-r from-violet-600 to-indigo-600 text-white shadow-md hover:from-violet-700 hover:to-indigo-700"
+                                                                : "bg-[#6E56CF] hover:bg-[#5B47B0] text-white shadow-md hover:from-violet-700 hover:to-indigo-700"
                                                         }`}
                                                     >
                                                         {yaAgregado ? "Agregado" : "Agregar al documento"}
@@ -486,20 +484,16 @@ export default function ExamenDocumento() {
                         </div>
 
                         <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
-                            <div className="border-b border-slate-100 bg-[linear-gradient(135deg,rgba(15,23,42,0.98)_0%,rgba(8,145,178,0.94)_100%)] px-5 py-4">
-                                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                                    <div>
-                                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-cyan-100">Documento armado</p>
-                                        <h2 className="text-lg font-bold text-white">Exámenes seleccionados</h2>
+                            <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-5 py-4 bg-slate-50/50">
+                                <div className="flex items-center gap-3">
+                                    <div className="h-8 w-8 rounded-xl bg-slate-100 flex items-center justify-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                                     </div>
-                                    <div className="flex flex-wrap items-center gap-2">
-                                        <span className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white">
-                                            {totalExamenes} exámenes
-                                        </span>
-                                        <span className="inline-flex items-center rounded-full border border-cyan-300/20 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-100">
-                                            Ref. {formatoCLP.format(totalReferencia)}
-                                        </span>
-                                    </div>
+                                    <h2 className="text-sm font-semibold text-slate-800">Exámenes seleccionados</h2>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <span className="inline-flex items-center rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-semibold text-slate-600">{totalExamenes} exámenes</span>
+                                    <span className="inline-flex items-center rounded-lg border border-[#DDD6FE] bg-[#F3F0FF] px-2.5 py-1 text-[11px] font-semibold text-[#6E56CF]">Ref. {formatoCLP.format(totalReferencia)}</span>
                                 </div>
                             </div>
 
@@ -543,7 +537,7 @@ export default function ExamenDocumento() {
                                     <button
                                         type="button"
                                         onClick={generarDocumentoPDF}
-                                        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-sky-600 to-cyan-500 px-4 py-2.5 text-sm font-semibold text-white shadow-md transition-all duration-150 hover:from-sky-700 hover:to-cyan-600"
+                                        className="inline-flex items-center gap-2 rounded-xl bg-slate-900 hover:bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150"
                                     >
                                         Generar documento PDF
                                     </button>

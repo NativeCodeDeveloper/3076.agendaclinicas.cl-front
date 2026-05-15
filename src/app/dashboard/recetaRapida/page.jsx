@@ -197,10 +197,10 @@ export default function RecetaRapida() {
             <ToasterClient/>
 
             <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 md:py-10">
-                <div className="mb-8 rounded-[28px] border border-slate-200/80 bg-white/90 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+                <div className="mb-8 rounded-[28px] border border-slate-200/80 bg-white/90 p-5 shadow-sm">
                     <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                         <div>
-                            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-slate-600">Documento médico</p>
+                            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Documento médico</p>
                             <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
                                 Receta rápida
                             </h1>
@@ -224,8 +224,8 @@ export default function RecetaRapida() {
 
                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
                     <div className="space-y-6 lg:col-span-3">
-                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
-                            <div className="border-b border-slate-100 bg-[linear-gradient(180deg,rgba(248,250,252,0.96)_0%,rgba(255,255,255,1)_100%)] px-5 py-4">
+                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
+                            <div className="border-b border-slate-100 bg-slate-50/50 px-5 py-4">
                                 <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-700">Datos clínicos</h2>
                             </div>
 
@@ -322,7 +322,7 @@ export default function RecetaRapida() {
                             </div>
                         </div>
 
-                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
                             <div className="border-b border-slate-100 px-5 py-4">
                                 <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-700">Descripción de la receta</h2>
                             </div>
@@ -339,7 +339,7 @@ export default function RecetaRapida() {
                     </div>
 
                     <div className="space-y-6 lg:col-span-2">
-                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.06)]">
+                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
                             <div className="border-b border-slate-100 bg-slate-50 px-5 py-4">
                                 <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-700">Vista previa</h2>
                             </div>

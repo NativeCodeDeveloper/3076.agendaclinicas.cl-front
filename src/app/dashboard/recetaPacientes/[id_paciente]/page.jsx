@@ -650,418 +650,300 @@ export default function ReecetasPacientes() {
     }, [id_profesional_filtro, id_paciente]);
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.10),_transparent_28%),radial-gradient(circle_at_right,_rgba(6,182,212,0.10),_transparent_24%),linear-gradient(180deg,_#f8fafc_0%,_#ffffff_55%,_#f8fafc_100%)]">
+        <div className="min-h-screen bg-[#FAFAFB]">
             <ToasterClient/>
 
-            <div className="mx-auto max-w-6xl px-4 py-6 sm:px-6 lg:px-8 md:py-10">
-                <div className="mb-8 rounded-[28px] border border-slate-200/80 bg-white/85 p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
-                    <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-                        <div>
-                            <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.22em] text-violet-600">Emisión de receta</p>
-                            <h1 className="text-2xl font-bold tracking-tight text-slate-900 md:text-3xl">
-                                Receta médica para {paciente ? `${paciente.nombre} ${paciente.apellido}` : "paciente"}
-                            </h1>
-                            <p className="mt-2 max-w-2xl text-sm text-slate-600">
-                                Vista previa del paciente antes de generar o completar la receta clínica.
-                            </p>
-                        </div>
-                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <div className="rounded-2xl border border-violet-200 bg-violet-50/80 px-4 py-3">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-500">Paciente</p>
-                                <p className="mt-1 text-sm font-semibold text-slate-900">
-                                    {paciente ? `${paciente.nombre} ${paciente.apellido}` : "Cargando..."}
-                                </p>
-                            </div>
-                            <div className="rounded-2xl border border-cyan-200 bg-cyan-50/80 px-4 py-3">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-600">Rut</p>
-                                <p className="mt-1 text-sm font-semibold text-slate-900 font-mono">{formatRut(paciente?.rut) || "-"}</p>
-                            </div>
-                        </div>
-                    </div>
+            <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8 md:py-10">
 
-                    <div className="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex items-center gap-2">
-                            <InfoButton informacion={"En esta vista se muestran los datos base del paciente para preparar la receta médica. Puede usar esta información como contexto previo antes de completar la emisión del documento."}/>
-                            <span className="text-sm text-slate-500">Resumen clínico previo a la receta</span>
-                        </div>
-                        <button
-                            onClick={volverAFichas}
-                            className="inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:shadow-md hover:scale-[1.01]"
-                            style={{ background: "linear-gradient(135deg, #6E56CF 0%, #8B5CF6 100%)" }}
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
-                            </svg>
-                            Carpeta del Paciente
-                        </button>
-                    </div>
+                {/* ── Header ── */}
+                <div className="mb-8">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Documentos Clínicos</p>
+                    <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">
+                        Receta Médica
+                    </h1>
+                    <p className="mt-1 text-[13px] text-slate-500">
+                        {paciente ? `${paciente.nombre} ${paciente.apellido}` : "Cargando paciente..."}
+                    </p>
+                </div>
+
+                {/* ── Acciones ── */}
+                <div className="mb-6 flex flex-wrap items-center gap-2">
+                    <button
+                        onClick={volverAFichas}
+                        className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-[#6E56CF] hover:bg-[#5B47B0] shadow-sm transition-all"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
+                        </svg>
+                        Carpeta del Paciente
+                    </button>
+                    <InfoButton informacion={"Registre y gestione las recetas médicas del paciente. El PDF generado incluye los datos del profesional, diagnóstico e indicaciones."}/>
                 </div>
 
                 {cargando ? (
-                    <div className="rounded-[28px] border border-dashed border-slate-200 bg-white p-10 text-center text-sm text-slate-500 shadow-sm">
+                    <div className="rounded-[28px] border border-dashed border-slate-200 bg-white p-10 text-center text-sm text-slate-500">
                         Cargando datos del paciente...
                     </div>
                 ) : !paciente ? (
-                    <div className="rounded-[28px] border border-dashed border-rose-200 bg-white p-10 text-center text-sm text-rose-500 shadow-sm">
+                    <div className="rounded-[28px] border border-dashed border-rose-200 bg-white p-10 text-center text-sm text-rose-500">
                         No fue posible encontrar información del paciente.
                     </div>
                 ) : (
-                    <div className="space-y-6">
-                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
-                            <div className="flex flex-col gap-4 bg-[linear-gradient(135deg,#0f172a_0%,#312e81_58%,#0891b2_100%)] px-5 py-4 md:px-6 lg:flex-row lg:items-center lg:justify-between">
-                                <div className="flex items-center gap-3">
-                                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-sm font-bold tracking-wide text-white backdrop-blur-sm">
-                                        {paciente.nombre?.charAt(0)}{paciente.apellido?.charAt(0)}
-                                    </div>
-                                    <div>
-                                        <h2 className="text-2xl font-bold tracking-tight text-white">
-                                            {paciente.nombre} {paciente.apellido}
-                                        </h2>
-                                        <p className="text-sm text-slate-200">Preparación de receta individual</p>
-                                    </div>
+                    <div className="space-y-5">
+
+                        {/* ── Tarjeta del paciente ── */}
+                        <div className="rounded-[28px] border border-slate-200 bg-white shadow-sm overflow-hidden">
+                            <div className="flex items-center gap-4 px-6 py-5 border-b border-slate-100">
+                                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#EDE9FE] text-base font-bold text-[#6E56CF]">
+                                    {paciente.nombre?.charAt(0)}{paciente.apellido?.charAt(0)}
                                 </div>
-                                <div className="flex flex-wrap items-center gap-2">
-                                    <span className="inline-flex items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-white/90 backdrop-blur-sm">
-                                        Previsión: {previsionDeterminacion(paciente.prevision_id)}
+                                <div className="min-w-0">
+                                    <p className="text-base font-bold text-slate-900">{paciente.nombre} {paciente.apellido}</p>
+                                    <p className="text-[13px] text-slate-500 font-mono">RUT {formatRut(paciente.rut) || "---"}</p>
+                                </div>
+                                <div className="ml-auto flex flex-wrap gap-2">
+                                    <span className="inline-flex items-center rounded-lg bg-[#F3F0FF] border border-[#DDD6FE] px-2.5 py-0.5 text-[11px] font-semibold text-[#6E56CF] uppercase tracking-wide">
+                                        {previsionDeterminacion(paciente.prevision_id)}
                                     </span>
-                                    <span className="inline-flex items-center rounded-full border border-cyan-300/20 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-100">
-                                        Edad: {calcularEdad(paciente.nacimiento)} años
+                                    <span className="inline-flex items-center rounded-lg bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[11px] font-medium text-slate-500">
+                                        {calcularEdad(paciente.nacimiento)} años
                                     </span>
                                 </div>
                             </div>
-
-                            <div className="grid grid-cols-1 gap-3 p-5 md:grid-cols-2 md:p-6 xl:grid-cols-3">
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Nombre completo</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{paciente.nombre} {paciente.apellido}</p>
-                                </div>
-                                <div className="rounded-2xl border border-violet-200 bg-violet-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-500">Rut</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900 font-mono">{formatRut(paciente.rut) || "-"}</p>
-                                </div>
-                                <div className="rounded-2xl border border-cyan-200 bg-cyan-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-cyan-600">Nacimiento</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{formatearFecha(paciente.nacimiento)}</p>
-                                </div>
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Sexo</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{paciente.sexo || "-"}</p>
-                                </div>
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Teléfono</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{paciente.telefono || "-"}</p>
-                                </div>
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Correo</p>
-                                    <p className="mt-1 break-all text-sm font-semibold text-slate-900">{paciente.correo || "-"}</p>
-                                </div>
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 md:col-span-2 xl:col-span-2">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Dirección</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{paciente.direccion || "-"}</p>
-                                </div>
-                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">País</p>
-                                    <p className="mt-1 text-sm font-semibold text-slate-900">{paciente.pais || "-"}</p>
-                                </div>
+                            <div className="grid grid-cols-2 gap-px bg-slate-100 md:grid-cols-4 lg:grid-cols-6">
+                                {[
+                                    { label: "Nacimiento",  value: formatearFecha(paciente.nacimiento) },
+                                    { label: "Sexo",        value: paciente.sexo },
+                                    { label: "Teléfono",    value: paciente.telefono },
+                                    { label: "Correo",      value: paciente.correo },
+                                    { label: "Dirección",   value: paciente.direccion },
+                                    { label: "País",        value: paciente.pais },
+                                ].map(({ label, value }) => (
+                                    <div key={label} className="bg-white px-4 py-3">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400 mb-1">{label}</p>
+                                        <p className="text-[13px] font-medium text-slate-800 break-words">{value || "---"}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
 
-                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
-                            <div className="border-b border-slate-100 bg-[linear-gradient(135deg,rgba(15,23,42,0.98)_0%,rgba(49,46,129,0.95)_100%)] px-5 py-4">
-                                <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-                                    <div>
-                                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-violet-200">Formulario</p>
-                                        <h2 className="text-xl font-bold text-white">Redacción de receta médica</h2>
-                                    </div>
-                                    <span className="inline-flex w-fit items-center rounded-full border border-cyan-300/20 bg-cyan-400/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.16em] text-cyan-100">
-                                        Registro de Recta
-                                    </span>
+                        {/* ── Formulario de receta ── */}
+                        <div className="rounded-[28px] border border-slate-200 bg-white shadow-sm overflow-hidden">
+                            <div className="flex items-center gap-3 border-b border-slate-100 px-6 py-4 bg-slate-50/50">
+                                <div className="h-8 w-8 rounded-xl bg-[#EDE9FE] flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#6E56CF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
                                 </div>
+                                <h2 className="text-sm font-semibold text-slate-800">Redacción de receta médica</h2>
                             </div>
 
-                            <div className="grid grid-cols-1 gap-6 p-5 md:p-6 xl:grid-cols-[minmax(0,1.4fr)_minmax(320px,0.85fr)]">
+                            <div className="grid grid-cols-1 gap-6 p-6 xl:grid-cols-[1fr_320px]">
+                                {/* Columna izquierda: campos */}
                                 <div className="space-y-5">
-                                    <div className="rounded-2xl border border-slate-200 bg-slate-50/60 px-4 py-3">
-                                        <p className="mb-2 text-xs font-semibold text-slate-700">Profesional que emite la receta</p>
-                                        <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+                                    {/* Profesional */}
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50/60 p-4 space-y-3">
+                                        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Profesional que emite la receta</p>
+                                        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
                                             <div>
-                                                <label className="mb-1 block text-[11px] font-medium text-slate-500">Profesional</label>
+                                                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">Profesional</label>
                                                 <Select
                                                     value={uiOnlyProfesionalSeleccionado}
                                                     onValueChange={(value) => {
                                                         setUiOnlyProfesionalSeleccionado(value);
-                                                        const profesionalEncontrado = listaProfesionales.find(
-                                                            (profesional) => String(profesional.id_profesional) === value
-                                                        );
+                                                        const prof = listaProfesionales.find(p => String(p.id_profesional) === value);
                                                         setId_profesional(Number(value));
-                                                        setProfesional_responsable(profesionalEncontrado?.nombreProfesional || "");
+                                                        setProfesional_responsable(prof?.nombreProfesional || "");
                                                     }}
                                                 >
-                                                    <SelectTrigger className="h-9 w-full rounded-xl border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-none">
-                                                        <SelectValue placeholder="Selecciona un profesional" />
+                                                    <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm text-slate-900 shadow-none">
+                                                        <SelectValue placeholder="Seleccionar..." />
                                                     </SelectTrigger>
                                                     <SelectContent className="rounded-xl border-slate-200 bg-white">
-                                                        {listaProfesionales.map((profesional) => (
-                                                            <SelectItem
-                                                                key={profesional.id_profesional}
-                                                                value={String(profesional.id_profesional)}
-                                                                className="rounded-lg py-2"
-                                                            >
-                                                                <span className="font-medium text-slate-900">{profesional.nombreProfesional}</span>
+                                                        {listaProfesionales.map((p) => (
+                                                            <SelectItem key={p.id_profesional} value={String(p.id_profesional)} className="rounded-lg py-2">
+                                                                {p.nombreProfesional}
                                                             </SelectItem>
                                                         ))}
                                                     </SelectContent>
                                                 </Select>
                                             </div>
                                             <div>
-                                                <label className="mb-1 block text-[11px] font-medium text-slate-500">RUT profesional</label>
-                                                <ShadcnInput
-                                                    value={rut_profesional_manual}
-                                                    onChange={(event) => setRut_profesional_manual(event.target.value)}
-                                                    placeholder="RUT para el PDF"
-                                                    className="h-9 rounded-xl border-slate-200 bg-white px-3 shadow-none"
-                                                />
+                                                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">RUT profesional</label>
+                                                <ShadcnInput value={rut_profesional_manual} onChange={(e) => setRut_profesional_manual(e.target.value)} placeholder="Opcional, para PDF" className="h-10 rounded-xl border-slate-200 bg-white shadow-none"/>
                                             </div>
                                             <div>
-                                                <label className="mb-1 block text-[11px] font-medium text-slate-500">Diagnóstico</label>
-                                                <ShadcnInput
-                                                    value={diagnostico_pdf}
-                                                    onChange={(event) => setDiagnostico_pdf(event.target.value)}
-                                                    placeholder="Diagnóstico para el PDF"
-                                                    className="h-9 rounded-xl border-slate-200 bg-white px-3 shadow-none"
-                                                />
+                                                <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">Diagnóstico</label>
+                                                <ShadcnInput value={diagnostico_pdf} onChange={(e) => setDiagnostico_pdf(e.target.value)} placeholder="Opcional, para PDF" className="h-10 rounded-xl border-slate-200 bg-white shadow-none"/>
                                             </div>
                                         </div>
-                                        <p className="mt-1.5 text-[11px] text-slate-400">RUT y diagnóstico son opcionales, solo se usan en el PDF.</p>
+                                        <p className="text-[11px] text-slate-400">RUT y diagnóstico son opcionales — solo aparecen en el PDF generado.</p>
                                     </div>
 
-                                    <div className="rounded-[24px] border border-slate-200 bg-white p-5">
-                                        <div className="flex items-start justify-between gap-4">
-                                            <div>
-                                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Descripción</p>
-                                                <h3 className="mt-1 text-lg font-bold text-slate-900">Indicaciones y contenido de la receta</h3>
-                                            </div>
-                                            <span className="rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-cyan-700">
-                                                Texto clínico
-                                            </span>
-                                        </div>
-
-                                        <div className="mt-5 space-y-3">
-                                            <label className="block text-sm font-semibold text-slate-700">
-                                                Descripción de la receta
-                                            </label>
-                                            <Textarea
-                                                value={descripcion_receta}
-                                                onChange={(event) => setDescripcion_receta(event.target.value)}
-                                                placeholder="Ej: Administrar paracetamol 500 mg cada 8 horas por 5 días. Mantener reposo, hidratación y control en caso de persistencia de síntomas."
-                                                className="min-h-[220px] resize-none rounded-[24px] border-slate-200 bg-slate-50/70 px-4 py-3 text-sm leading-7 text-slate-900 shadow-none focus-visible:ring-slate-200"
-                                            />
-                                            <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-slate-500">
-                                                <span>{descripcion_receta.trim().length} caracteres</span>
-                                            </div>
-                                        </div>
+                                    {/* Texto de la receta */}
+                                    <div>
+                                        <label className="mb-1.5 block text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Indicaciones y contenido de la receta</label>
+                                        <Textarea
+                                            value={descripcion_receta}
+                                            onChange={(e) => setDescripcion_receta(e.target.value)}
+                                            placeholder="Ej: Administrar paracetamol 500 mg cada 8 horas por 5 días. Mantener reposo, hidratación y control en caso de persistencia de síntomas."
+                                            className="min-h-[220px] resize-y border-slate-200 bg-white text-sm leading-7 text-slate-900 shadow-none focus-visible:ring-violet-100 rounded-xl"
+                                        />
+                                        <p className="mt-1.5 text-[11px] text-slate-400">{descripcion_receta.trim().length} caracteres</p>
                                     </div>
                                 </div>
 
-                                <div className="space-y-5">
-                                    <div className="overflow-hidden rounded-[24px] border border-violet-200 bg-[linear-gradient(180deg,rgba(245,243,255,0.9)_0%,rgba(255,255,255,0.96)_100%)]">
-                                        <div className="border-b border-violet-100 px-5 py-4">
-                                            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-violet-500">Resumen visual</p>
-                                            <h3 className="mt-1 text-lg font-bold text-slate-900">Datos listos para la emisión</h3>
+                                {/* Columna derecha: resumen */}
+                                <div className="space-y-4">
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50/60 overflow-hidden">
+                                        <div className="border-b border-slate-100 px-4 py-3">
+                                            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Resumen de emisión</p>
                                         </div>
-
-                                        <div className="space-y-3 p-5">
-                                            <div className="rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-sm">
-                                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Paciente</p>
-                                                <p className="mt-1 text-sm font-semibold text-slate-900">{paciente.nombre} {paciente.apellido}</p>
-                                            </div>
-                                            <div className="rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-sm">
-                                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Profesional</p>
-                                                <p className="mt-1 text-sm font-semibold text-slate-900">
-                                                    {profesional_responsable|| "Pendiente"}
-                                                </p>
-                                            </div>
-                                            {diagnostico_pdf.trim() && (
-                                                <div className="rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-sm">
-                                                    <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Diagnóstico PDF</p>
-                                                    <p className="mt-1 text-sm font-semibold text-slate-900">{diagnostico_pdf}</p>
+                                        <div className="space-y-2 p-4">
+                                            {[
+                                                { label: "Paciente", value: `${paciente.nombre} ${paciente.apellido}` },
+                                                { label: "Profesional", value: profesional_responsable || "Pendiente" },
+                                                ...(diagnostico_pdf.trim() ? [{ label: "Diagnóstico", value: diagnostico_pdf }] : []),
+                                            ].map(({ label, value }) => (
+                                                <div key={label} className="rounded-xl border border-slate-200 bg-white px-3 py-2.5">
+                                                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">{label}</p>
+                                                    <p className="mt-0.5 text-[13px] font-semibold text-slate-800">{value}</p>
+                                                </div>
+                                            ))}
+                                            {descripcion_receta.trim() && (
+                                                <div className="rounded-xl border border-slate-200 bg-white px-3 py-2.5">
+                                                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400 mb-1">Vista previa</p>
+                                                    <p className="text-[12px] leading-5 text-slate-600 whitespace-pre-line line-clamp-6">{descripcion_receta}</p>
                                                 </div>
                                             )}
-                                            <div className="rounded-2xl border border-white/70 bg-white/80 px-4 py-3 shadow-sm">
-                                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Vista previa del texto</p>
-                                                <p className="mt-2 whitespace-pre-line text-sm leading-6 text-slate-700">
-                                                    {descripcion_receta || "La descripción de la receta aparecerá aquí para revisar la composición visual del contenido."}
-                                                </p>
-                                            </div>
                                         </div>
                                     </div>
 
-                                    <div className="rounded-[24px] border border-dashed border-slate-300 bg-slate-50/80 p-5">
-                                        <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Estado del formulario</p>
-                                        <div className="mt-3 space-y-3">
-                                            <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
-                                                <span>Selección de profesional</span>
-                                                <span className="font-semibold text-slate-900">
-                                                    {profesional_responsable ? "Completo" : "Pendiente"}
-                                                </span>
-                                            </div>
-                                            <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700">
-                                                <span>Descripción clínica</span>
-                                                <span className="font-semibold text-slate-900">
-                                                    {descripcion_receta.trim() ? "Completa" : "Pendiente"}
-                                                </span>
-                                            </div>
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50/60 overflow-hidden">
+                                        <div className="border-b border-slate-100 px-4 py-3">
+                                            <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">Estado</p>
+                                        </div>
+                                        <div className="space-y-2 p-4">
+                                            {[
+                                                { label: "Profesional", done: !!profesional_responsable },
+                                                { label: "Descripción clínica", done: !!descripcion_receta.trim() },
+                                            ].map(({ label, done }) => (
+                                                <div key={label} className="flex items-center justify-between rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-[13px]">
+                                                    <span className="text-slate-600">{label}</span>
+                                                    <span className={`font-semibold text-[12px] ${done ? "text-emerald-600" : "text-slate-400"}`}>
+                                                        {done ? "✓ Listo" : "Pendiente"}
+                                                    </span>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap gap-2 border-t border-slate-100 px-5 py-4 md:px-6">
+                            {/* Botones */}
+                            <div className="flex flex-wrap gap-2 border-t border-slate-100 px-6 py-4 bg-slate-50/50">
                                 <button
-                                    onClick={volverAFichas}
-                                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all duration-150 hover:border-slate-300 hover:bg-slate-100"
-                                >
-                                    Volver al historial
-                                </button>
-                                <button
-                                    onClick={()=> insertarFichasPaciente(
-                                        nombre_paciente,
-                                        apellido_paciente,
-                                        rut_paciente,
-                                        id_paciente,
-                                        id_profesional,
-                                        profesional_responsable,
-                                        descripcion_receta
-                                    )}
+                                    onClick={() => insertarFichasPaciente(nombre_paciente, apellido_paciente, rut_paciente, id_paciente, id_profesional, profesional_responsable, descripcion_receta)}
                                     type="button"
-                                    className="inline-flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-4 py-2.5 text-sm font-semibold text-white shadow-[0_10px_30px_rgba(79,70,229,0.28)] transition-all duration-150 hover:from-violet-700 hover:to-indigo-700"
+                                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#6E56CF] hover:bg-[#5B47B0] px-4 py-2.5 text-sm font-semibold text-white transition-all"
                                 >
                                     Guardar receta
                                 </button>
                                 <button
                                     onClick={generarPDFReceta}
                                     type="button"
-                                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-900 bg-slate-900 px-4 py-2.5 text-sm font-semibold text-white transition-all duration-150 hover:bg-slate-800"
+                                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-900 bg-slate-900 hover:bg-slate-800 px-4 py-2.5 text-sm font-semibold text-white transition-all"
                                 >
                                     Descargar PDF
                                 </button>
                                 <button
-                                    onClick={()=> actualizarReceta_especifica_paciente(
-                                        nombre_paciente,
-                                        apellido_paciente,
-                                        rut_paciente,
-                                        id_paciente,
-                                        id_profesional,
-                                        profesional_responsable,
-                                        descripcion_receta,
-                                        id_receta
-                                    )}
+                                    onClick={() => actualizarReceta_especifica_paciente(nombre_paciente, apellido_paciente, rut_paciente, id_paciente, id_profesional, profesional_responsable, descripcion_receta, id_receta)}
                                     type="button"
-                                    className="inline-flex items-center gap-1.5 rounded-xl border border-cyan-200 bg-cyan-50 px-4 py-2.5 text-sm font-semibold text-cyan-700 transition-all duration-150 hover:border-cyan-300 hover:bg-cyan-100"
+                                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-700 transition-all"
                                 >
                                     Actualizar
                                 </button>
                                 <button
-                                    onClick={()=>eliminarReceta(
-                                        id_receta
-                                    )}
+                                    onClick={() => eliminarReceta(id_receta)}
                                     type="button"
-                                    className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 px-4 py-2.5 text-sm font-semibold text-rose-700 transition-all duration-150 hover:border-rose-300 hover:bg-rose-100"
+                                    className="inline-flex items-center gap-1.5 rounded-xl border border-rose-200 bg-rose-50 hover:bg-rose-100 px-4 py-2.5 text-sm font-semibold text-rose-700 transition-all"
                                 >
                                     Eliminar
+                                </button>
+                                <button
+                                    onClick={volverAFichas}
+                                    className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-sm font-semibold text-slate-600 transition-all"
+                                >
+                                    Volver al historial
                                 </button>
                             </div>
                         </div>
 
-                        <div className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.08)]">
-                            <div className="border-b border-slate-100 bg-[linear-gradient(135deg,rgba(248,250,252,0.96)_0%,rgba(238,242,255,0.96)_100%)] px-5 py-4 md:px-6">
-                                <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                                    <div>
-                                        <h2 className="text-xl font-bold text-slate-900">Recetas registradas</h2>
-                                    </div>
-
-                                    <div className="w-full lg:max-w-xs">
-                                        <label className="mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
-                                            Filtrar por profesional
-                                        </label>
-                                        <Select
-                                            value={id_profesional_filtro}
-                                            onValueChange={(value)=> setId_profesional_filtro(value)}
-                                        >
-                                            <SelectTrigger className="h-11 w-full rounded-2xl border-slate-200 bg-white px-4 text-sm text-slate-900 shadow-none">
-                                                <SelectValue placeholder="Selecciona un filtro" />
-                                            </SelectTrigger>
-                                            <SelectContent className="rounded-2xl border-slate-200 bg-white">
-                                                <SelectItem value="todas" className="rounded-xl py-2.5">Todas las recetas</SelectItem>
-                                                {listaProfesionales.map((profesional) => (
-                                                    <SelectItem
-                                                        key={`filtro-${profesional.id_profesional}`}
-                                                        value={String(profesional.id_profesional)}
-                                                        className="rounded-xl py-2.5"
-                                                    >
-                                                        {profesional.nombreProfesional}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
+                        {/* ── Recetas registradas ── */}
+                        <div className="rounded-[28px] border border-slate-200 bg-white shadow-sm overflow-hidden">
+                            <div className="flex flex-col gap-4 border-b border-slate-100 px-6 py-4 bg-slate-50/50 sm:flex-row sm:items-center sm:justify-between">
+                                <h2 className="text-sm font-semibold text-slate-800">Recetas registradas</h2>
+                                <div className="w-full sm:max-w-xs">
+                                    <Select value={id_profesional_filtro} onValueChange={(v) => setId_profesional_filtro(v)}>
+                                        <SelectTrigger className="h-10 w-full rounded-xl border-slate-200 bg-white text-sm text-slate-900 shadow-none">
+                                            <SelectValue placeholder="Filtrar por profesional" />
+                                        </SelectTrigger>
+                                        <SelectContent className="rounded-xl border-slate-200 bg-white">
+                                            <SelectItem value="todas" className="rounded-lg py-2">Todas las recetas</SelectItem>
+                                            {listaProfesionales.map((p) => (
+                                                <SelectItem key={`filtro-${p.id_profesional}`} value={String(p.id_profesional)} className="rounded-lg py-2">
+                                                    {p.nombreProfesional}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             </div>
 
-                            <div className="p-5 md:p-6">
-                                <div className="overflow-hidden rounded-[24px] border border-slate-200">
-                                    <Table className="min-w-[760px] bg-white">
-                                        <TableHeader className="bg-[linear-gradient(135deg,#0f172a_0%,#312e81_60%,#0891b2_100%)]">
-                                            <TableRow className="border-0 hover:bg-transparent">
-                                                <TableHead className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white">Fecha</TableHead>
-                                                <TableHead className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white">Paciente</TableHead>
-                                                <TableHead className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white">Profesional</TableHead>
-                                                <TableHead className="px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white">Descripción</TableHead>
-                                                <TableHead className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-[0.18em] text-white">Acción</TableHead>
+                            <div className="overflow-x-auto">
+                                <Table className="min-w-[700px]">
+                                    <TableHeader>
+                                        <TableRow className="bg-slate-50 border-b border-slate-100 hover:bg-slate-50">
+                                            <TableHead className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Fecha</TableHead>
+                                            <TableHead className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Paciente</TableHead>
+                                            <TableHead className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Profesional</TableHead>
+                                            <TableHead className="px-6 py-4 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Descripción</TableHead>
+                                            <TableHead className="px-6 py-4 text-right text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Acción</TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {listaRecetasPaciente.length === 0 ? (
+                                            <TableRow>
+                                                <TableCell colSpan={5} className="py-12 text-center text-sm text-slate-400">
+                                                    No hay recetas registradas para este paciente.
+                                                </TableCell>
                                             </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {listaRecetasPaciente.map((receta) => (
-                                                <TableRow key={receta.id_receta} className="border-slate-100 bg-white hover:bg-slate-50/80">
-                                                    <TableCell className="px-4 py-4 text-sm font-medium text-slate-700">
-                                                        {formatearFechaHora(receta.fecha_receta)}
-                                                    </TableCell>
-                                                    <TableCell className="px-4 py-4 text-sm font-semibold text-slate-900">
-                                                        {`${receta.nombre_paciente}  ${receta.apellido_paciente}`}
-                                                    </TableCell>
-                                                    <TableCell className="px-4 py-4 text-sm text-slate-700">
-                                                        {receta.profesional_responsable}
-                                                    </TableCell>
-                                                    <TableCell className="max-w-[420px] px-4 py-4 text-sm leading-6 whitespace-normal text-slate-600">
-                                                        {receta.descripcion_receta}
-                                                    </TableCell>
-                                                    <TableCell className="px-4 py-4 text-right">
-                                                        <button
-                                                            onClick={()=> seleccionarRecetaEspecifica(
-                                                                receta.id_receta
-                                                            ) }
-                                                            type="button"
-                                                            className="inline-flex items-center gap-2 rounded-xl border border-violet-200 bg-violet-50 px-3 py-2 text-sm font-semibold text-violet-700 transition-all duration-150 hover:border-violet-300 hover:bg-violet-100"
-                                                        >
-                                                            Seleccionar
-                                                        </button>
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </div>
+                                        ) : listaRecetasPaciente.map((receta) => (
+                                            <TableRow key={receta.id_receta} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
+                                                <TableCell className="px-6 py-4 text-[13px] font-medium text-slate-600">{formatearFechaHora(receta.fecha_receta)}</TableCell>
+                                                <TableCell className="px-6 py-4 text-[13px] font-semibold text-slate-900">{receta.nombre_paciente} {receta.apellido_paciente}</TableCell>
+                                                <TableCell className="px-6 py-4 text-[13px] text-slate-600">{receta.profesional_responsable}</TableCell>
+                                                <TableCell className="max-w-[380px] px-6 py-4 text-[13px] leading-5 text-slate-600 whitespace-normal">{receta.descripcion_receta}</TableCell>
+                                                <TableCell className="px-6 py-4 text-right">
+                                                    <button
+                                                        onClick={() => seleccionarRecetaEspecifica(receta.id_receta)}
+                                                        type="button"
+                                                        className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3 py-1.5 text-[12px] font-semibold text-slate-700 transition-all"
+                                                    >
+                                                        Editar
+                                                    </button>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
 
-                                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 px-4 py-3 text-xs text-slate-500">
-                                    <span>
-                                        Filtro visual activo: {id_profesional_filtro === "todas"
-                                        ? "Todas las recetas"
-                                        : listaProfesionales.find(
-                                        (profesional) => String(profesional.id_profesional) === String(id_profesional_filtro)
-                                    )?.nombreProfesional || "Profesional no encontrado"}
-                                    </span>
-                                    <span>{listaRecetasPaciente.length} registros en pantalla</span>
-                                </div>
+                            <div className="flex items-center justify-between border-t border-slate-100 px-6 py-3 text-[11px] text-slate-400">
+                                <span>
+                                    {id_profesional_filtro === "todas" ? "Todas las recetas" : listaProfesionales.find(p => String(p.id_profesional) === String(id_profesional_filtro))?.nombreProfesional || ""}
+                                </span>
+                                <span>{listaRecetasPaciente.length} registros</span>
                             </div>
                         </div>
                     </div>

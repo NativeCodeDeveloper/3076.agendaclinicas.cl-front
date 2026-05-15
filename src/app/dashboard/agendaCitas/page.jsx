@@ -28,7 +28,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import {SelectDinamic} from "@/Componentes/SelectDinamic";
-import { formatRut } from "@/lib/designTokens";
+import { formatRut, cleanRut } from "@/lib/designTokens";
 
 
 export default function AgendaCitas() {
@@ -158,13 +158,14 @@ export default function AgendaCitas() {
 
     async function buscarPorRut(rut) {
         try {
+            const rutLimpio = cleanRut(rut);
             const res = await fetch(`${API}/reservaPacientes/seleccionarRut`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({rut}),
+                body: JSON.stringify({rut: rutLimpio}),
                 mode: "cors"
             });
 

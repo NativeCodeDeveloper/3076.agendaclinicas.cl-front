@@ -71,6 +71,8 @@ export default function CalendarioMensualHoras() {
      * La duración (duracion_min) controla el tamaño de los bloques horarios.
      */
     const [servicioActivo, setServicioActivo] = useState(null);
+    const [dropdownServicios, setDropdownServicios] = useState(false);
+    const dropdownRef = useRef(null);
     const duracionMinutos = Number(servicioActivo?.duracion_min) || 60;
 
     /* ── Slots bloqueados (ya reservados) ── */
@@ -188,6 +190,17 @@ export default function CalendarioMensualHoras() {
             })
             .catch(err => console.error("[Agenda] días bloqueados:", err));
     }, [id_profesional]);
+
+    /** Cierra el dropdown de servicios al hacer clic fuera */
+    useEffect(() => {
+        function handleClickFuera(e) {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setDropdownServicios(false);
+            }
+        }
+        document.addEventListener("mousedown", handleClickFuera);
+        return () => document.removeEventListener("mousedown", handleClickFuera);
+    }, []);
 
     /* ══════════════════════════════════════════
        GENERACIÓN DE BLOQUES HORARIOS
@@ -309,6 +322,7 @@ export default function CalendarioMensualHoras() {
     function seleccionarServicio(tarifa) {
         setServicioActivo(tarifa);
         setServicio(tarifa);  // persiste en contexto global para el formulario
+        setDropdownServicios(false);
         // Reset de selección de fecha/hora
         setFechaSeleccionada(null);
         setHoraInicio(""); setHoraFin(""); setFechaInicio(""); setFechaFinalizacion("");
@@ -435,7 +449,7 @@ export default function CalendarioMensualHoras() {
                     necesita. Esto determina la duración
                     de los bloques del calendario.
                 ════════════════════════════════════ */}
-                <div className="rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-lg shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/70 text-slate-800">
+                <div className="relative z-10 rounded-2xl border border-slate-200 bg-white/80 p-4 shadow-lg shadow-slate-900/5 backdrop-blur supports-[backdrop-filter]:bg-white/70 text-slate-800">
                     <div className="flex items-center justify-between">
                         <h2 className="text-sm font-semibold text-slate-800">Selecciona un servicio</h2>
                         <span className="text-[12px] text-slate-500">Paso 1 de 2</span>
@@ -449,39 +463,83 @@ export default function CalendarioMensualHoras() {
                             Este profesional aún no tiene servicios configurados.
                         </p>
                     ) : (
-                        <div className="mt-3 space-y-2">
-                            {listaServicios.map((tarifa) => {
-                                const activo = servicioActivo?.id_tarifaProfesional === tarifa.id_tarifaProfesional;
-                                return (
-                                    <button
-                                        key={tarifa.id_tarifaProfesional}
-                                        type="button"
-                                        onClick={() => seleccionarServicio(tarifa)}
-                                        className={
-                                            "w-full flex items-center justify-between rounded-xl border p-3 shadow-sm transition hover:shadow-md hover:shadow-slate-900/5 " +
-                                            (activo ? "bg-green-50 border-green-300" : "bg-white/90 border-slate-200 hover:border-gray-400")
-                                        }
+                        <div className="mt-3 relative" ref={dropdownRef}>
+                            {/* Trigger del dropdown */}
+                            <button
+                                type="button"
+                                onClick={() => setDropdownServicios(v => !v)}
+                                className={
+                                    "w-full flex items-center justify-between rounded-xl border p-3 shadow-sm transition hover:shadow-md hover:shadow-slate-900/5 " +
+                                    (servicioActivo ? "bg-green-50 border-green-300" : "bg-white/90 border-slate-200 hover:border-gray-400")
+                                }
+                            >
+                                <div className="text-left">
+                                    {servicioActivo ? (
+                                        <>
+                                            <div className="text-sm font-medium text-slate-800">{servicioActivo.nombreServicio}</div>
+                                            <div className="text-xs text-slate-500">
+                                                {servicioActivo.duracion_min} min
+                                                {Number(servicioActivo.precio) > 0 && ` · $${Number(servicioActivo.precio).toLocaleString("es-CL")}`}
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="text-sm text-slate-400">Elige un servicio...</div>
+                                    )}
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    {servicioActivo && (
+                                        <span className="px-2 py-0.5 rounded-md text-xs font-semibold bg-green-600 text-white">
+                                            Seleccionado
+                                        </span>
+                                    )}
+                                    <svg
+                                        className={"w-4 h-4 text-slate-400 transition-transform duration-200 " + (dropdownServicios ? "rotate-180" : "")}
+                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
                                     >
-                                        {/* Nombre y duración */}
-                                        <div className="text-left">
-                                            <div className="text-sm font-medium text-slate-800">{tarifa.nombreServicio}</div>
-                                            <div className="text-xs text-slate-500">{tarifa.duracion_min} min de atención</div>
-                                        </div>
-                                        {/* Precio + botón */}
-                                        <div className="flex items-center gap-3">
-                                            {Number(tarifa.precio) > 0 && (
-                                                <span className={"text-sm font-semibold " + (activo ? "text-green-700" : "text-slate-700")}>
-                                                    ${Number(tarifa.precio).toLocaleString("es-CL")}
-                                                </span>
-                                            )}
-                                            <span className={"px-3 py-1 rounded-lg text-xs font-semibold shadow-sm transition active:scale-[0.98] " +
-                                                (activo ? "bg-green-600 text-white" : "bg-gray-900 text-white hover:bg-gray-800")}>
-                                                {activo ? "Seleccionado" : "Seleccionar"}
-                                            </span>
-                                        </div>
-                                    </button>
-                                );
-                            })}
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </div>
+                            </button>
+
+                            {/* Lista desplegable */}
+                            {dropdownServicios && (
+                                <div className="absolute z-20 mt-1 w-full rounded-xl border border-slate-200 bg-white shadow-lg shadow-slate-900/10 overflow-hidden">
+                                    {listaServicios.map((tarifa, idx) => {
+                                        const activo = servicioActivo?.id_tarifaProfesional === tarifa.id_tarifaProfesional;
+                                        return (
+                                            <button
+                                                key={tarifa.id_tarifaProfesional}
+                                                type="button"
+                                                onClick={() => seleccionarServicio(tarifa)}
+                                                className={
+                                                    "w-full flex items-center justify-between px-4 py-3 text-left transition hover:bg-slate-50 " +
+                                                    (activo ? "bg-green-50" : "") +
+                                                    (idx < listaServicios.length - 1 ? " border-b border-slate-100" : "")
+                                                }
+                                            >
+                                                <div>
+                                                    <div className={"text-sm font-medium " + (activo ? "text-green-700" : "text-slate-800")}>
+                                                        {tarifa.nombreServicio}
+                                                    </div>
+                                                    <div className="text-xs text-slate-500">{tarifa.duracion_min} min de atención</div>
+                                                </div>
+                                                <div className="flex items-center gap-3 ml-4 shrink-0">
+                                                    {Number(tarifa.precio) > 0 && (
+                                                        <span className={"text-sm font-semibold " + (activo ? "text-green-700" : "text-slate-600")}>
+                                                            ${Number(tarifa.precio).toLocaleString("es-CL")}
+                                                        </span>
+                                                    )}
+                                                    {activo && (
+                                                        <svg className="w-4 h-4 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7"/>
+                                                        </svg>
+                                                    )}
+                                                </div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>
