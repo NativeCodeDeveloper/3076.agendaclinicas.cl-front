@@ -144,8 +144,8 @@ export default function FichaClinica() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8">
-                    
+                <div className="grid grid-cols-1 gap-4 md:gap-8">
+
                     {/* ── Búsqueda de Paciente ── */}
                     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
                         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/30 flex items-center gap-3">
@@ -222,7 +222,7 @@ export default function FichaClinica() {
                         </div>
 
                         <div className="overflow-x-auto">
-                            <Table>
+                            <Table className="min-w-[600px]">
                                 <TableHeader className="bg-slate-50/50">
                                     <TableRow className="hover:bg-transparent border-slate-100">
                                         <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-5 px-6">Identidad del Paciente</TableHead>

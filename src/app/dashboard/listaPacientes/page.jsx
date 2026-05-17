@@ -147,15 +147,15 @@ export default function ListaPacientes() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8">
-                    
+                <div className="grid grid-cols-1 gap-4 md:gap-8">
+
                     {/* Panel de Búsqueda */}
                     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
-                        <div className="px-8 py-5 border-b border-slate-100 bg-slate-50/30">
+                        <div className="px-4 py-4 md:px-8 md:py-5 border-b border-slate-100 bg-slate-50/30">
                             <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Filtros de Localización</h2>
                         </div>
-                        <div className="p-8">
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="p-4 md:p-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
                                 <div className="space-y-3">
                                     <label className="text-[11px] font-bold text-slate-400 uppercase tracking-widest ml-1">Buscar por Nombre</label>
                                     <div className="flex gap-3">
@@ -199,7 +199,7 @@ export default function ListaPacientes() {
 
                     {/* Tabla de Resultados */}
                     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
-                        <div className="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
+                        <div className="px-4 py-4 md:px-8 md:py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
                             <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Base de Datos de Pacientes</h2>
                             <button
                                 onClick={() => listarPacientes()}
@@ -211,7 +211,7 @@ export default function ListaPacientes() {
                         </div>
 
                         <div className="overflow-x-auto">
-                            <Table>
+                            <Table className="min-w-[700px]">
                                 <TableHeader>
                                     <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-100">
                                         <TableHead className="w-[100px] text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5">Perfil</TableHead>

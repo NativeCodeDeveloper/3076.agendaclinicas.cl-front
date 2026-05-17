@@ -356,8 +356,8 @@ export default function AgendaCitas() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 gap-8">
-                    
+                <div className="grid grid-cols-1 gap-4 md:gap-8">
+
                     {/* ── Filtros Avanzados ── */}
                     <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                         <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/30 flex items-center gap-3">
@@ -370,7 +370,7 @@ export default function AgendaCitas() {
                         </div>
                         
                         <div className="p-6">
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
                                 {/* Búsqueda Directa */}
                                 <div className="space-y-4">
                                     <div className="space-y-2">
@@ -471,9 +471,9 @@ export default function AgendaCitas() {
                                 </span>
                             </div>
                             
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-4 w-full md:w-auto">
                                 <Select value={estadoReserva} onValueChange={setestadoReserva}>
-                                    <SelectTrigger className="h-10 w-[220px] bg-white border border-slate-200 rounded-xl text-sm font-semibold">
+                                    <SelectTrigger className="h-10 w-full md:w-[220px] bg-white border border-slate-200 rounded-xl text-sm font-semibold">
                                         <SelectValue placeholder="Filtrar por Estado"/>
                                     </SelectTrigger>
                                     <SelectContent className="rounded-xl border-slate-200">
@@ -491,7 +491,7 @@ export default function AgendaCitas() {
                         </div>
 
                         <div className="overflow-x-auto">
-                            <Table>
+                            <Table className="min-w-[800px]">
                                 <TableHeader className="bg-slate-50/50">
                                     <TableRow className="hover:bg-transparent border-slate-100">
                                         <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-5 text-center">Fecha y Hora</TableHead>

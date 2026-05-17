@@ -236,9 +236,9 @@ const [id_profesional, setId_profesional] = useState("");
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    
-                    {/* ── Columna Izquierda: Formulario (4/12) ── */}
-                    <div className="lg:col-span-4 space-y-6">
+
+                    {/* ── Columna Izquierda: Formulario (5/12) ── */}
+                    <div className="lg:col-span-5 space-y-6">
                         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                             <div className="px-6 py-6 border-b border-slate-100 flex items-center gap-3">
                                 <div className="h-10 w-10 rounded-xl bg-violet-50 flex items-center justify-center text-[#6E56CF]">
@@ -304,8 +304,8 @@ const [id_profesional, setId_profesional] = useState("");
                         </div>
                     </div>
 
-                    {/* ── Columna Derecha: Listado (8/12) ── */}
-                    <div className="lg:col-span-8 space-y-6">
+                    {/* ── Columna Derecha: Listado (7/12) ── */}
+                    <div className="lg:col-span-7 space-y-6">
                         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
                             <div className="px-6 py-6 border-b border-slate-100 flex items-center justify-between">
                                 <div className="flex items-center gap-3">
@@ -328,7 +328,7 @@ const [id_profesional, setId_profesional] = useState("");
                             </div>
 
                             <div className="overflow-x-auto">
-                                <Table>
+                                <Table className="min-w-[700px]">
                                     <TableHeader className="bg-slate-50/50">
                                         <TableRow className="hover:bg-transparent border-slate-100">
                                             <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-4">Profesional</TableHead>

@@ -1789,7 +1789,7 @@ function CalendarioContent() {
                     </div>
                     <div className="flex items-center gap-2">
                         {/* Selector de profesional */}
-                        <div className="relative min-w-[200px]">
+                        <div className="relative w-full sm:min-w-[200px]">
                             <SelectDinamic
                                 value={id_profesional}
                                 onChange={(e) => setId_profesional(e.target.value)}
@@ -2007,10 +2007,12 @@ function CalendarioContent() {
                     <>
                         <div className="fixed inset-0 z-40" onClick={() => setMonthPopover(null)} />
                         <div
-                            className="fixed z-50 bg-white rounded-2xl border border-slate-200 shadow-[0_20px_60px_rgba(15,23,42,0.18)] py-3 px-1 min-w-[230px] max-w-[290px]"
+                            className="fixed z-50 bg-white rounded-2xl border border-slate-200 shadow-[0_20px_60px_rgba(15,23,42,0.18)] py-3 px-1 w-[calc(100vw-32px)] sm:w-auto sm:min-w-[230px] sm:max-w-[290px]"
                             style={{
                                 top: Math.min(monthPopover.y + 10, window.innerHeight - 300),
-                                left: Math.min(Math.max(monthPopover.x - 115, 8), window.innerWidth - 300),
+                                left: window.innerWidth < 640
+                                    ? 16
+                                    : Math.min(Math.max(monthPopover.x - 115, 8), window.innerWidth - 298),
                             }}
                         >
                             {/* Cabecera */}

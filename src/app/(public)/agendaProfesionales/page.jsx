@@ -44,7 +44,7 @@ export default function AgendaProfesionales() {
           <span className="text-sm font-bold tracking-widest text-indigo-600 uppercase mb-4 block">
             Paso 1: Selección de Especialista
           </span>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
             Reserva de Sesiones
           </h1>
           <p className="text-slate-600 text-lg md:text-xl font-light leading-relaxed">

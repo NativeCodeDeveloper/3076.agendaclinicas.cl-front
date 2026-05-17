@@ -446,12 +446,13 @@ export default function TarifaServicio() {
 
 
 
-                <div className="mt-8 rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-                    <div className="space-y-1 mb-5">
+                <div className="mt-8 rounded-[24px] border border-slate-200 bg-white shadow-sm overflow-hidden">
+                    <div className="space-y-1 mb-0 p-6 pb-5 border-b border-slate-100">
                         <h2 className="text-base font-semibold text-slate-900">Tarifas registradas</h2>
                         <p className="text-sm text-slate-500">Lista de valores por consulta y profesional.</p>
                     </div>
-                    <Table>
+                    <div className="overflow-x-auto">
+                    <Table className="min-w-[600px]">
                         <TableHeader>
                             <TableRow className="bg-slate-50 hover:bg-slate-50">
                                 <TableHead className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Profesional</TableHead>
@@ -488,6 +489,7 @@ export default function TarifaServicio() {
                             )}
                         </TableBody>
                     </Table>
+                    </div>
                 </div>
 
             </div>

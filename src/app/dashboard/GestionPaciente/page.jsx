@@ -242,12 +242,12 @@ export default function GestionPaciente() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8 items-start">
                     
                     {/* ── Columna Izquierda: Formulario de Ingreso (8 slots) ── */}
                     <div className="lg:col-span-8 space-y-8">
                         <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
-                            <div className="px-8 py-6 border-b border-slate-100 bg-slate-50/30 flex items-center gap-3">
+                            <div className="px-4 py-4 md:px-8 md:py-6 border-b border-slate-100 bg-slate-50/30 flex items-center gap-3">
                                 <div className="h-10 w-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center text-[#6E56CF] shadow-sm">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
@@ -256,8 +256,8 @@ export default function GestionPaciente() {
                                 <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-[0.15em]">Nuevo Registro de Paciente</h2>
                             </div>
 
-                            <div className="p-8">
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                            <div className="p-4 md:p-8">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-5 md:gap-x-8 md:gap-y-6">
                                     {/* Grupo: Datos Básicos */}
                                     <div className="md:col-span-2 flex items-center gap-4 mb-2">
                                         <div className="h-px flex-1 bg-slate-100"></div>

@@ -57,13 +57,13 @@ export default function ShadcnFechaHora({onChange}) {
         : undefined
 
     return (
-        <div className="flex gap-4">
+        <div className="flex flex-wrap gap-3">
             <div className="flex flex-col gap-3">
                 <Label className="px-1">Fecha</Label>
                 <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                         <Button variant="outline"
-                                className="w-32 justify-between font-normal bg-blue-900 text-white hover:bg-blue-800">
+                                className="w-36 justify-between font-normal bg-blue-900 text-white hover:bg-blue-800">
                             {dateLabel}
                             <ChevronDownIcon/>
                         </Button>

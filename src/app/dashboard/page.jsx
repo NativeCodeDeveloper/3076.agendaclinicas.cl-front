@@ -558,7 +558,7 @@ export default function AgendaCitas() {
             <div className="flex-1 mx-auto w-full max-w-[1600px] px-4 py-6 md:px-8 md:py-10 2xl:max-w-none">
                 
                 {/* ── Header Principal y Resumen ── */}
-                <div className="mb-10 flex flex-col xl:flex-row xl:items-end xl:justify-between gap-8">
+                <div className="mb-6 flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4 xl:gap-8">
                     <div>
                         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Gestión de Operaciones</p>
                         <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
@@ -593,7 +593,7 @@ export default function AgendaCitas() {
                 <div className="space-y-8">
                     {/* Panel de Filtros */}
                     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
-                        <div onClick={() => setMostrarFiltros(!mostrarFiltros)} className="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors">
+                        <div onClick={() => setMostrarFiltros(!mostrarFiltros)} className="px-4 py-4 md:px-8 md:py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between cursor-pointer hover:bg-slate-50 transition-colors">
                             <div className="flex items-center gap-3">
                                 <div className="h-8 w-8 rounded-lg bg-violet-50 text-[#6E56CF] flex items-center justify-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" /></svg>
@@ -603,8 +603,8 @@ export default function AgendaCitas() {
                             <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 text-slate-400 transition-transform ${mostrarFiltros ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
                         </div>
                         {mostrarFiltros && (
-                            <div className="p-8 animate-in fade-in slide-in-from-top-4 duration-300">
-                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                            <div className="p-4 md:p-8 animate-in fade-in slide-in-from-top-4 duration-300">
+                                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Nombre Paciente</label>
@@ -624,7 +624,7 @@ export default function AgendaCitas() {
                                     <div className="space-y-4">
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Rango de Fechas</label>
-                                            <div className="grid grid-cols-2 gap-2">
+                                            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                                                 <Calendar28 label="Inicio" value={fechaInicio} onChange={(v) => setfechaInicio(v)} />
                                                 <Calendar28 label="Termino" value={fechaFinalizacion} onChange={(v) => setfechaFinalizacion(v)} />
                                             </div>
@@ -669,7 +669,7 @@ export default function AgendaCitas() {
                         </div>
 
                         <div className="overflow-x-auto">
-                            <Table>
+                            <Table className="min-w-[700px]">
                                 <TableHeader>
                                     <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-100">
                                         <TableHead className="w-[120px] text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5 pl-8">Horario</TableHead>
