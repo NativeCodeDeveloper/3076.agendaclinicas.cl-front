@@ -17,9 +17,7 @@ import {InfoButton} from "@/Componentes/InfoButton";
 
 
 export default function Dashboard() {
-    return null; // Presupuesto deshabilitado temporalmente
-    // eslint-disable-next-line no-unreachable
-    // USESTATES DE REACT PARA EL CAMBIO DE ESTADOS CON HOOKS
+
     const [productos, setProductos] = useState([]);
     const [productoSeleccionado, setproductoSeleccionado] = useState(null);
     const [listadoCategorias, setlistadoCategorias] = useState([]);

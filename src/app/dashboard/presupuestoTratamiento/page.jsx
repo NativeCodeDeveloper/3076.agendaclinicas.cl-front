@@ -21,7 +21,6 @@ import {InputTextDinamic} from "@/Componentes/InputTextDinamic";
 
 
 export default function PresupuestoTratamiento() {
-    return null; // Presupuesto deshabilitado temporalmente
     const API = process.env.NEXT_PUBLIC_API_URL;
     const EMPRESA_NOMBRE = process.env.NEXT_PUBLIC_EMPRESA_NOMBRE || "Centro Integral ESSENZA";
     const [listaServicios, setListaServicios] = useState([]);

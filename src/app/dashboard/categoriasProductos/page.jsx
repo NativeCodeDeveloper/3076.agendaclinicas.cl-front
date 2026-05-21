@@ -7,7 +7,6 @@ import {useRouter} from "next/navigation";
 
 
 export default function CategoriasProductos() {
-    return null; // Presupuesto deshabilitado temporalmente
     const [categorias, setCategorias] = useState([]);
     const [categoriaSelecionado, setCategoriaSelecionado] = useState(null);
     const [descripcionCategoria,setdescripcionCategoria] = useState("");
