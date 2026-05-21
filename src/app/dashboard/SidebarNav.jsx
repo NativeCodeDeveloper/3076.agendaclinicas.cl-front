@@ -12,7 +12,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import UserMenu from "./UserMenu";
 
 // ── Mapa de rutas por acordeón ─────────────────────────────────────────────
@@ -96,11 +96,22 @@ function SubNavItem({ href, label }) {
 
 function NavAccordion({ id, label, icon, children, openAccordions, onToggle }) {
     const isOpen = openAccordions.has(id);
+    const ref = useRef(null);
+
+    const handleToggle = () => {
+        onToggle(id);
+        if (!isOpen) {
+            requestAnimationFrame(() => {
+                ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            });
+        }
+    };
+
     return (
-        <div className="mt-1">
+        <div className="mt-1" ref={ref}>
             <button
                 type="button"
-                onClick={() => onToggle(id)}
+                onClick={handleToggle}
                 className={`w-full flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-150 ${
                     isOpen
                         ? "bg-[#F3F0FF] text-[#6E56CF]"
@@ -215,10 +226,16 @@ export default function SidebarNav() {
                 <NavGroup label="DOCUMENTOS" />
 
                 <NavAccordion id="documentos" label="Documentos Clínicos" icon={IcoDocumentos} {...accProps}>
-                    <SubNavItem href="/dashboard/presupuestoTratamiento" label="Presupuesto" />
                     <SubNavItem href="/dashboard/recetaRapida" label="Receta Médica" />
                     <SubNavItem href="/dashboard/recetaLentes" label="Receta de Lentes" />
                     <SubNavItem href="/dashboard/examenDocumento" label="Solicitar Exámenes" />
+                </NavAccordion>
+
+
+                <NavAccordion id="fichas" label="Presupuestos" icon={IcoFichas} {...accProps}>
+                    <SubNavItem href="/dashboard/presupuestoTratamiento" label="Generar presupuesto" />
+                    <SubNavItem href="/dashboard/ingresoProductos" label="Tratamientos Disponibles" />
+                    <SubNavItem href="/dashboard/categoriasProductos" label="Categorías de Tratamientos" />
                 </NavAccordion>
 
                 {/* ══ CONFIGURACIÓN ══ */}
@@ -226,14 +243,19 @@ export default function SidebarNav() {
 
                 <NavAccordion id="servicios" label="Agenda & Servicios" icon={IcoAjustes} {...accProps}>
                     <SubNavItem href="/dashboard/profesionales" label="Profesionales" />
-                    <SubNavItem href="/dashboard/ingresoProductos" label="Tratamientos" />
                     <SubNavItem href="/dashboard/serviciosAgendamiento" label="Catálogo de Servicios" />
                     <SubNavItem href="/dashboard/tarifaServicio" label="Tarifas por Profesional" />
                 </NavAccordion>
 
-                <NavAccordion id="fichas" label="Fichas & Clínica" icon={IcoFichas} {...accProps}>
-                    <SubNavItem href="/dashboard/fichasClinicasPlantillas" label="Fichas Clínicas" />
-                    <SubNavItem href="/dashboard/categoriasProductos" label="Categorías" />
+
+
+
+                <NavAccordion id="fichas" label="Diseño de Fichas" icon={IcoFichas} {...accProps}>
+                    <SubNavItem href="/dashboard/fichasClinicasPlantillas" label="Modelos de Fichas" />
+                </NavAccordion>
+
+
+                <NavAccordion id="fichas" label="Crear Examenes" icon={IcoFichas} {...accProps}>
                     <SubNavItem href="/dashboard/examenesClinicos" label="Exámenes Clínicos" />
                 </NavAccordion>
 
