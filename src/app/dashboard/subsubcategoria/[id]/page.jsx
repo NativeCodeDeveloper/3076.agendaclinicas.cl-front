@@ -4,7 +4,6 @@ import {useState,useEffect} from "react";
 import {ShadcnButton} from "@/Componentes/shadcnButton";
 import {toast} from "react-hot-toast";
 import ToasterClient from "@/Componentes/ToasterClient";
-import {router} from "next/client";
 import {
     Table,
     TableBody,
@@ -16,7 +15,6 @@ import {
 } from "@/components/ui/table"
 
 import {ShadcnInput} from "@/Componentes/shadcnInput";
-import {subirImagenCloudflare} from "@/FuncionesTranversales/FuncionesCloudflare.js";
 
 
 export default function SubSubCategoria(){
@@ -269,36 +267,36 @@ export default function SubSubCategoria(){
 
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.14),_transparent_32%),radial-gradient(circle_at_right,_rgba(6,182,212,0.12),_transparent_28%),linear-gradient(180deg,_#f1f5f9_0%,_#f8fafc_55%,_#f1f5f9_100%)]">
+        <div className="min-h-screen bg-[#FAFAFB]">
             <ToasterClient/>
 
             <div className="mx-auto w-full max-w-6xl px-6 py-10">
                 {/* Header */}
-                <div className="mb-8 rounded-[28px] border border-slate-300/80 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm">
+                <div className="mb-8">
                     <div className="flex flex-col gap-2">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700">Administracion</p>
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Administracion</p>
+                        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
                             Gestión de Sub-Subcategorías
                         </h1>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-[13px] text-slate-500">
                             Subcategoría principal:
-                            <span className="ml-2 font-semibold text-teal-700">{nombreSubcategoriaPadre}</span>
+                            <span className="ml-2 font-semibold text-[#6E56CF]">{nombreSubcategoriaPadre}</span>
                         </p>
                     </div>
                 </div>
 
                 {/* Form */}
-                <div className="rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="flex flex-col gap-6">
                         <div className="flex items-start justify-between gap-6">
                             <div className="space-y-1">
                                 <h2 className="text-base font-semibold text-slate-900">
                                     Ingreso y edición
-                                    <span className="ml-2 text-indigo-700">(Sub-Subcategoría)</span>
+                                    <span className="ml-2 text-[#6E56CF]">(Sub-Subcategoría)</span>
                                 </h2>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-[13px] text-slate-500">
                                     Sub-Subcategoría seleccionada:
-                                    <span className="ml-2 inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
+                                    <span className="ml-2 inline-flex items-center rounded-full bg-[#F3F0FF] px-3 py-1 text-xs font-semibold text-[#6E56CF] ring-1 ring-inset ring-[#DDD6FE]">
                                         {idSubSubCategoriaSeleccionada}
                                     </span>
                                 </p>
@@ -307,7 +305,7 @@ export default function SubSubCategoria(){
 
                         <div className="grid grid-cols-1 gap-3">
                             <label className="text-sm font-medium text-slate-700">Nombre de sub-subcategoría</label>
-                            <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
+                            <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 focus-within:border-[#6E56CF] focus-within:ring-2 focus-within:ring-violet-100">
                                 <ShadcnInput
                                     value={descripcionSubSubCategoria}
                                     onChange={(e)=> setDescripcionSubSubCategorias(e.target.value)}
@@ -333,7 +331,7 @@ export default function SubSubCategoria(){
 
                                         funcion={()=>insertarSubSubCategoria(descripcionSubSubCategoria, id)}
 
-                                        className="w-full rounded-xl bg-gradient-to-r from-indigo-700 to-teal-600 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-800 hover:to-teal-700"
+                                        className="w-full rounded-xl bg-[#6E56CF] text-white shadow-sm hover:bg-[#5B47B0]"
                                     />
                                 </div>
 
@@ -352,7 +350,7 @@ export default function SubSubCategoria(){
                                     <ShadcnButton
                                         nombre={'Actualizar Sub-Subcategoría'}
                                         funcion={()=> actualizarSubSubCategoria(descripcionSubSubCategoria, idSubSubCategoriaSeleccionada)}
-                                        className="w-full rounded-xl bg-gradient-to-r from-indigo-700 to-teal-600 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-800 hover:to-teal-700"
+                                        className="w-full rounded-xl bg-[#6E56CF] text-white shadow-sm hover:bg-[#5B47B0]"
                                     />
                                 )}
                             </div>
@@ -361,26 +359,26 @@ export default function SubSubCategoria(){
                 </div>
 
                 {/* Table */}
-                <div className="mt-10 rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="mt-10 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="mb-4 flex flex-col gap-1">
                         <h3 className="text-base font-semibold text-slate-900">Sub-Subcategorías</h3>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-[13px] text-slate-500">
                             Lista asociada a
-                            <span className="ml-2 font-semibold text-teal-700">{nombreSubcategoriaPadre}</span>
+                            <span className="ml-2 font-semibold text-[#6E56CF]">{nombreSubcategoriaPadre}</span>
                         </p>
                     </div>
 
                     <div className="overflow-hidden rounded-xl border border-slate-200">
                         <Table>
-                            <TableCaption className="caption-bottom bg-slate-50 py-3 text-sm text-slate-600">
+                            <TableCaption className="caption-bottom bg-slate-50 py-3 text-[13px] text-slate-500">
                                 Lista de Sub-Subcategorías asociadas a subcategoría
-                                <span className='ml-2 font-bold text-teal-700'>{nombreSubcategoriaPadre}</span>
+                                <span className='ml-2 font-bold text-[#6E56CF]'>{nombreSubcategoriaPadre}</span>
                             </TableCaption>
                             <TableHeader>
-                                <TableRow className="bg-[linear-gradient(135deg,#312e81_0%,#0f766e_100%)] hover:bg-[linear-gradient(135deg,#312e81_0%,#0f766e_100%)]">
-                                    <TableHead className="text-white">Sub-Subcategoría</TableHead>
-                                    <TableHead className="text-white">Acciones</TableHead>
-                                    <TableHead className="text-white"></TableHead>
+                                <TableRow className="bg-slate-50 hover:bg-slate-50">
+                                    <TableHead className="text-slate-400">Sub-Subcategoría</TableHead>
+                                    <TableHead className="text-slate-400">Acciones</TableHead>
+                                    <TableHead className="text-slate-400"></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -388,7 +386,7 @@ export default function SubSubCategoria(){
                                     listaSubSubCategorias.map((subsubcategoria) => (
                                         <TableRow
                                             key={subsubcategoria.id_subsubcategoria}
-                                            className="transition-colors hover:bg-indigo-50/60"
+                                            className="transition-colors hover:bg-slate-50"
                                         >
 
 
@@ -401,7 +399,7 @@ export default function SubSubCategoria(){
                                                 <ShadcnButton
                                                     nombre={'Seleccionar para Edición'}
                                                     funcion={()=> seleccionarSubSubCategoria(subsubcategoria.id_subsubcategoria)}
-                                                    className="rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                                                    className="rounded-lg border border-[#DDD6FE] bg-[#F3F0FF] text-[#6E56CF] hover:bg-[#EDE9FE]"
                                                 />
                                             </TableCell>
 

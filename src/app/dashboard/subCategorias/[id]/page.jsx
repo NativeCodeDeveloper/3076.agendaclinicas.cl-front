@@ -4,13 +4,11 @@ import {useState,useEffect} from "react";
 import {ShadcnButton} from "@/Componentes/shadcnButton";
 import {toast} from "react-hot-toast";
 import ToasterClient from "@/Componentes/ToasterClient";
-import {router} from "next/client";
 import {
     Table,
     TableBody,
     TableCaption,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow,
@@ -264,36 +262,36 @@ export default function SubCategoria(){
 
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(99,102,241,0.14),_transparent_32%),radial-gradient(circle_at_right,_rgba(6,182,212,0.12),_transparent_28%),linear-gradient(180deg,_#f1f5f9_0%,_#f8fafc_55%,_#f1f5f9_100%)]">
+        <div className="min-h-screen bg-[#FAFAFB]">
             <ToasterClient/>
 
             <div className="mx-auto w-full max-w-6xl px-6 py-10">
                 {/* Header */}
-                <div className="mb-8 rounded-[28px] border border-slate-300/80 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.12)] backdrop-blur-sm">
+                <div className="mb-8">
                     <div className="flex flex-col gap-2">
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-indigo-700">Administracion</p>
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Administracion</p>
+                        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
                             Gestión de Subcategorías
                         </h1>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-[13px] text-slate-500">
                             Categoría principal:
-                            <span className="ml-2 font-semibold text-teal-700">{descripcionCategoria}</span>
+                            <span className="ml-2 font-semibold text-[#6E56CF]">{descripcionCategoria}</span>
                         </p>
                     </div>
                 </div>
 
                 {/* Form */}
-                <div className="rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="flex flex-col gap-6">
                         <div className="flex items-start justify-between gap-6">
                             <div className="space-y-1">
                                 <h2 className="text-base font-semibold text-slate-900">
                                     Ingreso y edición
-                                    <span className="ml-2 text-indigo-700">(Subcategoría)</span>
+                                    <span className="ml-2 text-[#6E56CF]">(Subcategoría)</span>
                                 </h2>
-                                <p className="text-sm text-slate-600">
+                                <p className="text-[13px] text-slate-500">
                                     Subcategoría seleccionada:
-                                    <span className="ml-2 inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-inset ring-indigo-100">
+                                    <span className="ml-2 inline-flex items-center rounded-full bg-[#F3F0FF] px-3 py-1 text-xs font-semibold text-[#6E56CF] ring-1 ring-inset ring-[#DDD6FE]">
                                         {id}
                                     </span>
                                 </p>
@@ -302,7 +300,7 @@ export default function SubCategoria(){
 
                         <div className="grid grid-cols-1 gap-3">
                             <label className="text-sm font-medium text-slate-700">Nombre de subcategoría</label>
-                            <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100">
+                            <div className="rounded-xl border border-slate-200 bg-white px-3 py-2 focus-within:border-[#6E56CF] focus-within:ring-2 focus-within:ring-violet-100">
                                 <ShadcnInput
                                     value={descripcionSubcategoria}
                                     onChange={(e)=> setDescripcionSubcategoria(e.target.value)}
@@ -320,7 +318,7 @@ export default function SubCategoria(){
                                     <ShadcnButton
                                         nombre={'Ingresar Subcategoria'}
                                         funcion={()=> insertarSubcategoria(descripcionSubcategoria,id)}
-                                        className="w-full rounded-xl bg-gradient-to-r from-indigo-700 to-teal-600 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-800 hover:to-teal-700"
+                                        className="w-full rounded-xl bg-[#6E56CF] text-white shadow-sm hover:bg-[#5B47B0]"
                                     />
                                 </div>
                                 <div className="w-full sm:w-auto">
@@ -337,7 +335,7 @@ export default function SubCategoria(){
                                     <ShadcnButton
                                         nombre={'Actualizar Subcategoria'}
                                         funcion={()=> actualizarSubCategoria(descripcionSubcategoria,id,id_subcategoria)}
-                                        className="w-full rounded-xl bg-gradient-to-r from-indigo-700 to-teal-600 text-white shadow-md shadow-indigo-500/20 hover:from-indigo-800 hover:to-teal-700"
+                                        className="w-full rounded-xl bg-[#6E56CF] text-white shadow-sm hover:bg-[#5B47B0]"
                                     />
                                 )}
                             </div>
@@ -346,33 +344,33 @@ export default function SubCategoria(){
                 </div>
 
                 {/* Table */}
-                <div className="mt-10 rounded-[24px] border border-slate-300 bg-white p-6 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="mt-10 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="mb-4 flex flex-col gap-1">
                         <h3 className="text-base font-semibold text-slate-900">Subcategorías</h3>
-                        <p className="text-sm text-slate-600">
+                        <p className="text-[13px] text-slate-500">
                             Lista asociada a
-                            <span className="ml-2 font-semibold text-teal-700">{descripcionCategoria}</span>
+                            <span className="ml-2 font-semibold text-[#6E56CF]">{descripcionCategoria}</span>
                         </p>
                     </div>
 
                     <div className="overflow-hidden rounded-xl border border-slate-200">
                         <Table>
-                            <TableCaption className="caption-bottom bg-slate-50 py-3 text-sm text-slate-600">
+                            <TableCaption className="caption-bottom bg-slate-50 py-3 text-[13px] text-slate-500">
                                 Lista de Subcategorías asociadas a categoría
-                                <span className='ml-2 font-bold text-teal-700'>{descripcionCategoria}</span>
+                                <span className='ml-2 font-bold text-[#6E56CF]'>{descripcionCategoria}</span>
                             </TableCaption>
                             <TableHeader>
-                                <TableRow className="bg-[linear-gradient(135deg,#312e81_0%,#0f766e_100%)] hover:bg-[linear-gradient(135deg,#312e81_0%,#0f766e_100%)]">
-                                    <TableHead className="text-white">Subcategoría</TableHead>
-                                    <TableHead className="text-white">Acciones</TableHead>
-                                    <TableHead className="text-white"></TableHead>
+                                <TableRow className="bg-slate-50 hover:bg-slate-50">
+                                    <TableHead className="text-slate-400">Subcategoría</TableHead>
+                                    <TableHead className="text-slate-400">Acciones</TableHead>
+                                    <TableHead className="text-slate-400"></TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {listaSubcategorias.map((subcategoria) => (
                                     <TableRow
                                         key={subcategoria.id_subcategoria}
-                                        className="transition-colors hover:bg-indigo-50/60"
+                                        className="transition-colors hover:bg-slate-50"
                                     >
                                         <TableCell className="font-medium text-slate-900">
                                             {subcategoria.descripcionCategoria}
@@ -382,7 +380,7 @@ export default function SubCategoria(){
                                             <ShadcnButton
                                                 nombre={'Seleccionar para Edicion'}
                                                 funcion={()=> seleccionarSubcategoria(subcategoria.id_subcategoria)}
-                                                className="rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
+                                                className="rounded-lg border border-[#DDD6FE] bg-[#F3F0FF] text-[#6E56CF] hover:bg-[#EDE9FE]"
                                             />
                                         </TableCell>
 
@@ -398,7 +396,7 @@ export default function SubCategoria(){
                                             <ShadcnButton
                                                 nombre={'Sub-Subcategorias'}
                                                 funcion={(e)=> irSubSubCategoria(subcategoria.id_subcategoria) }
-                                                className="rounded-lg border border-teal-200 bg-teal-50 text-teal-700 hover:bg-teal-100"
+                                                className="rounded-lg border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100"
                                             />
                                         </TableCell>
                                     </TableRow>

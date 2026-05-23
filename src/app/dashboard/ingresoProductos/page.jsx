@@ -411,52 +411,36 @@ useEffect(() => {
             <ToasterClient/>
 
             {/* ── HEADER ── */}
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 mt-14">
-                <div className="relative overflow-hidden rounded-[28px] border border-slate-300 bg-white p-6 shadow-[0_16px_40px_rgba(15,23,42,0.12)]">
-                    {/* Gradient blob decorativo */}
-                    <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-gradient-to-br from-teal-400/20 to-indigo-400/20 blur-3xl" />
-                    <div className="pointer-events-none absolute -left-10 -bottom-10 h-36 w-36 rounded-full bg-gradient-to-tr from-indigo-400/10 to-teal-400/10 blur-2xl" />
-
-                    <div className="relative flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                        <div>
-                            <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-teal-50 to-indigo-50 px-3 py-1 text-[11px] font-semibold text-indigo-700 ring-1 ring-indigo-100">
-                                <span className="relative flex h-1.5 w-1.5">
-                                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-teal-400 opacity-75" />
-                                    <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-teal-500" />
-                                </span>
-                                Panel de administracion
-                            </span>
-                            <h1 className="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
-                                Gestion de Prestaciones y Servicios
-                            </h1>
-                            <p className="mt-1.5 max-w-xl text-sm text-slate-500 leading-relaxed">
-                                Cree y administre los productos y servicios que se mostraran en su catalogo.
-                            </p>
-                        </div>
-
-                        {/* KPI rapido + Info */}
-                        <div className="flex items-center gap-3">
-                            <div className="rounded-xl border border-slate-300 bg-slate-50/80 px-4 py-2.5 text-center">
-                                <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Total</p>
-                                <p className="text-lg font-bold text-slate-900">{productos.length}</p>
-                            </div>
-                            <InfoButton informacion={"Los servicios, prestaciones y productos que ingrese en este modulo seran los que estaran disponibles para la generacion de presupuestos de tratamiento. Es fundamental que cada registro este completo para que el sistema funcione correctamente.\n\nTodos los campos son obligatorios: debe seleccionar la Categoria Principal, la Sub-Categoria, la Sub-Sub Categoria, ingresar el Nombre del servicio o producto, una Descripcion y el Valor. Si algun campo queda vacio, el sistema no permitira guardar el registro.\n\nPara editar un servicio o producto ya existente, busquelo en la tabla inferior utilizando los filtros por categoria o por nombre. Una vez localizado, presione el boton \"Editar\" en la fila correspondiente. Los datos del registro se cargaran automaticamente en el formulario superior, donde podra modificar la informacion que necesite. Al terminar, presione el boton \"Actualizar\" para guardar los cambios.\n\nPara ingresar un nuevo registro, simplemente complete todos los campos del formulario y presione \"Ingresar\". Si desea limpiar el formulario en cualquier momento, presione el boton \"Limpiar\"."}/>
-                        </div>
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+                <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Presupuestos</p>
+                        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-900">
+                            Gestion de Prestaciones y Servicios
+                        </h1>
+                        <p className="mt-1 max-w-xl text-[13px] text-slate-500">
+                            Cree y administre los productos y servicios disponibles para presupuestos de tratamiento.
+                        </p>
                     </div>
 
-                    {/* Linea gradiente */}
-                    <div className="mt-5 h-px w-full bg-gradient-to-r from-teal-300 via-indigo-300 to-teal-300 opacity-60" />
+                    <div className="flex items-center gap-3">
+                        <div className="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-center shadow-sm">
+                            <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400">Total</p>
+                            <p className="text-lg font-bold text-slate-900">{productos.length}</p>
+                        </div>
+                        <InfoButton informacion={"Los servicios, prestaciones y productos que ingrese en este modulo seran los que estaran disponibles para la generacion de presupuestos de tratamiento. Es fundamental que cada registro este completo para que el sistema funcione correctamente.\n\nTodos los campos son obligatorios: debe seleccionar la Categoria Principal, la Sub-Categoria, la Sub-Sub Categoria, ingresar el Nombre del servicio o producto, una Descripcion y el Valor. Si algun campo queda vacio, el sistema no permitira guardar el registro.\n\nPara editar un servicio o producto ya existente, busquelo en la tabla inferior utilizando los filtros por categoria o por nombre. Una vez localizado, presione el boton \"Editar\" en la fila correspondiente. Los datos del registro se cargaran automaticamente en el formulario superior, donde podra modificar la informacion que necesite. Al terminar, presione el boton \"Actualizar\" para guardar los cambios.\n\nPara ingresar un nuevo registro, simplemente complete todos los campos del formulario y presione \"Ingresar\". Si desea limpiar el formulario en cualquier momento, presione el boton \"Limpiar\"."}/>
+                    </div>
                 </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
 
                 {/* ── FORMULARIO ── */}
-                <div className="rounded-[24px] border border-slate-300 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                <div className="rounded-[28px] border border-slate-200 bg-white shadow-sm">
                     {/* Cabecera del card */}
-                    <div className="border-b border-slate-200 bg-slate-100/80 px-5 py-3 flex items-center gap-2.5">
+                    <div className="border-b border-slate-200 bg-slate-50/70 px-5 py-3 flex items-center gap-2.5">
                         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6E56CF]">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-white">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 text-white">
                                 <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                             </svg>
                         </div>
@@ -467,7 +451,7 @@ useEffect(() => {
                             <p className="text-[11px] text-slate-400">Complete los campos requeridos</p>
                         </div>
                         {id_producto && (
-                            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-indigo-50 px-2.5 py-0.5 text-[11px] font-semibold text-indigo-700 ring-1 ring-indigo-200">
+                            <span className="ml-auto inline-flex items-center gap-1 rounded-full bg-[#F3F0FF] px-2.5 py-0.5 text-[11px] font-semibold text-[#6E56CF] ring-1 ring-[#DDD6FE]">
                                 Editando ID: {id_producto}
                             </span>
                         )}
@@ -484,7 +468,7 @@ useEffect(() => {
                                 <select
                                     value={categoriaProducto}
                                     onChange={(e) => setcategoriaProducto(e.target.value)}
-                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 cursor-pointer placeholder:text-slate-400"
+                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 cursor-pointer placeholder:text-slate-400"
                                 >
                                     <option value="" disabled>Seleccione una categoria</option>
                                     {listadoCategorias.map((categoria) => (
@@ -503,7 +487,7 @@ useEffect(() => {
                                 <select
                                     value={subcategorias}
                                     onChange={(e) => setsubcategorias(e.target.value)}
-                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 cursor-pointer placeholder:text-slate-400"
+                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 cursor-pointer placeholder:text-slate-400"
                                 >
                                     <option value="" disabled>Seleccione</option>
                                     {listaSubcategorias.map((subcategoria) => (
@@ -522,7 +506,7 @@ useEffect(() => {
                                 <select
                                     value={subsubcategorias}
                                     onChange={(e) => setsubsubcategorias(e.target.value)}
-                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 cursor-pointer placeholder:text-slate-400"
+                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 cursor-pointer placeholder:text-slate-400"
                                 >
                                     <option value="" disabled>Seleccione</option>
                                     {listaSubSubCategorias.map((subsubcategoria) => (
@@ -545,7 +529,7 @@ useEffect(() => {
                                         value={valorProducto}
                                         onChange={(e) => setvalorProducto(e.target.value)}
                                         placeholder="0"
-                                        className="w-full rounded-lg border border-slate-200 bg-white pl-8 pr-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 placeholder:text-slate-400"
+                                        className="w-full rounded-lg border border-slate-200 bg-white pl-8 pr-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 placeholder:text-slate-400"
                                     />
                                 </div>
                             </div>
@@ -560,7 +544,7 @@ useEffect(() => {
                                     value={tituloProducto}
                                     onChange={(e) => settituloProducto(e.target.value)}
                                     placeholder="Ej: Limpieza facial profunda"
-                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 placeholder:text-slate-400"
+                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 placeholder:text-slate-400"
                                 />
                             </div>
 
@@ -574,7 +558,7 @@ useEffect(() => {
                                     onChange={(e) => setdescripcionProducto(e.target.value)}
                                     rows={3}
                                     placeholder="Describa brevemente el servicio o producto..."
-                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 resize-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 placeholder:text-slate-400"
+                                    className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-700 shadow-sm outline-none transition duration-200 resize-none focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 placeholder:text-slate-400"
                                 />
                             </div>
                         </div>
@@ -582,10 +566,11 @@ useEffect(() => {
                         {/* Botones de accion */}
                         <div className="mt-6 flex flex-wrap items-center gap-2.5">
                             <button
+                                type="button"
                                 onClick={() => insertarProducto(tituloProducto, descripcionProducto, valorProducto, categoriaProducto, subcategorias, subsubcategorias)}
-                                className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-700 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-200 hover:from-indigo-800 hover:to-teal-700 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[0.98] disabled:opacity-60"
+                                className="inline-flex items-center gap-1.5 rounded-lg bg-[#6E56CF] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 active:scale-[0.98] disabled:opacity-60"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-4">
                                     <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                                 </svg>
                                 Ingresar
@@ -593,10 +578,11 @@ useEffect(() => {
 
                             {id_producto && (
                                 <button
+                                    type="button"
                                     onClick={() => actualizarProducto(tituloProducto, descripcionProducto, valorProducto, categoriaProducto, subcategorias, subsubcategorias, id_producto)}
-                                    className="inline-flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-indigo-700 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-200 hover:from-indigo-800 hover:to-teal-700 hover:shadow-lg hover:shadow-indigo-500/30 active:scale-[0.98]"
+                                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#6E56CF] px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 active:scale-[0.98]"
                                 >
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-4">
                                         <path d="m5.433 13.917 1.262-3.155A4 4 0 0 1 7.58 9.42l6.92-6.918a2.121 2.121 0 0 1 3 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 0 1-.65-.65Z" />
                                         <path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0 0 10 3H4.75A2.75 2.75 0 0 0 2 5.75v9.5A2.75 2.75 0 0 0 4.75 18h9.5A2.75 2.75 0 0 0 17 15.25V10a.75.75 0 0 0-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5Z" />
                                     </svg>
@@ -605,8 +591,9 @@ useEffect(() => {
                             )}
 
                             <button
+                                type="button"
                                 onClick={() => limpiarFormulario()}
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:bg-slate-200 hover:border-slate-400 active:scale-[0.98]"
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition duration-200 hover:bg-slate-200 hover:border-slate-400 active:scale-[0.98]"
                             >
                                 Limpiar
                             </button>
@@ -619,17 +606,17 @@ useEffect(() => {
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
 
                     {/* Filtro por categoria */}
-                    <div className="rounded-[24px] border border-slate-300 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                    <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
                         <div className="flex items-center gap-2 mb-3">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-indigo-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-indigo-500">
+                            <div className="flex size-6 items-center justify-center rounded-md bg-[#EDE9FE]">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 text-[#6E56CF]">
                                     <path fillRule="evenodd" d="M2.628 1.601C5.028 1.206 7.49 1 10 1s4.973.206 7.372.601a.75.75 0 0 1 .628.74v2.288a2.25 2.25 0 0 1-.659 1.59l-4.682 4.683a2.25 2.25 0 0 0-.659 1.59v3.037c0 .684-.31 1.33-.844 1.757l-1.937 1.55A.75.75 0 0 1 8 18.25v-5.757a2.25 2.25 0 0 0-.659-1.591L2.659 6.22A2.25 2.25 0 0 1 2 4.629V2.34a.75.75 0 0 1 .628-.74Z" clipRule="evenodd" />
                                 </svg>
                             </div>
                             <h3 className="text-sm font-semibold text-slate-800">Filtrar por categoria</h3>
                         </div>
                         <select
-                            className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 cursor-pointer"
+                            className="w-full rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition duration-200 focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 cursor-pointer"
                             value={categoriaProductoSeleccion}
                             onChange={(e) => {
                                 const value = e.target.value;
@@ -647,10 +634,10 @@ useEffect(() => {
                     </div>
 
                     {/* Busqueda por similitud */}
-                    <div className="rounded-[24px] border border-slate-300 bg-white p-5 shadow-[0_18px_50px_rgba(15,23,42,0.12)]">
+                    <div className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
                         <div className="flex items-center gap-2 mb-3">
-                            <div className="flex h-6 w-6 items-center justify-center rounded-md bg-teal-50">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-teal-500">
+                            <div className="flex size-6 items-center justify-center rounded-md bg-emerald-50">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 text-emerald-600">
                                     <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clipRule="evenodd" />
                                 </svg>
                             </div>
@@ -661,12 +648,12 @@ useEffect(() => {
                                 onChange={(e) => settituloSimilar(e.target.value)}
                                 type="text"
                                 placeholder="Ej: limpieza, masaje..."
-                                className="flex-1 rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition duration-200 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-500/20 hover:border-slate-300 placeholder:text-slate-400"
+                                className="flex-1 rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm shadow-sm outline-none transition duration-200 focus:border-[#6E56CF] focus:ring-2 focus:ring-violet-100 hover:border-slate-300 placeholder:text-slate-400"
                             />
                             <button
-                                onClick={() => buscarSimilar(tituloSimilar)}
                                 type="button"
-                                className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-indigo-700 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-indigo-500/20 transition duration-200 hover:from-indigo-800 hover:to-teal-700 hover:shadow-lg active:scale-[0.98]"
+                                onClick={() => buscarSimilar(tituloSimilar)}
+                                className="inline-flex items-center justify-center rounded-lg bg-[#6E56CF] px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition duration-200 active:scale-[0.98]"
                             >
                                 Buscar
                             </button>
@@ -676,12 +663,12 @@ useEffect(() => {
 
 
                 {/* ── TABLA ── */}
-                <div className="mt-8 rounded-[24px] border border-slate-300 bg-white shadow-[0_18px_50px_rgba(15,23,42,0.12)] overflow-hidden">
+                <div className="mt-8 rounded-[28px] border border-slate-200 bg-white shadow-sm overflow-hidden">
                     {/* Cabecera de tabla */}
-                    <div className="border-b border-slate-200 bg-slate-100/80 px-5 py-3 flex items-center justify-between">
+                    <div className="border-b border-slate-200 bg-slate-50/70 px-5 py-3 flex items-center justify-between">
                         <div className="flex items-center gap-2.5">
                             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#6E56CF]">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 text-white">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5 text-white">
                                     <path fillRule="evenodd" d="M.99 5.24A2.25 2.25 0 0 1 3.25 3h13.5A2.25 2.25 0 0 1 19 5.25l.01 9.5A2.25 2.25 0 0 1 16.76 17H3.26A2.25 2.25 0 0 1 1 14.75l-.01-9.5Zm8.26 9.52v-.625a.75.75 0 0 0-.75-.75H3.25a.75.75 0 0 0-.75.75v.615c0 .414.336.75.75.75h5.373a.75.75 0 0 0 .627-.74Zm1.5 0a.75.75 0 0 0 .627.74h5.373a.75.75 0 0 0 .75-.75v-.615a.75.75 0 0 0-.75-.75H11.5a.75.75 0 0 0-.75.75v.625Zm6.75-5.995v-.625a.75.75 0 0 0-.75-.75H11.5a.75.75 0 0 0-.75.75v.625c0 .414.336.75.75.75h5.25a.75.75 0 0 0 .75-.75Zm-8.5 0v-.625a.75.75 0 0 0-.75-.75H3.25a.75.75 0 0 0-.75.75v.625c0 .414.336.75.75.75H8.5a.75.75 0 0 0 .75-.75Z" clipRule="evenodd" />
                                 </svg>
                             </div>
@@ -689,15 +676,16 @@ useEffect(() => {
                         </div>
                         <div className="flex items-center gap-2">
                             <button
+                                type="button"
                                 onClick={() => { cargarProductos(); toast.success("Listado actualizado"); }}
-                                className="inline-flex items-center gap-1.5 rounded-lg border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 active:scale-[0.97]"
+                                className="inline-flex items-center gap-1.5 rounded-lg border border-[#DDD6FE] bg-[#F3F0FF] px-3 py-1.5 text-xs font-semibold text-[#6E56CF] transition hover:bg-[#EDE9FE] active:scale-[0.97]"
                             >
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5">
                                     <path fillRule="evenodd" d="M15.312 11.424a5.5 5.5 0 0 1-9.201 2.466l-.312-.311h2.451a.75.75 0 0 0 0-1.5H4.5a.75.75 0 0 0-.75.75v3.75a.75.75 0 0 0 1.5 0v-2.033l.364.363a7 7 0 0 0 11.712-3.138.75.75 0 0 0-1.449-.39Zm-10.624-2.85a5.5 5.5 0 0 1 9.201-2.465l.312.31H11.75a.75.75 0 0 0 0 1.5h3.75a.75.75 0 0 0 .75-.75V3.42a.75.75 0 0 0-1.5 0v2.033l-.364-.364A7 7 0 0 0 3.239 8.227a.75.75 0 0 0 1.449.39Z" clipRule="evenodd" />
                                 </svg>
                                 Recargar todo
                             </button>
-                            <span className="inline-flex h-6 min-w-[24px] items-center justify-center rounded-full bg-indigo-100 px-2 text-[11px] font-bold text-indigo-700">
+                            <span className="inline-flex h-6 min-w-[24px] items-center justify-center rounded-full bg-[#F3F0FF] px-2 text-[11px] font-bold text-[#6E56CF]">
                                 {productos.length}
                             </span>
                         </div>
@@ -725,7 +713,7 @@ useEffect(() => {
                                 {productos.map((producto) => (
                                     <TableRow
                                         key={producto.id_producto}
-                                        className={`transition-colors duration-150 hover:bg-indigo-50/50 cursor-pointer ${id_producto === producto.id_producto ? "bg-indigo-50/60 border-l-2 border-l-indigo-400" : ""}`}
+                                        className={`transition-colors duration-150 hover:bg-slate-50 cursor-pointer ${id_producto === producto.id_producto ? "bg-[#F3F0FF] border-l-2 border-l-[#6E56CF]" : ""}`}
                                     >
                                         <TableCell className="py-3 px-4 font-medium text-slate-800 max-w-[200px] truncate">
                                             {producto.tituloProducto}
@@ -742,12 +730,14 @@ useEffect(() => {
                                         <TableCell className="py-3 px-4">
                                             <div className="flex items-center justify-center gap-1.5">
                                                 <button
+                                                    type="button"
                                                     onClick={() => cargarProductoEspecifico(producto.id_producto)}
-                                                    className="inline-flex items-center justify-center rounded-md border border-indigo-200 bg-indigo-50 px-2.5 py-1.5 text-xs font-semibold text-indigo-700 transition hover:bg-indigo-100 active:scale-[0.97]"
+                                                    className="inline-flex items-center justify-center rounded-md border border-[#DDD6FE] bg-[#F3F0FF] px-2.5 py-1.5 text-xs font-semibold text-[#6E56CF] transition hover:bg-[#EDE9FE] active:scale-[0.97]"
                                                 >
                                                     Editar
                                                 </button>
                                                 <button
+                                                    type="button"
                                                     onClick={() => eliminarProducto(producto.id_producto)}
                                                     className="inline-flex items-center justify-center rounded-md border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs font-semibold text-red-600 transition hover:bg-red-100 active:scale-[0.97]"
                                                 >

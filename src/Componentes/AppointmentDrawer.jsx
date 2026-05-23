@@ -344,6 +344,8 @@ function FormSection({
           3. Actualizar endpoints insertarReserva y actualizarReservacion para aceptar estos campos.
           4. Retornar ambos campos en todos los SELECTs de reservas.
 
+           ── Fin bloque comentado ── */}
+
       {mode !== "bloqueo" && (
         <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3 space-y-3">
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">
@@ -421,7 +423,7 @@ function FormSection({
           </div>
         </div>
       )}
-      ── Fin bloque comentado ── */}
+     
 
       {/* Bloqueo rápido */}
       {mode === "create" && (
