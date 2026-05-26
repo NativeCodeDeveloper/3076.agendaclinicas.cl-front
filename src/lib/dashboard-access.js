@@ -69,7 +69,6 @@ const routeMatchersByRole = {
     /^\/dashboard\/profesionales$/,
     /^\/dashboard\/serviciosAgendamiento$/,
     /^\/dashboard\/tarifaServicio$/,
-    /^\/dashboard\/edicionPlantillaEspecifica\/[^/]+$/,
   ],
   "centro-estetico": [
     /^\/dashboard$/,
@@ -233,30 +232,30 @@ const DASHBOARD_NAV_SECTIONS = [
     id: "principal",
     title: "Principal",
     items: [
-      { label: "Panel de Citas", href: "/dashboard", icon: "home" },
+      { label: "Panel de Reservas", href: "/dashboard", icon: "home" },
       { label: "Crear Usuarios", href: "/dashboard/createUser", icon: "shield" },
     ],
   },
   {
     id: "agenda",
     title: "Agenda",
-    accordionLabel: "Agenda Clinica",
+    accordionLabel: "Agenda",
     icon: "calendar",
     items: [
       { label: "Calendario General", href: "/dashboard/calendarioGeneral", icon: "panels" },
-      { label: "Calendario y Reservas", href: "/dashboard/calendario", icon: "calendarDays" },
+      { label: "Crear Reserva", href: "/dashboard/calendario", icon: "calendarDays" },
       { label: "Bloqueos", href: "/dashboard/bloqueosAgenda", icon: "lock" },
     ],
   },
   {
     id: "pacientes",
-    title: "Pacientes",
-    accordionLabel: "Pacientes",
+    title: "Pacientes y Fichas",
+    accordionLabel: "Pacientes y Fichas",
     icon: "users",
     items: [
-      { label: "Listado de Pacientes", href: "/dashboard/listaPacientes", icon: "users" },
+      { label: "Ver Pacientes", href: "/dashboard/listaPacientes", icon: "users" },
       { label: "Registrar Paciente", href: "/dashboard/GestionPaciente", icon: "users" },
-      { label: "Carpeta del Paciente", href: "/dashboard/FichaClinica", icon: "fileText" },
+      { label: "Ficha Clinica", href: "/dashboard/FichaClinica", icon: "fileText" },
     ],
   },
   {
@@ -283,13 +282,13 @@ const DASHBOARD_NAV_SECTIONS = [
   },
   {
     id: "configuracion",
-    title: "Configuracion",
-    accordionLabel: "Agenda y Servicios",
+    title: "Configuracion Clinica",
+    accordionLabel: "Configuracion Clinica",
     icon: "settings",
     items: [
-      { label: "Profesionales", href: "/dashboard/profesionales", icon: "settings" },
-      { label: "Catalogo de Servicios", href: "/dashboard/serviciosAgendamiento", icon: "settings" },
-      { label: "Tarifas por Profesional", href: "/dashboard/tarifaServicio", icon: "settings" },
+      { label: "Profesionales y Agendas", href: "/dashboard/profesionales", icon: "settings" },
+      { label: "Servicios Agendables", href: "/dashboard/serviciosAgendamiento", icon: "settings" },
+      { label: "Tarifas de Consulta", href: "/dashboard/tarifaServicio", icon: "settings" },
     ],
   },
   {
@@ -304,13 +303,13 @@ const DASHBOARD_NAV_SECTIONS = [
   },
   {
     id: "contenido",
-    title: "Contenido",
-    accordionLabel: "Contenido Web",
+    title: "Contenido web",
+    accordionLabel: "Contenido web",
     icon: "image",
     items: [
-      { label: "Carrusel de Portada", href: "/dashboard/portadaEdit", icon: "monitor" },
-      { label: "Carrusel Seccion 1", href: "/dashboard/publicacionesTituloDescripcion", icon: "image" },
-      { label: "Carrusel Seccion 2", href: "/dashboard/publicaciones", icon: "layout" },
+      { label: "Banners de Portada", href: "/dashboard/portadaEdit", icon: "monitor" },
+      { label: "Tratamientos Destacados", href: "/dashboard/publicacionesTituloDescripcion", icon: "image" },
+      { label: "Publicaciones Web", href: "/dashboard/publicaciones", icon: "layout" },
     ],
   },
 ];

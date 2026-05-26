@@ -1,6 +1,7 @@
 "use client"
 import {useParams} from "next/navigation";
 import {useState, useEffect, useRef} from "react";
+import { useUser } from "@clerk/nextjs";
 import {toast} from "react-hot-toast";
 import ToasterClient from "@/Componentes/ToasterClient";
 import formatearFecha from "@/FuncionesTranversales/funcionesTranversales.js"
@@ -15,6 +16,11 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import {InfoButton} from "@/Componentes/InfoButton";
 import { formatRut } from "@/lib/designTokens";
+import {
+    canAccessOdontograma,
+    canAccessRecetasEnFicha,
+    getDashboardRoleFromUser,
+} from "@/lib/dashboard-access";
 
 
 function parsearDatosDinamicos(datos) {
@@ -114,6 +120,7 @@ function convertirFechaParaBackend(fecha) {
 export default function Paciente() {
 
     const {id_paciente} = useParams();
+    const { user } = useUser();
     const [detallePaciente, setDetallePaciente] = useState([])
     const API = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
@@ -475,6 +482,9 @@ export default function Paciente() {
 
     const pacienteActual = detallePaciente[0];
     const totalFichas = listaFichas.length;
+    const dashboardRole = getDashboardRoleFromUser(user);
+    const canSeeOdontograma = canAccessOdontograma(dashboardRole);
+    const canSeeRecetaMedica = canAccessRecetasEnFicha(dashboardRole);
 
 
 
@@ -608,18 +618,22 @@ export default function Paciente() {
                                 </div>
                                 <span className="text-[13px] font-bold text-slate-700">Agendar Cita</span>
                             </button>
-                            <button onClick={verOdontogramas} className="h-28 bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between hover:border-[#6E56CF] hover:shadow-lg hover:shadow-indigo-50/50 transition-all group text-left">
-                                <div className="h-10 w-10 rounded-xl bg-violet-50 text-[#6E56CF] flex items-center justify-center group-hover:bg-[#6E56CF] group-hover:text-white transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 9.75h4.5m-4.5 4.5h4.5M7.5 3.75h9A2.25 2.25 0 0118.75 6v12A2.25 2.25 0 0116.5 20.25h-9A2.25 2.25 0 015.25 18V6A2.25 2.25 0 017.5 3.75z" /></svg>
-                                </div>
-                                <span className="text-[13px] font-bold text-slate-700">Odontograma</span>
-                            </button>
-                            <button onClick={() => irAReceta(id_paciente)} className="h-28 bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between hover:border-[#6E56CF] hover:shadow-lg hover:shadow-indigo-50/50 transition-all group text-left">
-                                <div className="h-10 w-10 rounded-xl bg-violet-50 text-[#6E56CF] flex items-center justify-center group-hover:bg-[#6E56CF] group-hover:text-white transition-colors">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" /></svg>
-                                </div>
-                                <span className="text-[13px] font-bold text-slate-700">Receta Médica</span>
-                            </button>
+                            {canSeeOdontograma && (
+                                <button onClick={verOdontogramas} className="h-28 bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between hover:border-[#6E56CF] hover:shadow-lg hover:shadow-indigo-50/50 transition-all group text-left">
+                                    <div className="h-10 w-10 rounded-xl bg-violet-50 text-[#6E56CF] flex items-center justify-center group-hover:bg-[#6E56CF] group-hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 9.75h4.5m-4.5 4.5h4.5M7.5 3.75h9A2.25 2.25 0 0118.75 6v12A2.25 2.25 0 0116.5 20.25h-9A2.25 2.25 0 015.25 18V6A2.25 2.25 0 017.5 3.75z" /></svg>
+                                    </div>
+                                    <span className="text-[13px] font-bold text-slate-700">Odontograma</span>
+                                </button>
+                            )}
+                            {canSeeRecetaMedica && (
+                                <button onClick={() => irAReceta(id_paciente)} className="h-28 bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between hover:border-[#6E56CF] hover:shadow-lg hover:shadow-indigo-50/50 transition-all group text-left">
+                                    <div className="h-10 w-10 rounded-xl bg-violet-50 text-[#6E56CF] flex items-center justify-center group-hover:bg-[#6E56CF] group-hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6M7 4h10a2 2 0 012 2v12a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2z" /></svg>
+                                    </div>
+                                    <span className="text-[13px] font-bold text-slate-700">Receta Médica</span>
+                                </button>
+                            )}
                         </div>
 
                         {/* Formulario de Edición (Cerrable) */}
