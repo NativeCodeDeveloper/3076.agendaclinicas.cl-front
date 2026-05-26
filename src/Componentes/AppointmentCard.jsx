@@ -135,23 +135,66 @@ export function AppointmentCard({ event, currentView }) {
   }
 
   // ── Vista SEMANA / DÍA / AGENDA ─────────────────────────────────────────
-  // Umbral: slots menores a 25px aprox. corresponden a ~15 min
   const isShort = duracion < 30;
-  const isVeryShort = duracion < 20;
+  const isVeryShort = duracion < 15;
 
   if (isVeryShort) {
-    // Tarjeta ultra-mini: solo hora de inicio + nombre en una línea
+    // Ultra-mini (< 15 min): hora inicio + nombre en una sola línea
     return (
       <div
         className="flex h-full w-full items-center gap-1 px-1.5 overflow-hidden"
         style={{ borderLeft: `3px solid ${token.accent}`, background: token.bg }}
       >
-        <span className="text-[10px] font-bold tabular-nums leading-none flex-shrink-0" style={{ color: token.accent }}>
+        <span className="text-[10px] font-bold tabular-nums leading-none shrink-0" style={{ color: token.accent }}>
           {horaInicio}
         </span>
         <span className="truncate text-[10px] font-semibold leading-none" style={{ color: token.text }}>
           {nombreCompleto || event.title}
         </span>
+      </div>
+    );
+  }
+
+  if (isShort) {
+    // Compacta (15-29 min): hora + pill en la misma fila, nombre abajo
+    return (
+      <div
+        className="flex h-full w-full flex-col justify-start px-2 py-1 cursor-pointer overflow-hidden"
+        style={{
+          borderLeft: `3px solid ${token.accent}`,
+          background: token.bg,
+          boxShadow: `inset 0 0 0 1px ${token.border}`,
+        }}
+      >
+        <div className="flex items-center justify-between gap-1 shrink-0 min-w-0">
+          <span
+            className="text-[10px] font-bold tabular-nums whitespace-nowrap leading-none shrink-0"
+            style={{ color: token.accent }}
+          >
+            {horaInicio} – {horaFin}
+          </span>
+          <span
+            className="inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[8px] font-bold leading-none shrink-0"
+            style={{ backgroundColor: `${token.accent}18`, color: token.text, border: `1px solid ${token.accent}35` }}
+          >
+            <span className="inline-block h-1 w-1 rounded-full shrink-0" style={{ backgroundColor: token.accent }} />
+            {token.label}
+          </span>
+        </div>
+        <span
+          className="truncate text-[12px] font-bold leading-tight mt-0.5 shrink-0"
+          style={{ color: token.text }}
+        >
+          {nombreCompleto || event.title}
+        </span>
+        {prestacion && duracion >= 20 && (
+          <span
+            className="truncate text-[10px] font-medium leading-tight shrink-0"
+            style={{ color: token.text, opacity: 0.65 }}
+          >
+            {prestacion}
+          </span>
+        )}
       </div>
     );
   }
