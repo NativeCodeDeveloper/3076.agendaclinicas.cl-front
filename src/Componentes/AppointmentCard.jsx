@@ -174,13 +174,13 @@ export function AppointmentCard({ event, currentView }) {
           {horaInicio} – {horaFin}
         </span>
         <span
-          className="flex items-center gap-0.5 text-[9px] font-bold leading-none flex-shrink-0"
-          style={{ color: token.accent }}
+          className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold leading-none flex-shrink-0"
+          style={{
+            backgroundColor: token.accent,
+            color: "#fff",
+          }}
         >
-          <span
-            className="inline-block h-1.5 w-1.5 rounded-full flex-shrink-0"
-            style={{ backgroundColor: token.accent }}
-          />
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-white/60 flex-shrink-0" />
           {token.label}
         </span>
       </div>
