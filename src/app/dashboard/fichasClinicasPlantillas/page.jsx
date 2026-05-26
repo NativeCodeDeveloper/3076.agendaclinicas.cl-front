@@ -1,6 +1,6 @@
 "use client"
 
-import {useEffect, useRef, useState} from "react"
+import {useEffect, useState} from "react"
 import {toast} from "react-hot-toast";
 import ToasterClient from "@/Componentes/ToasterClient";
 import {useRouter} from "next/navigation";
@@ -8,7 +8,7 @@ import {useRouter} from "next/navigation";
 export default function FichasClinicasPlantillas() {
 
     const API = process.env.NEXT_PUBLIC_API_URL;
-    const {push} = useRouter();
+    const router = useRouter();
 
     // =============================================
     // ESTADOS
@@ -22,7 +22,8 @@ export default function FichasClinicasPlantillas() {
 
     // Modal editar plantilla
     const [modalEditarPlantilla, setModalEditarPlantilla] = useState(false)
-    const idPlantillaEditandoRef = useRef(null)
+    const [plantillaEditando, setPlantillaEditando] = useState(null)
+    const [id_plantillaEditing, setId_plantillaEditing] = useState(null)
     const [mostrarGuia, setMostrarGuia] = useState(false)
 
     // =============================================
@@ -35,7 +36,8 @@ export default function FichasClinicasPlantillas() {
     }
 
     function abrirModalEditarPlantilla(plantilla) {
-        idPlantillaEditandoRef.current = plantilla.id_plantilla;
+        setPlantillaEditando(plantilla);
+        setId_plantillaEditing(plantilla.id_plantilla);
         setNuevaPlantillaNombre(plantilla.nombre);
         setNuevaPlantillaDescripcion(plantilla.descripcion);
         setModalEditarPlantilla(true);
@@ -171,7 +173,7 @@ export default function FichasClinicasPlantillas() {
 
 
     function irACategoriaPlatilla(id_plantilla) {
-        push(`/dashboard/fichasClinicasCategorias/${id_plantilla}`);
+        router.push(`/dashboard/fichasClinicasCategorias/${id_plantilla}`);
     }
     // =============================================
     // RENDER
@@ -529,7 +531,7 @@ export default function FichasClinicasPlantillas() {
                             </button>
                             <button
                                 type="button"
-                                onClick={()=>  editarPlantilla(nuevaPlantillaNombre,nuevaPlantillaDescripcion,idPlantillaEditandoRef.current)}
+                                onClick={()=>  editarPlantilla(nuevaPlantillaNombre,nuevaPlantillaDescripcion,id_plantillaEditing)}
                                 className="px-5 py-2 text-sm font-semibold text-white bg-[#6E56CF] rounded-xl hover:bg-[#5B47B0] active:scale-[0.97] transition-all duration-150 shadow-sm"
                             >
                                 Guardar Cambios
