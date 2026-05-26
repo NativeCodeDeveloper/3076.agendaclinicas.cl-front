@@ -1,6 +1,7 @@
 const DASHBOARD_ROLES = [
   "default",
   "admin",
+  "super-usuario-nativecode",
   "recepcionista",
   "secretaria",
   "basico",
@@ -15,6 +16,11 @@ const DASHBOARD_ROLES = [
 const DASHBOARD_ROLE_SET = new Set(DASHBOARD_ROLES);
 
 const routeMatchersByRole = {
+  "super-usuario-nativecode": [
+    /^\/dashboard$/,
+    /^\/dashboard\/no-access$/,
+    /^\/dashboard\/createUser$/,
+  ],
   recepcionista: [
     /^\/dashboard$/,
     /^\/dashboard\/no-access$/,
@@ -211,6 +217,7 @@ const DASHBOARD_NAV_SECTIONS = [
     title: "Principal",
     items: [
       { label: "Panel de Citas", href: "/dashboard", icon: "home" },
+      { label: "Crear Usuarios", href: "/dashboard/createUser", icon: "shield" },
     ],
   },
   {
@@ -292,6 +299,61 @@ const DASHBOARD_NAV_SECTIONS = [
   },
 ];
 
+const DASHBOARD_ROLE_DETAILS = {
+  admin: {
+    label: "Administrador",
+    description: "Acceso total al dashboard.",
+  },
+  "super-usuario-nativecode": {
+    label: "Super Usuario NativeCode",
+    description: "Puede crear usuarios en Clerk y asignar perfiles del sistema.",
+  },
+  recepcionista: {
+    label: "Recepcionista",
+    description: "Gestiona agenda, pacientes basicos y detalle de reservas.",
+  },
+  secretaria: {
+    label: "Secretaria",
+    description: "Gestiona agenda y flujo administrativo de reservas.",
+  },
+  basico: {
+    label: "Basico",
+    description: "Acceso clinico y operativo limitado, sin recetas ni examenes.",
+  },
+  "centro-estetico": {
+    label: "Centro Estetico",
+    description: "Base operativa mas catalogo de tratamientos y categorias.",
+  },
+  "clinico-medico": {
+    label: "Clinico Medico",
+    description: "Puede trabajar fichas, recetas medicas y solicitudes de examenes.",
+  },
+  odontologico: {
+    label: "Odontologico",
+    description: "Incluye flujo clinico con odontograma y catalogo odontologico.",
+  },
+  oftalmologia: {
+    label: "Oftalmologia",
+    description: "Incluye flujo clinico mas receta de lentes.",
+  },
+  agenda: {
+    label: "Agenda",
+    description: "Enfocado en agenda, pacientes y continuidad de fichas.",
+  },
+  configuracion: {
+    label: "Configuracion",
+    description: "Mantiene catalogos, contenido y configuraciones maestras.",
+  },
+  default: {
+    label: "Default",
+    description: "Rol por defecto con acceso administrativo completo.",
+  },
+  unknown: {
+    label: "Sin permisos",
+    description: "Rol no reconocido por el sistema.",
+  },
+};
+
 function normalizeDashboardRole(input) {
   const raw = String(input || "").trim().toLowerCase();
 
@@ -334,6 +396,26 @@ function getVisibleDashboardSections(role) {
     .filter((section) => section.items.length > 0);
 }
 
+function getDashboardRoleLabel(role) {
+  const normalizedRole = normalizeDashboardRole(role);
+  return DASHBOARD_ROLE_DETAILS[normalizedRole]?.label || normalizedRole;
+}
+
+function getDashboardRoleDescription(role) {
+  const normalizedRole = normalizeDashboardRole(role);
+  return DASHBOARD_ROLE_DETAILS[normalizedRole]?.description || "";
+}
+
+function getAssignableDashboardRoles() {
+  return DASHBOARD_ROLES
+    .filter((role) => !["default", "admin"].includes(role))
+    .map((role) => ({
+      value: role,
+      label: getDashboardRoleLabel(role),
+      description: getDashboardRoleDescription(role),
+    }));
+}
+
 function getRoleFromClerkData(source) {
   return (
     source?.metadata?.role ||
@@ -368,12 +450,16 @@ function canAccessRecetasEnFicha(role) {
 
 export {
   DASHBOARD_NAV_SECTIONS,
+  DASHBOARD_ROLE_DETAILS,
   DASHBOARD_ROLES,
   canAccessDashboardPath,
   canAccessOdontograma,
   canAccessRecetasEnFicha,
   getDashboardRoleFromClaims,
   getDashboardRoleFromUser,
+  getDashboardRoleDescription,
+  getDashboardRoleLabel,
+  getAssignableDashboardRoles,
   getVisibleDashboardSections,
   hasFullDashboardAccess,
   normalizeDashboardRole,

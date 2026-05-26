@@ -2,7 +2,7 @@
 
 import { useUser, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
-import { getDashboardRoleFromUser } from "@/lib/dashboard-access";
+import { getDashboardRoleFromUser, getDashboardRoleLabel } from "@/lib/dashboard-access";
 
 export default function UserMenu() {
     const { user, isLoaded } = useUser();
@@ -24,14 +24,7 @@ export default function UserMenu() {
 
     const name = user?.fullName || user?.firstName || "Usuario";
     const role = getDashboardRoleFromUser(user);
-    const roleLabel =
-        role === "admin"
-            ? "Administrador"
-            : role === "default"
-                ? "Default"
-                : role === "unknown"
-                    ? "Sin permisos"
-                    : role.replace(/-/g, " ");
+    const roleLabel = getDashboardRoleLabel(role);
     const avatar = user?.imageUrl;
 
     return (

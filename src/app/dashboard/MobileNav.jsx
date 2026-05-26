@@ -18,6 +18,7 @@ import {
   MonitorSmartphone,
   PanelsTopLeft,
   Settings,
+  ShieldCheck,
   Users,
   Wallet,
   X,
@@ -40,6 +41,7 @@ const ICONS = {
   settings: Settings,
   folder: FolderKanban,
   lock: Lock,
+  shield: ShieldCheck,
 };
 
 export default function MobileNav() {
