@@ -165,32 +165,31 @@ export function AppointmentCard({ event, currentView }) {
         boxShadow: `inset 0 0 0 1px ${token.border}`,
       }}
     >
-      {/* Hora — propia línea, nunca se rompe */}
-      <div className="flex items-center gap-1.5 shrink-0">
-        <span
-          className="text-[10px] font-bold tabular-nums leading-none whitespace-nowrap"
-          style={{ color: token.accent }}
-        >
-          {horaInicio} – {horaFin}
-        </span>
-        {/* Pill compacto: solo dot + label, no compite con la hora */}
-        <span
-          className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold leading-none shrink-0 ml-auto"
-          style={{
-            backgroundColor: `${token.accent}18`,
-            color: token.text,
-            border: `1px solid ${token.accent}35`,
-          }}
-        >
-          <span className="inline-block h-1.5 w-1.5 rounded-full shrink-0" style={{ backgroundColor: token.accent }} />
-          {token.label}
-        </span>
-      </div>
+      {/* 1. HORA — siempre primero, nunca se rompe */}
+      <span
+        className="text-[10px] font-bold tabular-nums leading-none whitespace-nowrap shrink-0"
+        style={{ color: token.accent }}
+      >
+        {horaInicio} – {horaFin}
+      </span>
 
-      {/* Divisor del color del acento */}
+      {/* 2. ESTADO — pill justo bajo la hora */}
+      <span
+        className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold leading-none shrink-0 mt-1 self-start"
+        style={{
+          backgroundColor: `${token.accent}18`,
+          color: token.text,
+          border: `1px solid ${token.accent}35`,
+        }}
+      >
+        <span className="inline-block h-1.5 w-1.5 rounded-full shrink-0" style={{ backgroundColor: token.accent }} />
+        {token.label}
+      </span>
+
+      {/* Divisor */}
       <div className="my-1 shrink-0" style={{ height: "1px", background: `${token.accent}25` }} />
 
-      {/* Nombre paciente */}
+      {/* 3. PACIENTE */}
       <span
         className="truncate text-[13px] font-bold leading-snug shrink-0"
         style={{ color: token.text }}
@@ -198,7 +197,7 @@ export function AppointmentCard({ event, currentView }) {
         {nombreCompleto || event.title}
       </span>
 
-      {/* Prestación */}
+      {/* 4. SERVICIO */}
       {prestacion && (
         <span
           className="truncate text-[11px] font-medium leading-tight mt-0.5 shrink-0"
@@ -208,22 +207,17 @@ export function AppointmentCard({ event, currentView }) {
         </span>
       )}
 
-      {/* Profesional — inicial en círculo + nombre */}
+      {/* 5. DOCTOR — con ícono persona clásico */}
       {profesional && !isShort && (
-        <div className="flex items-center gap-1.5 mt-1.5 shrink-0 min-w-0">
-          <span
-            className="inline-flex items-center justify-center h-4 w-4 rounded-full text-[8px] font-black shrink-0"
-            style={{ backgroundColor: `${token.accent}25`, color: token.text }}
-          >
-            {profesional.charAt(0).toUpperCase()}
-          </span>
-          <span
-            className="truncate text-[10px] font-medium leading-none"
-            style={{ color: token.text, opacity: 0.65 }}
-          >
-            {profesional}
-          </span>
-        </div>
+        <span
+          className="inline-flex items-center gap-1 text-[10px] font-medium leading-none mt-1.5 shrink-0 truncate"
+          style={{ color: token.text, opacity: 0.65 }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+          </svg>
+          <span className="truncate">{profesional}</span>
+        </span>
       )}
 
       {/* Online */}
