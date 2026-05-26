@@ -479,10 +479,17 @@ export default function AgendaCitas() {
     }, [dataListaBase, id_profesional, fechaInicio, fechaFinalizacion, estadoReserva]);
 
     function normalizarEstadoReserva(estado = "") {
-        return String(estado)
+        const base = String(estado)
             .toLowerCase()
             .normalize("NFD")
-            .replace(/[\u0300-\u036f]/g, "");
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim();
+        // Unifica variantes del mismo estado para que el filtro funcione
+        if (base === "no asistio" || base === "no asistste" || base === "no asistio") return "no asiste";
+        if (base === "reservado") return "reservada";
+        if (base === "confirmado") return "confirmada";
+        if (base === "anulado") return "anulada";
+        return base;
     }
 
     function obtenerPaletaEstadoReserva(estadoReserva = "") {
