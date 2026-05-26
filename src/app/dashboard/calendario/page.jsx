@@ -1016,8 +1016,10 @@ function CalendarioContent() {
             const ahora = new Date();
             const inicio = new Date(`${fechaInicio}T${horaInicio}`);
             const final = new Date(`${fechaFinalizacion}T${horaFinalizacion}`);
-            if (inicio < ahora) {
-                toast.error("No es posible agendar en fechas NO vigentes");
+            // Compara solo el día, no el minuto exacto — permite completar el form sin error si el slot es hoy
+            const hoyStr = ahora.toISOString().slice(0, 10);
+            if (fechaInicio < hoyStr) {
+                toast.error("No es posible agendar en fechas pasadas.");
                 return false;
             }
             if (!estaDentroHorarioAgenda(inicio, final)) {
@@ -1916,9 +1918,25 @@ function CalendarioContent() {
                         <button
                             type="button"
                             onClick={() => {
-                                const now = new Date();
-                                const end = new Date(now.getTime() + 30 * 60000);
-                                abrirPopupSeleccion({ start: now, end, bounds: null });
+                                const ahora = new Date();
+                                const h = ahora.getHours();
+                                const m = ahora.getMinutes();
+
+                                // Próximo slot de 30 min redondeado hacia arriba
+                                let sH = m < 30 ? h : h + 1;
+                                let sM = m < 30 ? 30 : 0;
+
+                                // Si cae fuera del rango 8:00–22:30, usar mañana 09:00
+                                const fueraDiRango = sH < HORA_MINIMA_AGENDA || sH > 22 || (sH === 22 && sM > 30);
+                                const inicio = new Date(ahora);
+                                if (fueraDiRango) {
+                                    inicio.setDate(inicio.getDate() + 1);
+                                    inicio.setHours(9, 0, 0, 0);
+                                } else {
+                                    inicio.setHours(sH, sM, 0, 0);
+                                }
+                                const fin = new Date(inicio.getTime() + 30 * 60000);
+                                abrirPopupSeleccion({ start: inicio, end: fin, bounds: null });
                             }}
                             className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] sm:w-auto sm:min-w-[180px]" style={{ backgroundColor: "#6E56CF" }}
                             id="btn-nueva-reserva"
