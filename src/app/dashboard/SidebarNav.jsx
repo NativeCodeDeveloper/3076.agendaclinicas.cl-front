@@ -220,7 +220,7 @@ export default function SidebarNav() {
             {/* ── Navigation ── */}
             <nav className="flex-1 overflow-y-auto px-2 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
 
-                <NavItem href="/dashboard" icon={IcoHome} label="Inicio" />
+                <NavItem href="/dashboard" icon={IcoHome} label="Panel de Citas" />
 
                 <SectionLabel label="Agenda" />
 

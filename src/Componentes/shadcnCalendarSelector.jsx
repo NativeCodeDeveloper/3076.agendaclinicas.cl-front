@@ -67,7 +67,7 @@ export function Calendar28({ nombre, onChange, value }) {
                     id="date"
                     readOnly
                     value={displayValue} // Usar el displayValue derivado
-                    placeholder="Seleccione una fecha" // Placeholder más genérico
+                    placeholder="dd/mm/aaaa"
                     className="bg-white text-slate-900 border border-gray-200 rounded-md pr-10 py-2 shadow-sm"
                     onClick={() => setOpen(true)} // Añadir esto para abrir el Popover al hacer clic en el Input
                     onKeyDown={(e) => {

@@ -561,7 +561,7 @@ export default function AgendaCitas() {
             }
 
             const confirmarEliminacion = window.confirm(
-                "¿Esta seguro de que desea eliminar esta reservacion?"
+                "¿Está seguro de que desea eliminar esta reserva?"
             );
 
             if (!confirmarEliminacion) return;
@@ -583,7 +583,7 @@ export default function AgendaCitas() {
             if (respuestaBackend.message === true) {
                 setMenuEstadoAbiertoId(null);
                 await listarTablaCitas();
-                return toast.success("La reservacion ha sido eliminada con exito, La hora ha quedado disponible para otra cita");
+                return toast.success("La reserva ha sido eliminada. El horario quedó disponible para nuevas citas.");
             }
 
             return toast.error("No se ha podido eliminar la reserva. Intente mas tarde.");
@@ -716,9 +716,9 @@ export default function AgendaCitas() {
                 {/* ── Header Principal y Resumen ── */}
                 <div className="mb-6 flex flex-col xl:flex-row xl:items-end xl:justify-between gap-4 xl:gap-8">
                     <div>
-                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Gestión de Operaciones</p>
+                        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#6E56CF]">Agenda Clínica</p>
                         <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900 md:text-4xl">
-                            Panel de <span className="text-[#6E56CF]">Reservaciones</span>
+                            Panel de <span className="text-[#6E56CF]">Citas</span>
                         </h1>
                         <p className="mt-2 text-[13px] text-slate-500 max-w-2xl">
                             Control central de citas, estados de asistencia y flujo de pacientes. Filtra y gestiona la agenda clínica en tiempo real.
@@ -794,8 +794,8 @@ export default function AgendaCitas() {
                                         <div className="space-y-2">
                                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Rango de Fechas</label>
                                             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                                                <Calendar28 label="Inicio" value={fechaInicio} onChange={(v) => setfechaInicio(v)} />
-                                                <Calendar28 label="Termino" value={fechaFinalizacion} onChange={(v) => setfechaFinalizacion(v)} />
+                                                <Calendar28 nombre="Desde" value={fechaInicio} onChange={(v) => setfechaInicio(v)} />
+                                                <Calendar28 nombre="Hasta" value={fechaFinalizacion} onChange={(v) => setfechaFinalizacion(v)} />
                                             </div>
                                         </div>
                                         <button onClick={() => buscarEntreFechas(fechaInicio, fechaFinalizacion)} className="w-full h-11 bg-[#6E56CF] text-white text-[13px] font-bold rounded-xl hover:bg-[#5b45bc] shadow-lg shadow-indigo-100 transition-all">Filtrar por Período</button>
@@ -833,9 +833,9 @@ export default function AgendaCitas() {
                     {/* Tabla de Resultados */}
                     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
                         <div className="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
-                            <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Registros de Agenda</h2>
+                            <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Citas Agendadas</h2>
                             <div className="flex items-center gap-3">
-                                <span className="text-[11px] font-bold text-slate-400">{dataLista.length} resultados encontrados</span>
+                                <span className="text-[11px] font-bold text-slate-400">{dataLista.length} {dataLista.length === 1 ? "cita" : "citas"}</span>
                                 <button
                                     onClick={exportarAExcel}
                                     className="h-8 px-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold hover:bg-emerald-100 transition-all flex items-center gap-1.5"
@@ -854,7 +854,7 @@ export default function AgendaCitas() {
                                     <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                     </div>
-                                    <p className="text-[13px] text-slate-400 font-medium">No se han encontrado reservaciones para los criterios seleccionados.</p>
+                                    <p className="text-[13px] text-slate-400 font-medium">No se encontraron citas para los criterios seleccionados.</p>
                                 </div>
                             ) : (
                                 <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
@@ -917,7 +917,7 @@ export default function AgendaCitas() {
                                                 <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
                                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                                                 </div>
-                                                <p className="text-[13px] text-slate-400 font-medium">No se han encontrado reservaciones para los criterios seleccionados.</p>
+                                                <p className="text-[13px] text-slate-400 font-medium">No se encontraron citas para los criterios seleccionados.</p>
                                             </TableCell>
                                         </TableRow>
                                     ) : (
