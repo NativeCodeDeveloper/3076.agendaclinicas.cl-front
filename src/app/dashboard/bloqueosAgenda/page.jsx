@@ -339,14 +339,14 @@ const [id_profesional, setId_profesional] = useState("");
                             </div>
 
                             <div className="overflow-x-auto">
-                                <Table className="min-w-[700px]">
+                                <Table className="w-full table-fixed">
                                     <TableHeader className="bg-slate-50/50">
                                         <TableRow className="hover:bg-transparent border-slate-100">
-                                            <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-4">Profesional</TableHead>
-                                            <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-4">Motivo</TableHead>
-                                            <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-4">Inicio</TableHead>
-                                            <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-4">Fin</TableHead>
-                                            <TableHead className="text-[11px] font-bold text-slate-400 uppercase tracking-widest py-4 text-center">Acción</TableHead>
+                                            <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3 w-[30%]">Profesional</TableHead>
+                                            <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3 w-[22%]">Motivo</TableHead>
+                                            <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3 w-[20%]">Inicio</TableHead>
+                                            <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3 w-[20%]">Fin</TableHead>
+                                            <TableHead className="text-[10px] font-bold text-slate-400 uppercase tracking-widest py-3 w-[8%] text-center">Ver</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -354,37 +354,33 @@ const [id_profesional, setId_profesional] = useState("");
                                             listaBloqueos.map((bloqueo) => (
                                                 <TableRow
                                                     key={bloqueo.id_bloqueo}
-                                                    className="border-slate-50 hover:bg-slate-50/30 transition-colors cursor-pointer"
+                                                    className="border-slate-50 hover:bg-violet-50/30 transition-colors cursor-pointer"
                                                     onClick={() => abrirModalBloqueo(bloqueo)}
                                                 >
-                                                    <TableCell className="py-4">
-                                                        <span className="text-[13px] font-bold text-slate-700">{bloqueo.nombreProfesional}</span>
+                                                    <TableCell className="py-3 pr-2">
+                                                        <span className="text-[12px] font-bold text-slate-700 truncate block">{bloqueo.nombreProfesional}</span>
                                                     </TableCell>
-                                                    <TableCell className="py-4">
-                                                        <span className="text-[12px] font-medium text-slate-500 bg-slate-100/80 px-2 py-1 rounded-md">{bloqueo.motivo}</span>
+                                                    <TableCell className="py-3 pr-2">
+                                                        <span className="text-[11px] font-medium text-slate-500 bg-slate-100/80 px-2 py-1 rounded-lg truncate block max-w-full">{bloqueo.motivo}</span>
                                                     </TableCell>
-                                                    <TableCell className="py-4">
-                                                        <div className="flex flex-col">
-                                                            <span className="text-[13px] font-semibold text-slate-600">{formatearFechaTabla(bloqueo.fechaInicio)}</span>
-                                                            <span className="text-[10px] text-slate-400 font-bold">{bloqueo.horaInicio}</span>
-                                                        </div>
+                                                    <TableCell className="py-3 pr-2">
+                                                        <span className="text-[12px] font-semibold text-slate-600 block">{formatearFechaTabla(bloqueo.fechaInicio)}</span>
+                                                        <span className="text-[10px] text-slate-400 font-medium">{(bloqueo.horaInicio ?? "").slice(0, 5)}</span>
                                                     </TableCell>
-                                                    <TableCell className="py-4">
-                                                        <div className="flex flex-col">
-                                                            <span className="text-[13px] font-semibold text-slate-600">{formatearFechaTabla(bloqueo.fechaFinalizacion)}</span>
-                                                            <span className="text-[10px] text-slate-400 font-bold">{bloqueo.horaFinalizacion}</span>
-                                                        </div>
+                                                    <TableCell className="py-3 pr-2">
+                                                        <span className="text-[12px] font-semibold text-slate-600 block">{formatearFechaTabla(bloqueo.fechaFinalizacion)}</span>
+                                                        <span className="text-[10px] text-slate-400 font-medium">{(bloqueo.horaFinalizacion ?? "").slice(0, 5)}</span>
                                                     </TableCell>
-                                                    <TableCell className="py-4 text-center">
+                                                    <TableCell className="py-3 text-center">
                                                         <button
-                                                            onClick={(e) => {
-                                                                e.stopPropagation();
-                                                                abrirModalBloqueo(bloqueo);
-                                                            }}
-                                                            className="inline-flex items-center justify-center rounded-xl px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#6E56CF] hover:bg-violet-50 transition-all active:scale-95"
-                                                            title="Ver bloqueo"
+                                                            onClick={(e) => { e.stopPropagation(); abrirModalBloqueo(bloqueo); }}
+                                                            className="inline-flex items-center justify-center h-8 w-8 rounded-xl text-[#6E56CF] hover:bg-violet-50 transition-all active:scale-95"
+                                                            title="Ver detalle del bloqueo"
                                                         >
-                                                            Ver detalle
+                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                            </svg>
                                                         </button>
                                                     </TableCell>
                                                 </TableRow>
