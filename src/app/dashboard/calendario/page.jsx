@@ -1816,9 +1816,22 @@ function CalendarioContent() {
         if (activeFilters.length === 0) return events;
         return events.map((ev) => {
             if (ev.tipo !== "reserva") return ev;
-            const estado = (ev.resource?.estadoReserva ?? "reservada")
-                .toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-            const visible = activeFilters.some((f) => estado.startsWith(f.replace(/ /g, "")));
+            // Normaliza el estado: min\u00fasculas, sin acentos, sin espacios
+            const normalizar = (s) => String(s ?? "")
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/\s+/g, "");
+            // Unifica variantes (noasistio \u2192 noasiste, etc.)
+            const unificar = (s) => {
+                if (s === "noasistio" || s === "noasistste") return "noasiste";
+                if (s === "reservado") return "reservada";
+                if (s === "confirmado") return "confirmada";
+                if (s === "anulado") return "anulada";
+                return s;
+            };
+            const estadoNorm = unificar(normalizar(ev.resource?.estadoReserva ?? "reservada"));
+            const visible = activeFilters.some((f) => unificar(normalizar(f)) === estadoNorm);
             return { ...ev, _filtered: !visible };
         });
     }, [events, activeFilters]);
