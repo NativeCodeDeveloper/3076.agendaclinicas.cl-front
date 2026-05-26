@@ -90,13 +90,25 @@ export default function CreateUserPage() {
         }),
       });
 
-      const data = await response.json();
+      const rawResponse = await response.text();
+      let data = null;
 
-      if (!response.ok) {
-        throw new Error(data?.error || "No se pudo crear el usuario.");
+      try {
+        data = rawResponse ? JSON.parse(rawResponse) : null;
+      } catch {
+        data = null;
       }
 
-      setCreatedUser(data.user);
+      if (!response.ok) {
+        throw new Error(
+          data?.error ||
+          data?.message ||
+          rawResponse ||
+          `No se pudo crear el usuario. HTTP ${response.status}`
+        );
+      }
+
+      setCreatedUser(data?.user || null);
       setForm({ ...initialForm, role: form.role });
     } catch (submitError) {
       setError(submitError.message || "No se pudo crear el usuario.");
