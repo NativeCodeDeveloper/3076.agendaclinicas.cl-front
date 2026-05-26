@@ -34,19 +34,9 @@ export async function POST(req) {
     return badRequest("No se pudo leer el formulario enviado.");
   }
 
-  const firstName = String(body?.firstName || "").trim();
-  const lastName = String(body?.lastName || "").trim();
   const email = String(body?.email || "").trim().toLowerCase();
   const password = String(body?.password || "");
   const role = normalizeDashboardRole(body?.role);
-
-  if (!firstName) {
-    return badRequest("Debes ingresar el nombre.");
-  }
-
-  if (!lastName) {
-    return badRequest("Debes ingresar el apellido.");
-  }
 
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return badRequest("Debes ingresar un correo valido.");
@@ -63,8 +53,6 @@ export async function POST(req) {
   try {
     const client = await clerkClient();
     const user = await client.users.createUser({
-      firstName,
-      lastName,
       emailAddress: [email],
       password,
       publicMetadata: {
@@ -80,8 +68,6 @@ export async function POST(req) {
       user: {
         id: user.id,
         email: user.emailAddresses?.[0]?.emailAddress || email,
-        firstName: user.firstName || firstName,
-        lastName: user.lastName || lastName,
         role,
       },
     });

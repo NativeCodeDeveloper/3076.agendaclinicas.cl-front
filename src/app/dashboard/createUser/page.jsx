@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ShieldCheck, UserPlus, BadgeCheck, Mail, Lock, UserRound } from "lucide-react";
+import { ShieldCheck, UserPlus, BadgeCheck, Mail, Lock } from "lucide-react";
 import {
   getAssignableDashboardRoles,
   getDashboardRoleDescription,
@@ -9,8 +9,6 @@ import {
 } from "@/lib/dashboard-access";
 
 const initialForm = {
-  firstName: "",
-  lastName: "",
   email: "",
   password: "",
   confirmPassword: "",
@@ -62,8 +60,8 @@ export default function CreateUserPage() {
     setError("");
     setCreatedUser(null);
 
-    if (!form.firstName.trim() || !form.lastName.trim() || !form.email.trim()) {
-      setError("Completa nombre, apellido y correo.");
+    if (!form.email.trim()) {
+      setError("Completa el correo.");
       return;
     }
 
@@ -86,8 +84,6 @@ export default function CreateUserPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          firstName: form.firstName,
-          lastName: form.lastName,
           email: form.email,
           password: form.password,
           role: form.role,
@@ -101,7 +97,7 @@ export default function CreateUserPage() {
       }
 
       setCreatedUser(data.user);
-      setForm(initialForm);
+      setForm({ ...initialForm, role: form.role });
     } catch (submitError) {
       setError(submitError.message || "No se pudo crear el usuario.");
     } finally {
@@ -125,7 +121,7 @@ export default function CreateUserPage() {
                     Crear usuarios Clerk con perfil del dashboard
                   </h1>
                   <p className="mt-3 max-w-2xl text-[14px] leading-6 text-slate-600">
-                    Este formulario crea el usuario en Clerk y le asigna el perfil en
+                    Este formulario crea el usuario en Clerk usando solo correo y contrasena, y le asigna el perfil en
                     <code className="mx-1 rounded bg-slate-100 px-1.5 py-0.5 text-[12px] text-slate-700">publicMetadata.role</code>
                     para que el middleware y el menu respeten sus permisos.
                   </p>
@@ -143,28 +139,6 @@ export default function CreateUserPage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6 px-6 py-6 sm:px-8">
-              <div className="grid gap-5 md:grid-cols-2">
-                <Field label="Nombre" hint="Nombre visible del usuario en Clerk">
-                  <Input
-                    icon={UserRound}
-                    type="text"
-                    value={form.firstName}
-                    onChange={(event) => updateField("firstName", event.target.value)}
-                    placeholder="Ej: Camila"
-                  />
-                </Field>
-
-                <Field label="Apellido" hint="Apellido visible del usuario en Clerk">
-                  <Input
-                    icon={UserRound}
-                    type="text"
-                    value={form.lastName}
-                    onChange={(event) => updateField("lastName", event.target.value)}
-                    placeholder="Ej: Soto"
-                  />
-                </Field>
-              </div>
-
               <Field label="Correo electronico" hint="Se usara como email principal del usuario">
                 <Input
                   icon={Mail}
@@ -238,7 +212,7 @@ export default function CreateUserPage() {
                 <div className="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-[13px] text-emerald-800">
                   <p className="font-semibold">Usuario creado correctamente.</p>
                   <p className="mt-1">
-                    {createdUser.firstName} {createdUser.lastName} ({createdUser.email}) fue creado con el perfil{" "}
+                    {createdUser.email} fue creado con el perfil{" "}
                     <span className="font-semibold">{getDashboardRoleLabel(createdUser.role)}</span>.
                   </p>
                 </div>
@@ -289,7 +263,7 @@ export default function CreateUserPage() {
                 <div className="rounded-2xl border border-slate-200 bg-slate-50/80 p-4">
                   <p className="text-[13px] font-semibold text-slate-900">1. Clerk crea el usuario</p>
                   <p className="mt-1 text-[12px] leading-6 text-slate-500">
-                    Se registra nombre, apellido, correo y contrasena usando el Backend SDK.
+                    Se registra correo y contrasena usando el Backend SDK.
                   </p>
                 </div>
 
