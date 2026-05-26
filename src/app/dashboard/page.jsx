@@ -489,7 +489,7 @@ export default function AgendaCitas() {
         const estadoNormalizado = normalizarEstadoReserva(estadoReserva);
 
         if (estadoNormalizado === "reservada" || estadoNormalizado === "reservado") {
-            return { backgroundColor: "rgba(245, 158, 11, 0.12)", color: "#92400e", accentColor: "#F59E0B", borderColor: "rgba(245, 158, 11, 0.35)" };
+            return { backgroundColor: "rgba(110, 86, 207, 0.10)", color: "#4c1d95", accentColor: "#6E56CF", borderColor: "rgba(110, 86, 207, 0.30)" };
         }
         if (estadoNormalizado === "confirmada" || estadoNormalizado === "confirmado") {
             return { backgroundColor: "rgba(16, 185, 129, 0.12)", color: "#065f46", accentColor: "#10B981", borderColor: "rgba(16, 185, 129, 0.30)" };

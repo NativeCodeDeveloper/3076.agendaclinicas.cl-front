@@ -7,12 +7,12 @@
 // ─── Paleta de 8 estados del sistema ────────────────────────────────────────
 export const STATE_COLORS = {
   reservada: {
-    bg: "rgba(245, 158, 11, 0.12)",
-    text: "#92400e",
-    accent: "#F59E0B",
-    border: "rgba(245, 158, 11, 0.35)",
-    pill: "bg-amber-50 text-amber-700 border-amber-200",
-    dot: "#F59E0B",
+    bg: "rgba(110, 86, 207, 0.10)",
+    text: "#4c1d95",
+    accent: "#6E56CF",
+    border: "rgba(110, 86, 207, 0.30)",
+    pill: "bg-violet-50 text-violet-700 border-violet-200",
+    dot: "#6E56CF",
     label: "Reservada",
   },
   confirmada: {
