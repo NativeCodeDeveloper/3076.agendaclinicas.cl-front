@@ -158,17 +158,35 @@ export function AppointmentCard({ event, currentView }) {
 
   return (
     <div
-      className="flex h-full w-full flex-col justify-start px-2 py-1 cursor-pointer overflow-hidden"
+      className="flex h-full w-full flex-col justify-start px-2 py-1.5 cursor-pointer overflow-hidden gap-0"
       style={{
         borderLeft: `4px solid ${token.accent}`,
         background: token.bg,
         boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)",
       }}
     >
-      {/* Tiempo */}
-      <span className="text-[10px] font-bold text-slate-400 tabular-nums leading-none mb-0.5 flex-shrink-0">
-        {horaInicio} – {horaFin}
-      </span>
+      {/* Fila superior: hora + estado — toda la info clave en una línea */}
+      <div className="flex items-center justify-between gap-1 flex-shrink-0 mb-0.5">
+        <span
+          className="text-[10px] font-bold tabular-nums leading-none"
+          style={{ color: token.accent }}
+        >
+          {horaInicio} – {horaFin}
+        </span>
+        <span
+          className="flex items-center gap-0.5 text-[9px] font-bold leading-none flex-shrink-0"
+          style={{ color: token.accent }}
+        >
+          <span
+            className="inline-block h-1.5 w-1.5 rounded-full flex-shrink-0"
+            style={{ backgroundColor: token.accent }}
+          />
+          {token.label}
+        </span>
+      </div>
+
+      {/* Separador sutil */}
+      <div className="w-full flex-shrink-0 mb-1" style={{ borderTop: "1px solid rgba(255,255,255,0.35)" }} />
 
       {/* Nombre paciente */}
       <span
@@ -178,53 +196,37 @@ export function AppointmentCard({ event, currentView }) {
         {nombreCompleto || event.title}
       </span>
 
-      {/* Tipo de consulta / prestación — siempre visible si existe */}
+      {/* Tipo de consulta / prestación */}
       {prestacion && (
-        <span className="truncate text-[11px] font-medium text-slate-500 leading-tight mt-0.5 flex-shrink-0">
+        <span
+          className="truncate text-[11px] font-medium leading-tight mt-0.5 flex-shrink-0"
+          style={{ color: token.text, opacity: 0.75 }}
+        >
           {prestacion}
         </span>
       )}
 
-      {/* Profesional a cargo — visible cuando hay espacio (citas ≥ 30 min) */}
+      {/* Profesional — solo cuando hay espacio */}
       {profesional && !isShort && (
-        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-slate-400 leading-none mt-0.5 flex-shrink-0 truncate">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+        <span
+          className="inline-flex items-center gap-1 text-[10px] font-semibold leading-none mt-1 flex-shrink-0 truncate"
+          style={{ color: token.text, opacity: 0.65 }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
           </svg>
-          <span className="truncate">{profesional}</span>
+          <span className="truncate uppercase tracking-wide text-[9px]">{profesional}</span>
         </span>
       )}
 
-      {/* Modalidad (Online / Presencial) — visible cuando haya espacio */}
-      {modalidad && !isShort && (
-        <span className={`inline-flex items-center gap-1 text-[10px] font-bold leading-none mt-0.5 flex-shrink-0 ${
-          modalidad === "online" ? "text-blue-500" : "text-emerald-600"
-        }`}>
-          {modalidad === "online" ? (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-          ) : (
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-          )}
-          {modalidad === "online" ? "Online" : "Presencial"}
+      {/* Modalidad — solo online es relevante mostrarlo */}
+      {modalidad === "online" && !isShort && (
+        <span className="inline-flex items-center gap-1 text-[9px] font-bold leading-none mt-0.5 flex-shrink-0 text-blue-500">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+          </svg>
+          Online
         </span>
-      )}
-
-      {/* Badges de estado */}
-      {!isShort && (
-        <div className="flex flex-wrap gap-1 mt-auto pt-0.5">
-          <StatusBadge estado={estado} size="xs" />
-          {pago && <StatusBadge estado={pago} size="xs" />}
-        </div>
-      )}
-      {isShort && (
-        <div className="flex gap-1 mt-0.5">
-          <StatusBadge estado={estado} size="xs" />
-        </div>
       )}
     </div>
   );
