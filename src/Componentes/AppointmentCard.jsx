@@ -158,45 +158,37 @@ export function AppointmentCard({ event, currentView }) {
 
   return (
     <div
-      className="flex h-full w-full flex-col justify-start px-2.5 py-2 cursor-pointer overflow-hidden"
+      className="flex h-full w-full flex-col justify-start px-2.5 py-1.5 cursor-pointer overflow-hidden"
       style={{
         borderLeft: `3px solid ${token.accent}`,
-        background: "rgba(255,255,255,0.82)",
-        backdropFilter: "blur(6px)",
-        boxShadow: `0 1px 4px rgba(0,0,0,0.06), inset 0 0 0 1px ${token.border}`,
+        background: token.bg,
+        boxShadow: `inset 0 0 0 1px ${token.border}`,
       }}
     >
-      {/* Fila superior: hora + pill estado */}
-      <div className="flex items-center justify-between gap-1 shrink-0">
+      {/* Hora — propia línea, nunca se rompe */}
+      <div className="flex items-center gap-1.5 shrink-0">
         <span
-          className="text-[11px] font-semibold tabular-nums leading-none tracking-tight"
+          className="text-[10px] font-bold tabular-nums leading-none whitespace-nowrap"
           style={{ color: token.accent }}
         >
           {horaInicio} – {horaFin}
         </span>
-
-        {/* Pill translúcido estilo Apple */}
+        {/* Pill compacto: solo dot + label, no compite con la hora */}
         <span
-          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9px] font-bold leading-none shrink-0"
+          className="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[9px] font-bold leading-none shrink-0 ml-auto"
           style={{
-            backgroundColor: `${token.accent}22`,
+            backgroundColor: `${token.accent}18`,
             color: token.text,
-            border: `1px solid ${token.accent}44`,
+            border: `1px solid ${token.accent}35`,
           }}
         >
-          <span
-            className="inline-block h-1.5 w-1.5 rounded-full shrink-0"
-            style={{ backgroundColor: token.accent }}
-          />
+          <span className="inline-block h-1.5 w-1.5 rounded-full shrink-0" style={{ backgroundColor: token.accent }} />
           {token.label}
         </span>
       </div>
 
-      {/* Línea divisoria — más delgada y con el color del acento */}
-      <div
-        className="my-1.5 shrink-0"
-        style={{ height: "1px", background: `${token.accent}30` }}
-      />
+      {/* Divisor del color del acento */}
+      <div className="my-1 shrink-0" style={{ height: "1px", background: `${token.accent}25` }} />
 
       {/* Nombre paciente */}
       <span
@@ -216,15 +208,12 @@ export function AppointmentCard({ event, currentView }) {
         </span>
       )}
 
-      {/* Profesional — inicial en círculo + nombre, solo cuando hay espacio */}
+      {/* Profesional — inicial en círculo + nombre */}
       {profesional && !isShort && (
         <div className="flex items-center gap-1.5 mt-1.5 shrink-0 min-w-0">
           <span
             className="inline-flex items-center justify-center h-4 w-4 rounded-full text-[8px] font-black shrink-0"
-            style={{
-              backgroundColor: `${token.accent}25`,
-              color: token.text,
-            }}
+            style={{ backgroundColor: `${token.accent}25`, color: token.text }}
           >
             {profesional.charAt(0).toUpperCase()}
           </span>
@@ -237,7 +226,7 @@ export function AppointmentCard({ event, currentView }) {
         </div>
       )}
 
-      {/* Modalidad online */}
+      {/* Online */}
       {modalidad === "online" && !isShort && (
         <span className="inline-flex items-center gap-1 text-[9px] font-semibold leading-none mt-1 shrink-0 text-sky-500">
           <svg xmlns="http://www.w3.org/2000/svg" className="h-2.5 w-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
