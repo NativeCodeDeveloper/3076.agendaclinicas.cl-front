@@ -80,7 +80,7 @@ export function AppointmentCard({ event, currentView }) {
   const apellido = (reserva?.apellidoPaciente ?? "").trim();
   const nombreCompleto = [nombre, apellido].filter(Boolean).join(" ");
   // Tipo de consulta/prestación (viene del agendamiento web o del drawer)
-  const prestacion = (reserva?.nombrePrestacion ?? reserva?.prestacion ?? reserva?.nombre_prestacion ?? reserva?.motivoConsulta ?? "").trim();
+  const prestacion = (reserva?.motivo_reserva ?? reserva?.nombrePrestacion ?? reserva?.prestacion ?? reserva?.nombre_prestacion ?? reserva?.motivoConsulta ?? "").trim();
   // Modalidad: 'online' | 'presencial' | '' (campo nuevo — requiere migración BD)
   const modalidad = (reserva?.modalidad ?? "").toLowerCase().trim();
   // Nombre del profesional — resuelto en el mapeo de eventos del calendario

@@ -1898,9 +1898,9 @@ function CalendarioContent() {
                             })()}
                         </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
                         {/* Selector de profesional */}
-                        <div className="relative w-full sm:min-w-[200px]">
+                        <div className="relative w-full sm:min-w-[280px]">
                             <SelectDinamic
                                 value={id_profesional}
                                 onChange={(e) => setId_profesional(e.target.value)}
@@ -1908,7 +1908,7 @@ function CalendarioContent() {
                                     value: normalizarIdProfesional(p.id_profesional),
                                     label: p.nombreProfesional,
                                 }))}
-                                placeholder="Selecciona agenda"
+                                placeholder="Seleccionar Agenda"
                                 className="h-10 rounded-xl border-slate-200 bg-white pl-4 pr-8 text-[13px] font-semibold text-slate-800 shadow-sm focus:border-violet-300 focus:ring-2 focus:ring-violet-100"
                             />
                         </div>
@@ -1920,7 +1920,7 @@ function CalendarioContent() {
                                 const end = new Date(now.getTime() + 30 * 60000);
                                 abrirPopupSeleccion({ start: now, end, bounds: null });
                             }}
-                            className="inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:shadow-md" style={{ backgroundColor: "#6E56CF" }}
+                            className="inline-flex min-h-10 w-full items-center justify-center gap-2 rounded-xl px-6 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:shadow-md active:scale-[0.98] sm:w-auto sm:min-w-[180px]" style={{ backgroundColor: "#6E56CF" }}
                             id="btn-nueva-reserva"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
