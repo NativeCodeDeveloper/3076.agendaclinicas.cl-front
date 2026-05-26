@@ -1,9 +1,9 @@
 import { NextResponse, type NextRequest } from 'next/server'
 
-// ─── MODO DESARROLLO ─────────────────────────────────────────────────────────
-// Middleware sin autenticación — deja pasar todo para trabajar en el dashboard.
-// Para activar la protección real con Clerk, reemplaza este bloque por el que
-// está comentado abajo.
+// ─── MODO DESARROLLO / SIN CLERK CONFIGURADO ─────────────────────────────────
+// Middleware sin autenticación — deja pasar todo.
+// Cuando Clerk esté configurado para producción, reemplazar este bloque
+// por el que está comentado abajo.
 export default function middleware(_req: NextRequest) {
   return NextResponse.next()
 }
@@ -14,8 +14,7 @@ export const config = {
 
 /*
 ─── MIDDLEWARE REAL (Clerk + roles) ─────────────────────────────────────────
-Descomentar cuando se quiera activar la autenticación en producción.
-Requiere que las variables de entorno de Clerk estén configuradas.
+Activar cuando las variables de entorno de Clerk estén configuradas en Vercel.
 
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'

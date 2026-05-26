@@ -54,7 +54,6 @@ export default function SubCategoria(){
             const data = await res.json();
             setDescripcionCategoria(data.descripcionCategoria);
 
-            console.log(data);
         }catch (e) {
             console.error(e);
         }

@@ -135,7 +135,6 @@ export default function FichasClinicasPlantillas() {
 
     function seleccionarPlantilla(plantilla) {
         // TODO: Navegar a detalle o abrir categorías/campos
-        console.log("Seleccionar plantilla:", plantilla.id_plantilla, plantilla.nombre)
     }
 
     // =============================================

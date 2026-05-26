@@ -1200,7 +1200,7 @@ export default function Calendario() {
                                     const reserva = event.resource;
                                     if (!reserva) return;
                                     setReservaPopup({ reserva, position: null });
-                                });
+                                }).catch(console.error);
                             }}
                         />
                     </div>
@@ -1246,7 +1246,7 @@ export default function Calendario() {
                                                     seleccionarReservaEspecifica(ev.id_reserva).then(() => {
                                                         const reserva = ev.resource;
                                                         if (reserva) setReservaPopup({ reserva, position: null });
-                                                    });
+                                                    }).catch(console.error);
                                                 }
                                             }}
                                         >

@@ -210,7 +210,6 @@ function irACamposFicha(id_cat){
 
     function seleccionarCategoria(categoria) {
         // TODO: Navegar a la página de campos de esta categoría
-        console.log("Seleccionar categoría:", categoria.id_categoria, categoria.nombre)
     }
 
 
