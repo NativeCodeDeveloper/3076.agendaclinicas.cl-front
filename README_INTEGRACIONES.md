@@ -1,7 +1,78 @@
-# AgendaClínica 1.0.2 — Guía de Integraciones y Nuevas Funcionalidades
+# AgendaClínica 1.0.3 — Guía de Integraciones y Nuevas Funcionalidades
 
 > **Para:** Equipo técnico (NativeCode) y desarrolladores futuros  
-> **Estado:** Funcionalidades implementadas en frontend. Columnas de BD marcadas con `[PENDIENTE BD]` requieren migración antes de persistir datos.
+> **Estado:** Versión activa en producción. Incluye integraciones de v2.0 (Nicolás Rubio) + ajustes de diseño y UX. Columnas de BD marcadas con `[PENDIENTE BD]` requieren migración antes de persistir datos.  
+> **Rama de respaldo pre-integración:** `backup/antes-merge-v2`
+
+---
+
+## 0. Integraciones v2.0 → v1.0.3 (mayo 2026)
+
+Esta versión incorpora las funcionalidades desarrolladas por Nicolás Rubio en el repo `ACV2.0.1-FRONTEND`, integradas manualmente sobre la base de diseño de 1.0.3.
+
+### 0.1 Funcionalidades integradas desde v2.0
+
+**Calendario (`/dashboard/calendario`)**
+- Horario extendido: 08:00 – 23:00 (antes 09:00 – 20:00)
+- Tarifas por profesional: al seleccionar un profesional, el drawer carga sus servicios y precios disponibles via `GET /tarifasProfesional/seleccionarTarifasPorProfesional`
+- Campos `monto_reserva` y `motivo_reserva` en la creación y edición de citas — se envían al backend y se muestran en las tarjetas
+- Modal "Detalle del Bloqueo" al hacer clic sobre un bloqueo en el calendario o en la tabla lateral
+- `encontrarBloqueoSolapado`: detección mejorada de bloqueos antes de permitir selección en el calendario
+- `silenciarToastSolapamiento`: opción para no mostrar toast de overlap durante el drag (mejor UX)
+
+**Panel de Citas (`/dashboard`)**
+- Eliminar reserva desde el listado: botón en el menú de acciones, con confirmación — endpoint `POST /reservaPacientes/eliminarReserva`
+- Exportar citas a Excel (librería `xlsx`): descarga con nombre + fecha del día
+- Vista de tarjetas responsiva para mobile (< 1280px): muestra motivo y monto de la cita
+- Columna "Motivo" en la tabla desktop: muestra servicio y monto
+- KPI "Finalizadas" en el header de resumen
+
+**Bloqueos de Agenda (`/dashboard/bloqueosAgenda`)**
+- Modal "Ver detalle" al hacer clic en una fila: muestra profesional, motivo, fechas y botón eliminar
+- Botón "Ver detalle" en la columna de acción (reemplaza el botón eliminar directo)
+
+**Formulario de Reserva Pública (`/formularioReservaProfesional/[id_profesional]`)**
+- Lee `fechaInicio`, `fechaFinalizacion`, `horaInicio`, `horaFin` desde URL params (flujo desde agenda pública)
+- Valida que el servicio (motivo + monto) esté seleccionado antes de enviar
+- Envía `nombreProfesional`, `monto_reserva` y `motivo_reserva` al backend
+
+**Otros componentes**
+- `FichasPacientes`: campo "Fecha de nacimiento" con `ShadcnDatePicker`
+- `GestionPaciente`: `RutInput` en búsqueda de RUT (mejor formato y validación)
+- `AppointmentDrawer`: selector de tarifa/servicio del profesional (`listaTarifasProfesional`)
+- `RutInput`: `handleBeforeInput` + `handlePaste`, sin formato automático, uppercase, `maxLength={9}`
+- `AppointmentCard`: `motivo_reserva` visible en tarjetas del calendario
+- `agendaEspecificaProfersional`: `router.push` con params de fecha/hora al seleccionar un horario
+
+### 0.2 Endpoints de backend requeridos por las nuevas funciones
+
+| Endpoint | Método | Descripción |
+|---|---|---|
+| `/tarifasProfesional/seleccionarTarifasPorProfesional` | POST | Retorna tarifas/servicios del profesional |
+| `/reservaPacientes/eliminarReserva` | POST | Elimina una reserva por `id_reserva` |
+
+### 0.3 Columnas de BD requeridas (si no están aplicadas)
+
+```sql
+ALTER TABLE reservaciones ADD COLUMN monto_reserva VARCHAR(50) NULL;
+ALTER TABLE reservaciones ADD COLUMN motivo_reserva VARCHAR(255) NULL;
+ALTER TABLE reservaciones ADD COLUMN nombreProfesional VARCHAR(255) NULL;
+```
+
+> Todos los endpoints de SELECT de reservas deben retornar `monto_reserva` y `motivo_reserva` para que aparezcan en el dashboard y el calendario.
+
+### 0.4 Ajustes de diseño y UX realizados sobre la integración
+
+- **Paleta de estados unificada** en `src/lib/designTokens.js` — fuente única de verdad para calendario, dashboard y badges. Estado "Reservada" usa el violeta del proyecto (`#6E56CF`)
+- **Tarjetas del calendario** rediseñadas: orden clínico (hora → estado → paciente → servicio → doctor), 3 tamaños responsivos según duración (< 15 min, 15-29 min, ≥ 30 min)
+- **Modal de bloqueo** rediseñado con la paleta del proyecto (sin el gradiente oscuro de v2.0)
+- **Botón "Nueva Reserva"** corregido: calcula el próximo slot válido en lugar de usar `new Date()` exacto
+- **Edición de hora en el drawer**: al mover el inicio, el fin se arrastra manteniendo la duración original
+- **Filtros sincronizados**: "No asiste" normaliza variantes `no asistio` / `no asistste` en dashboard y calendario
+- **Sidebar**: "Vista General" removida, terminología clínica ("Panel de Citas" en lugar de "Inicio", "Calendario y Reservas" en lugar de "Nueva Reserva")
+- **Tabla de bloqueos**: columnas con ancho proporcional (`table-fixed`), acción con ícono ojo, horas compactas
+
+---
 
 ---
 
