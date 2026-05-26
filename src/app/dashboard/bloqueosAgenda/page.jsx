@@ -29,6 +29,8 @@ const [id_profesional, setId_profesional] = useState("");
     const [horaFinalizacion, setHoraFinalizacion] = useState("");
     const [motivo, setMotivo] = useState("");
     const [listaBloqueos, setListaBloqueos] = useState([]);
+    const [modalBloqueoAbierto, setModalBloqueoAbierto] = useState(false);
+    const [bloqueoSeleccionado, setBloqueoSeleccionado] = useState(null);
 
 
 
@@ -61,7 +63,15 @@ const [id_profesional, setId_profesional] = useState("");
         return new Date(`${soloFecha}T${hora}`);
     }
 
+    function abrirModalBloqueo(bloqueo) {
+        setBloqueoSeleccionado(bloqueo);
+        setModalBloqueoAbierto(true);
+    }
 
+    function cerrarModalBloqueo() {
+        setModalBloqueoAbierto(false);
+        setBloqueoSeleccionado(null);
+    }
 
     async function buscarPorProfesionalBloqueo() {
         try {
@@ -183,6 +193,7 @@ const [id_profesional, setId_profesional] = useState("");
                 const respuestaBackend = await res.json();
                 if(respuestaBackend.message ===true){
                     await verTodosLosBloqueos();
+                    cerrarModalBloqueo();
                     return toast.success('Se ha eliminado con exito el bloqueo del sistema. ')
                 }else {
                     return toast.error("Verifique que no haya una hora o bloqueo previo.")
@@ -341,7 +352,11 @@ const [id_profesional, setId_profesional] = useState("");
                                     <TableBody>
                                         {listaBloqueos.length > 0 ? (
                                             listaBloqueos.map((bloqueo) => (
-                                                <TableRow key={bloqueo.id_bloqueo} className="border-slate-50 hover:bg-slate-50/30 transition-colors">
+                                                <TableRow
+                                                    key={bloqueo.id_bloqueo}
+                                                    className="border-slate-50 hover:bg-slate-50/30 transition-colors cursor-pointer"
+                                                    onClick={() => abrirModalBloqueo(bloqueo)}
+                                                >
                                                     <TableCell className="py-4">
                                                         <span className="text-[13px] font-bold text-slate-700">{bloqueo.nombreProfesional}</span>
                                                     </TableCell>
@@ -362,13 +377,14 @@ const [id_profesional, setId_profesional] = useState("");
                                                     </TableCell>
                                                     <TableCell className="py-4 text-center">
                                                         <button
-                                                            onClick={() => eliminarBloqueo(bloqueo.id_bloqueo)}
-                                                            className="h-8 w-8 inline-flex items-center justify-center rounded-xl text-red-500 hover:bg-red-50 hover:text-red-600 transition-all active:scale-95"
-                                                            title="Eliminar bloqueo"
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                abrirModalBloqueo(bloqueo);
+                                                            }}
+                                                            className="inline-flex items-center justify-center rounded-xl px-3 py-2 text-[11px] font-bold uppercase tracking-wider text-[#6E56CF] hover:bg-violet-50 transition-all active:scale-95"
+                                                            title="Ver bloqueo"
                                                         >
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4.5 w-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                                            </svg>
+                                                            Ver detalle
                                                         </button>
                                                     </TableCell>
                                                 </TableRow>
@@ -394,6 +410,75 @@ const [id_profesional, setId_profesional] = useState("");
                     </div>
                 </div>
             </div>
+
+            {modalBloqueoAbierto && bloqueoSeleccionado && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={cerrarModalBloqueo} />
+                    <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-300/50 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
+                        <div className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#312e81_58%,#0891b2_100%)] px-6 py-5">
+                            <div className="pointer-events-none absolute -top-8 -right-8 h-24 w-24 rounded-full bg-white/10" />
+                            <div className="pointer-events-none absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/5" />
+                            <div className="relative">
+                                <div className="mb-1 flex items-center gap-2">
+                                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                    </div>
+                                    <h3 className="text-lg font-semibold text-white">Detalle del Bloqueo</h3>
+                                </div>
+                                <p className="text-sm text-white/70">Revisa la información del bloqueo y elimínalo si corresponde.</p>
+                            </div>
+                        </div>
+
+                        <div className="space-y-4 p-6">
+                            <div>
+                                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Profesional</label>
+                                <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm font-semibold text-slate-700">
+                                    {bloqueoSeleccionado.nombreProfesional}
+                                </div>
+                            </div>
+                            <div>
+                                <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Motivo</label>
+                                <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
+                                    {bloqueoSeleccionado.motivo}
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                <div>
+                                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Inicio</label>
+                                    <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
+                                        <span className="block font-semibold">{formatearFechaTabla(bloqueoSeleccionado.fechaInicio)}</span>
+                                        <span className="mt-1 block text-xs font-medium text-slate-500">{bloqueoSeleccionado.horaInicio}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Fin</label>
+                                    <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
+                                        <span className="block font-semibold">{formatearFechaTabla(bloqueoSeleccionado.fechaFinalizacion)}</span>
+                                        <span className="mt-1 block text-xs font-medium text-slate-500">{bloqueoSeleccionado.horaFinalizacion}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-2.5 border-t border-slate-200 bg-slate-100/50 px-6 py-4">
+                            <button
+                                onClick={cerrarModalBloqueo}
+                                className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-all duration-150 hover:bg-slate-50 active:scale-[0.97]"
+                            >
+                                Cerrar
+                            </button>
+                            <button
+                                onClick={() => eliminarBloqueo(bloqueoSeleccionado.id_bloqueo)}
+                                className="rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-red-500/25 transition-all duration-150 hover:from-red-700 hover:to-rose-700 active:scale-[0.97]"
+                            >
+                                Eliminar Bloqueo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }

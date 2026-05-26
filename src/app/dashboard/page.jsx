@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table"
 
 import * as React from "react"
-import { formatRut, cleanRut } from "@/lib/designTokens";
+import * as XLSX from "xlsx";
 import {
     Select,
     SelectContent,
@@ -49,8 +49,11 @@ export default function AgendaCitas() {
     const [id_profesional, setId_profesional] = useState("");
     const [actualizandoReservaId, setActualizandoReservaId] = useState(null);
     const [abriendoFichaReservaId, setAbriendoFichaReservaId] = useState(null);
+    const [eliminandoReservaId, setEliminandoReservaId] = useState(null);
     const [mostrarFiltros, setMostrarFiltros] = useState(false);
     const [menuEstadoAbiertoId, setMenuEstadoAbiertoId] = useState(null);
+    const [monto_reserva, setMontoReserva] = useState("");
+    const [motivo_reserva, setMotivoReserva] = useState("");
 
     useEffect(() => {
         if (typeof window === "undefined") return;
@@ -147,6 +150,15 @@ export default function AgendaCitas() {
             .toUpperCase();
     }
 
+    function formatearRutVisible(rutValor) {
+        const rutNormalizado = normalizarRut(rutValor);
+        return rutNormalizado ? `RUT: ${rutNormalizado}` : "RUT: Sin registro";
+    }
+
+    function formatearEstadoVisible(estadoValor) {
+        return String(estadoValor || "").trim().toLowerCase();
+    }
+
     function formatearRutBusqueda(rutValor) {
         const rutNormalizado = normalizarRut(rutValor);
 
@@ -208,7 +220,7 @@ export default function AgendaCitas() {
     }
 
     async function crearPacienteDesdeReserva(reserva) {
-        const rutNormalizado = cleanRut(reserva?.rut || "");
+        const rutNormalizado = normalizarRut(reserva?.rut);
         const telefonoNormalizado = String(reserva?.telefono || "").trim() || "NO INDICADO";
         const correoNormalizado = String(reserva?.email || "").trim() || null;
 
@@ -222,7 +234,7 @@ export default function AgendaCitas() {
             body: JSON.stringify({
                 nombre: reserva?.nombrePaciente || "NO INDICADO",
                 apellido: reserva?.apellidoPaciente || "NO INDICADO",
-                rut: rutNormalizado,
+                rut: rutNormalizado || "NO INDICADO",
                 nacimiento: "1900-01-01",
                 sexo: "No especifica",
                 prevision_id: 4,
@@ -251,7 +263,7 @@ export default function AgendaCitas() {
             throw new Error("La creacion del paciente no fue aceptada por el servidor");
         }
 
-        const pacienteCreado = await buscarPacientePorRut(rutNormalizado);
+        const pacienteCreado = await buscarPacientePorRut(rutNormalizado || reserva?.rut);
 
         if (!pacienteCreado?.id_paciente) {
             throw new Error("No se pudo recuperar el paciente recien creado");
@@ -271,8 +283,8 @@ export default function AgendaCitas() {
 
     function aplicarFiltrosCombinados(reservas = []) {
         return reservas.filter((reserva) => {
-            const coincideProfesional = !id_profesional || id_profesional === "null" || String(reserva?.id_profesional) === String(id_profesional);
-            const coincideEstado = !estadoReserva || estadoReserva === "null" || normalizarEstadoReserva(reserva?.estadoReserva) === normalizarEstadoReserva(estadoReserva);
+            const coincideProfesional = !id_profesional || String(reserva?.id_profesional) === String(id_profesional);
+            const coincideEstado = !estadoReserva || normalizarEstadoReserva(reserva?.estadoReserva) === normalizarEstadoReserva(estadoReserva);
             const coincideFecha = coincideConRangoFechas(reserva);
 
             return coincideProfesional && coincideEstado && coincideFecha;
@@ -379,14 +391,13 @@ export default function AgendaCitas() {
 
     async function buscarPorRut(rut) {
         try {
-            const rutLimpio = cleanRut(rut);
             const res = await fetch(`${API}/reservaPacientes/seleccionarRut`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({rut: rutLimpio}),
+                body: JSON.stringify({rut}),
                 mode: "cors"
             });
 
@@ -543,6 +554,71 @@ export default function AgendaCitas() {
         }
     }
 
+    async function eliminarReservaDesdeListado(id_reserva) {
+        try {
+            if (!id_reserva) {
+                return toast.error("No se pudo identificar la reservación a eliminar.");
+            }
+
+            const confirmarEliminacion = window.confirm(
+                "¿Esta seguro de que desea eliminar esta reservacion?"
+            );
+
+            if (!confirmarEliminacion) return;
+
+            setEliminandoReservaId(id_reserva);
+
+            const res = await fetch(`${API}/reservaPacientes/eliminarReserva`, {
+                method: "POST",
+                headers: { Accept: "application/json", "Content-Type": "application/json" },
+                body: JSON.stringify({id_reserva}),
+                mode: "cors"
+            });
+
+            if (!res.ok) {
+                return toast.error("No hay conexion con el servidor por favor contacte a Soporte");
+            }
+
+            const respuestaBackend = await res.json();
+            if (respuestaBackend.message === true) {
+                setMenuEstadoAbiertoId(null);
+                await listarTablaCitas();
+                return toast.success("La reservacion ha sido eliminada con exito, La hora ha quedado disponible para otra cita");
+            }
+
+            return toast.error("No se ha podido eliminar la reserva. Intente mas tarde.");
+        } catch (error) {
+            console.log(error);
+            return toast.error("No hay conexion con el servidor por favor contacte a Soporte");
+        } finally {
+            setEliminandoReservaId(null);
+        }
+    }
+
+    function exportarAExcel() {
+        if (!dataLista || dataLista.length === 0) {
+            return toast.error("No hay datos para exportar.");
+        }
+
+        const datosExportar = dataLista.map((reserva) => ({
+            "Fecha": formatearFechaDashboard(reserva.fechaInicio),
+            "Hora": formatearHoraDashboard(reserva.horaInicio),
+            "Nombre Paciente": reserva.nombrePaciente || "",
+            "Apellido Paciente": reserva.apellidoPaciente || "",
+            "RUT": reserva.rut || "",
+            "Profesional": obtenerNombreProfesionalReserva(reserva),
+            "Motivo": reserva.motivo_reserva || "",
+            "Monto": reserva.monto_reserva || "",
+            "Estado": reserva.estadoReserva || "",
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(datosExportar);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Reservaciones");
+        XLSX.writeFile(workbook, `reservaciones_${new Date().toISOString().slice(0, 10)}.xlsx`);
+        toast.success("Archivo Excel exportado correctamente.");
+    }
+
     const resumenEstados = dataLista.reduce((acc, item) => {
         const estado = normalizarEstadoReserva(item?.estadoReserva);
         if (estado === "confirmada" || estado === "confirmado") acc.confirmadas += 1;
@@ -665,7 +741,17 @@ export default function AgendaCitas() {
                     <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
                         <div className="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
                             <h2 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Registros de Agenda</h2>
-                            <span className="text-[11px] font-bold text-slate-400">{dataLista.length} resultados encontrados</span>
+                            <div className="flex items-center gap-3">
+                                <span className="text-[11px] font-bold text-slate-400">{dataLista.length} resultados encontrados</span>
+                                <button
+                                    onClick={exportarAExcel}
+                                    className="h-8 px-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-bold hover:bg-emerald-100 transition-all flex items-center gap-1.5"
+                                    title="Exportar a Excel"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                                    Exportar Excel
+                                </button>
+                            </div>
                         </div>
 
                         <div className="overflow-x-auto">
@@ -694,7 +780,7 @@ export default function AgendaCitas() {
                                                     <div className="flex flex-col"><span className="text-[13px] font-bold text-slate-900">{formatearHoraDashboard(reserva.horaInicio)} hrs</span><span className="text-[11px] text-slate-400 font-medium mt-1">{formatearFechaDashboard(reserva.fechaInicio)}</span></div>
                                                 </TableCell>
                                                 <TableCell className="py-6">
-                                                    <div className="flex flex-col"><span className="text-[13px] font-bold text-slate-800">{reserva.nombrePaciente} {reserva.apellidoPaciente}</span><span className="text-[11px] text-slate-400 font-medium mt-0.5">{formatRut(reserva.rut) || "RUT No indicado"}</span></div>
+                                                    <div className="flex flex-col"><span className="text-[13px] font-bold text-slate-800">{reserva.nombrePaciente} {reserva.apellidoPaciente}</span><span className="text-[11px] text-slate-400 font-medium mt-0.5">{formatearRutVisible(reserva.rut)}</span></div>
                                                 </TableCell>
                                                 <TableCell className="py-6">
                                                     <div className="flex items-center gap-3"><div className="h-8 w-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-[10px] font-bold">{obtenerNombreProfesionalReserva(reserva).charAt(0)}</div><span className="text-[13px] font-semibold text-slate-600">{obtenerNombreProfesionalReserva(reserva)}</span></div>
@@ -709,8 +795,21 @@ export default function AgendaCitas() {
                                                             <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
                                                                 <div className="p-2 grid grid-cols-1 gap-1">
                                                                     {accionesRapidasEstado.map((accion) => (
-                                                                        <button key={accion.valor} onClick={() => actualizarEstadoReservaRapido(reserva.id_reserva, accion.valor)} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left"><div className="h-7 w-7 rounded-lg flex items-center justify-center" style={obtenerEstiloBadgeEstado(accion.valor)}>{accion.icono}</div><span className="text-[12px] font-bold text-slate-700">{accion.etiqueta}</span></button>
+                                                                        <button key={accion.valor} onClick={() => actualizarEstadoReservaRapido(reserva.id_reserva, accion.valor)} disabled={actualizandoReservaId === reserva.id_reserva} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left disabled:cursor-not-allowed disabled:opacity-60"><div className="h-7 w-7 rounded-lg flex items-center justify-center" style={obtenerEstiloBadgeEstado(accion.valor)}>{accion.icono}</div><span className="text-[12px] font-bold text-slate-700">{accion.etiqueta}</span></button>
                                                                     ))}
+                                                                    <div className="border-t border-slate-100 mt-1 pt-1">
+                                                                        <button
+                                                                            type="button"
+                                                                            disabled={eliminandoReservaId === reserva.id_reserva}
+                                                                            onClick={() => eliminarReservaDesdeListado(reserva.id_reserva)}
+                                                                            className="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 transition-colors text-left disabled:cursor-not-allowed disabled:opacity-60"
+                                                                        >
+                                                                            <div className="h-7 w-7 rounded-lg flex items-center justify-center bg-rose-50 border border-rose-200 text-rose-600">
+                                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                                                                            </div>
+                                                                            <span className="text-[12px] font-bold text-rose-600">{eliminandoReservaId === reserva.id_reserva ? "Eliminando..." : "Eliminar reserva"}</span>
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         )}

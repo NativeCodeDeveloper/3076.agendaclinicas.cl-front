@@ -25,8 +25,8 @@ const locales = { es: es };
 const dfStartOfWeek = (date) => startOfWeek(date, { locale: es });
 const localizer = dateFnsLocalizer({ format, parse, startOfWeek: dfStartOfWeek, getDay, locales });
 const DnDCalendar = withDragAndDrop(Calendar);
-const HORA_MINIMA_AGENDA = 9;
-const HORA_MAXIMA_AGENDA = 20;
+const HORA_MINIMA_AGENDA = 8;
+const HORA_MAXIMA_AGENDA = 23;
 
 function crearHoraLimite(hora, minuto = 0, segundo = 0) {
     const fecha = new Date();
@@ -284,6 +284,9 @@ function CalendarioContent() {
     const [horaFinalizacion, setHoraFinalizacion] = useState("");
     const [estadoReserva, setEstadoReserva] = useState("");
     const [id_reserva, setid_reserva] = useState(0);
+    const [monto_reserva, setMontoReserva] = useState("");
+    const [motivo_reserva, setMotivoReserva] = useState("");
+    const [listaTarifasProfesional, setListaTarifasProfesional] = useState([]);
     const [dataAgenda, setDataAgenda] = useState([]);
     const [dataBloqueos, setDataBloqueos] = useState([]);
     const [listaProfesionales, setListaProfesionales] = useState([]);
@@ -293,6 +296,8 @@ function CalendarioContent() {
     const [mostrarFormularioAgenda, setMostrarFormularioAgenda] = useState(false);
     const [selectionPreview, setSelectionPreview] = useState(null);
     const [selectionDraft, setSelectionDraft] = useState(null);
+    const [modalBloqueoAbierto, setModalBloqueoAbierto] = useState(false);
+    const [bloqueoSeleccionado, setBloqueoSeleccionado] = useState(null);
     const [floatingDraft, setFloatingDraft] = useState(null);
     const [popupMode, setPopupMode] = useState("create");
     const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
@@ -328,6 +333,8 @@ function CalendarioContent() {
         motivoBloqueo: "",
         prestacion: "",     // Tipo de consulta (Ej: "Consulta inicial", "Control")
         modalidad: "presencial", // 'presencial' | 'online'
+        monto_reserva: "",
+        motivo_reserva: "",
     });
 
     // Lista de prestaciones/servicios para el dropdown del drawer
@@ -368,6 +375,28 @@ function CalendarioContent() {
         }
     }
 
+    async function cargarTarifasPorProfesional(profesionalId) {
+        try {
+            if (!profesionalId) {
+                setListaTarifasProfesional([]);
+                return;
+            }
+            const res = await fetch(`${API}/tarifasProfesional/seleccionarTarifasPorProfesional`, {
+                method: "POST",
+                headers: { Accept: "application/json", "Content-Type": "application/json" },
+                mode: "cors",
+                body: JSON.stringify({ profesional_id: Number(profesionalId) })
+            });
+            if (!res.ok) { setListaTarifasProfesional([]); return; }
+            const data = await res.json();
+            if (Array.isArray(data)) setListaTarifasProfesional(data);
+            else setListaTarifasProfesional([]);
+        } catch (err) {
+            console.log("No se pudo cargar tarifas del profesional:", err);
+            setListaTarifasProfesional([]);
+        }
+    }
+
     async function seleccionarTodosProfesionalesCalendario() {
         try {
             const res = await fetch(`${API}/profesionales/seleccionarTodosProfesionales`, {
@@ -399,8 +428,29 @@ function CalendarioContent() {
         cargarListaPrestaciones(); // Carga servicios para el dropdown de tipo de consulta
     }, []);
 
+    useEffect(() => {
+        cargarTarifasPorProfesional(id_profesional);
+    }, [id_profesional]);
 
 
+
+
+    function formatearFechaTabla(fechaISO) {
+        if (!fechaISO) return "";
+        const partes = fechaISO.slice(0, 10).split("-");
+        if (partes.length !== 3) return fechaISO;
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+    }
+
+    function abrirModalBloqueo(bloqueo) {
+        setBloqueoSeleccionado(bloqueo);
+        setModalBloqueoAbierto(true);
+    }
+
+    function cerrarModalBloqueo() {
+        setModalBloqueoAbierto(false);
+        setBloqueoSeleccionado(null);
+    }
 
     function formatearFechaLocal(d) {
         const y = d.getFullYear();
@@ -484,6 +534,34 @@ function CalendarioContent() {
         return null;
     }
 
+    function encontrarBloqueoSolapado(start, end) {
+        if (!dataBloqueos || dataBloqueos.length === 0) return null;
+
+        for (const bloqueo of dataBloqueos) {
+            const horaIni = bloqueo.horaInicio ?? "00:00:00";
+            const horaFin = bloqueo.horaFinalizacion ?? "23:59:00";
+            const fechaIniStr = (bloqueo.fechaInicio ?? "").slice(0, 10);
+            const fechaFinStr = (bloqueo.fechaFinalizacion ?? "").slice(0, 10);
+            const primerDia = new Date(fechaIniStr + "T00:00:00");
+            const ultimoDia = new Date(fechaFinStr + "T00:00:00");
+            if (isNaN(primerDia.getTime()) || isNaN(ultimoDia.getTime())) continue;
+
+            let cursor = new Date(primerDia);
+            while (cursor <= ultimoDia) {
+                const y = cursor.getFullYear();
+                const m = String(cursor.getMonth() + 1).padStart(2, "0");
+                const d = String(cursor.getDate()).padStart(2, "0");
+                const fechaDia = `${y}-${m}-${d}`;
+                const bStart = new Date(`${fechaDia}T${horaIni}`);
+                const bEnd = new Date(`${fechaDia}T${horaFin}`);
+                if (start < bEnd && end > bStart) return bloqueo;
+                cursor = new Date(y, cursor.getMonth(), cursor.getDate() + 1, 0, 0, 0);
+            }
+        }
+
+        return null;
+    }
+
     function isOverlapping(start, end, ignoredReservaId = null) {
         return obtenerTipoSolapamiento(start, end, ignoredReservaId) !== null;
     }
@@ -539,6 +617,8 @@ function CalendarioContent() {
             motivoBloqueo: "",
             prestacion: "",
             modalidad: "presencial",
+            monto_reserva: "",
+            motivo_reserva: "",
         });
     }
 
@@ -570,6 +650,8 @@ function CalendarioContent() {
             motivoBloqueo: "",
             prestacion: "",          // Tipo de consulta (se llena en el drawer)
             modalidad: "presencial", // Modalidad por defecto
+            monto_reserva: "",
+            motivo_reserva: "",
         });
         setFloatingDraft({
             id: "draft-selection",
@@ -630,6 +712,8 @@ function CalendarioContent() {
             // Si la reserva ya tiene prestación/modalidad guardada en BD, se recupera aquí
             prestacion: reserva.nombre_prestacion ?? reserva.prestacion ?? "",
             modalidad: reserva.modalidad ?? "presencial",
+            monto_reserva: reserva.monto_reserva ?? "",
+            motivo_reserva: reserva.motivo_reserva ?? "",
         });
 
         setFloatingDraft(null);
@@ -680,7 +764,7 @@ function CalendarioContent() {
         }
 
         if (!estaDentroHorarioAgenda(nuevoInicio, nuevoFin)) {
-            toast.error("Solo puedes agendar entre 09:00 y 20:00 horas, con un rango valido.");
+            toast.error("Solo puedes agendar entre 08:00 y 23:00 horas, con un rango valido.");
             return;
         }
 
@@ -705,7 +789,7 @@ function CalendarioContent() {
         nuevoFin.setFullYear(year, month - 1, day);
 
         if (!estaDentroHorarioAgenda(nuevoInicio, nuevoFin)) {
-            toast.error("Solo puedes agendar entre 09:00 y 20:00 horas, con un rango valido.");
+            toast.error("Solo puedes agendar entre 08:00 y 23:00 horas, con un rango valido.");
             return;
         }
 
@@ -717,7 +801,8 @@ function CalendarioContent() {
         actualizarBorradorSeleccion(nuevoInicio, nuevoFin);
     }
 
-    function validarSeleccionPrevia(start, end, ignoredReservaId = null) {
+    function validarSeleccionPrevia(start, end, ignoredReservaId = null, opciones = {}) {
+        const { silenciarToastSolapamiento = false } = opciones;
         if (!id_profesional) {
             if (!selectionGuardRef.current.missingProfessional) {
                 selectionGuardRef.current.missingProfessional = true;
@@ -745,7 +830,7 @@ function CalendarioContent() {
         if (!estaDentroHorarioAgenda(start, end)) {
             if (!selectionGuardRef.current.outOfHours) {
                 selectionGuardRef.current.outOfHours = true;
-                toast.error("Solo puedes agendar entre 09:00 y 20:00 horas.");
+                toast.error("Solo puedes agendar entre 08:00 y 23:00 horas.");
                 setTimeout(() => {
                     selectionGuardRef.current.outOfHours = false;
                 }, 1200);
@@ -756,7 +841,7 @@ function CalendarioContent() {
 
         const tipoSolapamiento = obtenerTipoSolapamiento(start, end, ignoredReservaId);
         if (tipoSolapamiento) {
-            if (!selectionGuardRef.current.overlap) {
+            if (!silenciarToastSolapamiento && !selectionGuardRef.current.overlap) {
                 selectionGuardRef.current.overlap = true;
                 toast.error("Esta hora tiene un bloqueo u hora preexistente.");
                 setTimeout(() => {
@@ -909,10 +994,21 @@ function CalendarioContent() {
 
 
     // prestacion y modalidad vienen del popupForm — se envían al backend cuando esté migrado
-    async function insertarNuevaReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, id_profesional, prestacion = "", modalidad = "presencial") {
+    async function insertarNuevaReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, id_profesional, prestacion = "", modalidad = "presencial", monto_reserva = "", motivo_reserva = "") {
         try {
             const rutLimpio = normalizarRut(rut);
-            if (!nombrePaciente || !apellidoPaciente || !rutLimpio || !telefono || !fechaInicio || !horaInicio || !horaFinalizacion || !id_profesional) {
+            if (
+                !nombrePaciente ||
+                !apellidoPaciente ||
+                !rutLimpio ||
+                !telefono ||
+                !fechaInicio ||
+                !horaInicio ||
+                !fechaFinalizacion ||
+                !horaFinalizacion ||
+                !id_profesional ||
+                !String(motivo_reserva ?? "").trim()
+            ) {
                 toast.error('Debe llenar todos los campos');
                 return false;
             }
@@ -925,7 +1021,7 @@ function CalendarioContent() {
                 return false;
             }
             if (!estaDentroHorarioAgenda(inicio, final)) {
-                toast.error("Solo puedes agendar entre 09:00 y 20:00 horas.");
+                toast.error("Solo puedes agendar entre 08:00 y 23:00 horas.");
                 return false;
             }
             if (final < inicio) {
@@ -944,7 +1040,7 @@ function CalendarioContent() {
                     mode: "cors",
                     // NOTA: nombre_prestacion y modalidad se envían pero el backend
                     // debe tener la migración de BD aplicada para persistirlos.
-                    body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva: "reservada", id_profesional, nombre_prestacion: prestacion || null, modalidad: modalidad || "presencial" })
+                    body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, monto_reserva: monto_reserva || "", motivo_reserva: motivo_reserva || "", estadoReserva: "reservada", id_profesional, nombre_prestacion: prestacion || null, modalidad: modalidad || "presencial" })
                 });
                 const respuestaBackend = await res.json();
                 if (!res.ok && respuestaBackend.message === "conflicto") {
@@ -1067,7 +1163,10 @@ function CalendarioContent() {
             end.toTimeString().slice(0, 8),
             reservaOriginal.estadoReserva,
             reservaOriginal.id_profesional,
-            reservaOriginal.id_reserva
+            reservaOriginal.id_reserva,
+            reservaOriginal._nombreProfesional || obtenerNombreProfesionalSeleccionado(),
+            reservaOriginal.monto_reserva || "",
+            reservaOriginal.motivo_reserva || ""
         );
     }
 
@@ -1084,7 +1183,7 @@ function CalendarioContent() {
             const inicio = new Date(`${fechaInicio}T${horaInicio}`);
             const final = new Date(`${fechaFinalizacion}T${horaFinalizacion}`);
             if (!estaDentroHorarioAgenda(inicio, final)) {
-                return toast.error("Solo puedes bloquear horarios entre 09:00 y 20:00 horas.");
+                return toast.error("Solo puedes bloquear horarios entre 08:00 y 23:00 horas.");
             }
 
             const res = await fetch(`${API}/bloqueoAgenda/InsertarBloqueo`, {
@@ -1140,6 +1239,7 @@ function CalendarioContent() {
             const respuestaBackend = await res.json();
             if (respuestaBackend.message === true) {
                 await refrescarCalendario();
+                cerrarModalBloqueo();
                 return toast.success("Se ha eliminado el bloqueo correctamente.");
             }
             return toast.error("No se ha podido eliminar el bloqueo. Intente más tarde.");
@@ -1443,7 +1543,7 @@ function CalendarioContent() {
         </div>
     );
 
-    async function actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva) {
+    async function actualizarInformacionReserva(nombrePaciente, apellidoPaciente, rut, telefono, email, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva, nombreProfesional = "", monto_reserva = "", motivo_reserva = "") {
         try {
             const rutLimpio = normalizarRut(rut);
             if (!nombrePaciente || !apellidoPaciente || !rutLimpio || !telefono || !fechaInicio || !horaInicio || !fechaFinalizacion || !horaFinalizacion || !estadoReserva || !id_profesional || !id_reserva) {
@@ -1455,7 +1555,7 @@ function CalendarioContent() {
                 method: "POST",
                 headers: { Accept: "application/json", "Content-Type": "application/json" },
                 mode: "cors",
-                body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, estadoReserva, id_profesional, id_reserva })
+                body: JSON.stringify({ nombrePaciente, apellidoPaciente, nombreProfesional: nombreProfesional || "", rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, monto_reserva: monto_reserva || "", motivo_reserva: motivo_reserva || "", estadoReserva, id_profesional, id_reserva })
             });
             const respuestaBackend = await res.json();
             if (!res.ok && respuestaBackend.message === "conflicto") {
@@ -1505,6 +1605,8 @@ function CalendarioContent() {
             setHoraFinalizacion(reserva.horaFinalizacion ?? "");
             setEstadoReserva(reserva.estadoReserva ?? "");
             setId_profesional(normalizarIdProfesional(reserva.id_profesional));
+            setMontoReserva(reserva.monto_reserva ?? "");
+            setMotivoReserva(reserva.motivo_reserva ?? "");
         } catch (error) {
             console.log(error);
             return toast.error("El servidor no responde");
@@ -1517,6 +1619,7 @@ function CalendarioContent() {
 
     function limpiarData() {
         setNombrePaciente(""); setApellidoPaciente(""); setTelefono(""); setRut(""); setEmail("");
+        setMontoReserva(""); setMotivoReserva("");
     }
 
     async function cambiarEstadoRapido(estadoNuevo) {
@@ -1537,7 +1640,10 @@ function CalendarioContent() {
             horaFinalizacion,
             estadoNuevo,
             id_profesional,
-            id_reserva
+            id_reserva,
+            obtenerNombreProfesionalSeleccionado(),
+            monto_reserva,
+            motivo_reserva
         );
 
         if (actualizado) {
@@ -1574,8 +1680,10 @@ function CalendarioContent() {
             formatearFechaLocal(selectionDraft.end),
             selectionDraft.end.toTimeString().slice(0, 8),
             id_profesional,
-            popupForm.prestacion ?? "",    // Tipo de consulta
-            popupForm.modalidad ?? "presencial" // Online / Presencial
+            popupForm.prestacion ?? "",
+            popupForm.modalidad ?? "presencial",
+            popupForm.monto_reserva ?? "",
+            popupForm.motivo_reserva ?? ""
         );
         if (created) {
             setNombrePaciente(popupForm.nombrePaciente);
@@ -1602,7 +1710,10 @@ function CalendarioContent() {
             selectionDraft.end.toTimeString().slice(0, 8),
             selectionDraft.estadoReserva || estadoReserva || "reservada",
             id_profesional,
-            selectionDraft.id_reserva
+            selectionDraft.id_reserva,
+            obtenerNombreProfesionalSeleccionado(),
+            popupForm.monto_reserva ?? "",
+            popupForm.motivo_reserva ?? ""
         );
 
         if (actualizado) {
@@ -1961,12 +2072,16 @@ function CalendarioContent() {
                                 const start = slot.start ?? slot;
                                 const end = slot.end ?? slot;
                                 setSelectionPreview({ start, end });
-                                if (!validarSeleccionPrevia(start, end)) return false;
+                                if (!validarSeleccionPrevia(start, end, null, { silenciarToastSolapamiento: true })) return false;
                                 return true;
                             }}
                             onSelectEvent={(event) => {
                                 setMonthPopover(null);
                                 limpiarSeleccionTemporal();
+                                if (event?.tipo === "bloqueo") {
+                                    abrirModalBloqueo(event.resource ?? event);
+                                    return;
+                                }
                                 if (!event?.id_reserva) { toast.error("No se encontró el ID de la reserva"); return; }
                                 setid_reserva(event.id_reserva);
                                 seleccionarReservaEspecifica(event.id_reserva);
@@ -1975,6 +2090,13 @@ function CalendarioContent() {
                             onSelectSlot={(slotInfo) => {
                                 const start = slotInfo.start ?? slotInfo;
                                 const end = slotInfo.end ?? slotInfo;
+                                const bloqueo = encontrarBloqueoSolapado(start, end);
+                                if (bloqueo) {
+                                    setSelectionPreview(null);
+                                    limpiarSeleccionTemporal();
+                                    abrirModalBloqueo(bloqueo);
+                                    return;
+                                }
                                 if (!validarSeleccionPrevia(start, end)) {
                                     limpiarSeleccionTemporal();
                                     return;
@@ -2041,6 +2163,10 @@ function CalendarioContent() {
                                             className="flex items-center gap-2.5 px-2 py-2 rounded-xl hover:bg-slate-50 cursor-pointer"
                                             onClick={() => {
                                                 setMonthPopover(null);
+                                                if (ev.tipo === "bloqueo") {
+                                                    abrirModalBloqueo(ev.resource ?? ev);
+                                                    return;
+                                                }
                                                 if (ev.id_reserva) {
                                                     limpiarSeleccionTemporal();
                                                     setid_reserva(ev.id_reserva);
@@ -2120,7 +2246,11 @@ function CalendarioContent() {
                                         </thead>
                                         <tbody>
                                             {dataBloqueos.map((bloqueo) => (
-                                                <tr key={bloqueo.id_bloqueo} className="border-b border-slate-50 last:border-b-0">
+                                                <tr
+                                                    key={bloqueo.id_bloqueo}
+                                                    className="cursor-pointer border-b border-slate-50 last:border-b-0 hover:bg-slate-50/60 transition-colors"
+                                                    onClick={() => abrirModalBloqueo(bloqueo)}
+                                                >
                                                     <td className="py-2.5 pr-4 font-medium text-slate-800">{bloqueo.motivo || "Sin motivo"}</td>
                                                     <td className="py-2.5 pr-4 text-slate-500">{(bloqueo.fechaInicio ?? "").slice(0, 10)}</td>
                                                     <td className="py-2.5 pr-4 text-slate-500">{bloqueo.horaInicio ?? "--"}</td>
@@ -2129,10 +2259,10 @@ function CalendarioContent() {
                                                     <td className="py-2.5">
                                                         <button
                                                             type="button"
-                                                            onClick={() => eliminarBloqueo(bloqueo.id_bloqueo)}
-                                                            className="inline-flex items-center gap-1 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100 transition-colors"
+                                                            onClick={(e) => { e.stopPropagation(); abrirModalBloqueo(bloqueo); }}
+                                                            className="inline-flex items-center gap-1 rounded-lg border border-violet-200 bg-violet-50 px-2.5 py-1.5 text-xs font-medium text-violet-700 hover:bg-violet-100 transition-colors"
                                                         >
-                                                            Eliminar
+                                                            Ver detalle
                                                         </button>
                                                     </td>
                                                 </tr>
@@ -2144,6 +2274,73 @@ function CalendarioContent() {
                         </div>
                     )}
                 </div>
+
+                {modalBloqueoAbierto && bloqueoSeleccionado && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={cerrarModalBloqueo} />
+                        <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-300/50 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
+                            <div className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#312e81_58%,#0891b2_100%)] px-6 py-5">
+                                <div className="pointer-events-none absolute -top-8 -right-8 h-24 w-24 rounded-full bg-white/10" />
+                                <div className="pointer-events-none absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/5" />
+                                <div className="relative">
+                                    <div className="mb-1 flex items-center gap-2">
+                                        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                            </svg>
+                                        </div>
+                                        <h3 className="text-lg font-semibold text-white">Detalle del Bloqueo</h3>
+                                    </div>
+                                    <p className="text-sm text-white/70">Revisa la información del bloqueo y elimínalo si corresponde.</p>
+                                </div>
+                            </div>
+                            <div className="space-y-4 p-6">
+                                <div>
+                                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Profesional</label>
+                                    <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm font-semibold text-slate-700">
+                                        {obtenerNombreProfesionalSeleccionado()}
+                                    </div>
+                                </div>
+                                <div>
+                                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Motivo</label>
+                                    <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
+                                        {bloqueoSeleccionado.motivo || "Sin motivo"}
+                                    </div>
+                                </div>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                    <div>
+                                        <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Inicio</label>
+                                        <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
+                                            <span className="block font-semibold">{formatearFechaTabla(bloqueoSeleccionado.fechaInicio)}</span>
+                                            <span className="mt-1 block text-xs font-medium text-slate-500">{bloqueoSeleccionado.horaInicio ?? "--"}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Fin</label>
+                                        <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
+                                            <span className="block font-semibold">{formatearFechaTabla(bloqueoSeleccionado.fechaFinalizacion)}</span>
+                                            <span className="mt-1 block text-xs font-medium text-slate-500">{bloqueoSeleccionado.horaFinalizacion ?? "--"}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="flex items-center justify-end gap-2.5 border-t border-slate-200 bg-slate-100/50 px-6 py-4">
+                                <button
+                                    onClick={cerrarModalBloqueo}
+                                    className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-all duration-150 hover:bg-slate-50 active:scale-[0.97]"
+                                >
+                                    Cerrar
+                                </button>
+                                <button
+                                    onClick={() => eliminarBloqueo(bloqueoSeleccionado.id_bloqueo)}
+                                    className="rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-red-500/25 transition-all duration-150 hover:from-red-700 hover:to-rose-700 active:scale-[0.97]"
+                                >
+                                    Eliminar Bloqueo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* ═══ DRAWER PREMIUM (reemplaza al popup flotante) ═══ */}
                 {selectionDraft && (
@@ -2174,6 +2371,7 @@ function CalendarioContent() {
                         )}
                         listaProfesionales={listaProfesionales}
                         listaPrestaciones={listaPrestaciones}
+                        listaTarifasProfesional={listaTarifasProfesional}
                         id_profesional={id_profesional}
                         selectionDraft={selectionDraft}
                         popupForm={popupForm}
