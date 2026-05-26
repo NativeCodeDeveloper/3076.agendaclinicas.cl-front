@@ -209,6 +209,7 @@ function FormSection({
   // — requiere que el endpoint /serviciosProfesionales/seleccionarTodosServiciosProfesionales
   //   esté llamado desde el padre y que el resultado se pase aquí.
   listaPrestaciones = [],
+  listaTarifasProfesional = [],
   onBloquear,
   onCambiarEstado,
 }) {
@@ -337,14 +338,56 @@ function FormSection({
         </div>
       )}
 
+      {/* Selector de tarifa / servicio del profesional */}
+      {mode !== "bloqueo" && listaTarifasProfesional.length > 0 && (
+        <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3 space-y-2">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500 mb-1">
+            Servicio
+          </p>
+          <div>
+            <label className={labelClass}>Tipo de atenci&oacute;n</label>
+            <select
+              value={popupForm.motivo_reserva ?? ""}
+              onChange={(e) => {
+                const selectedValue = e.target.value;
+                if (!selectedValue) {
+                  onPopupFormChange("motivo_reserva", "");
+                  onPopupFormChange("monto_reserva", "");
+                  return;
+                }
+                const tarifa = listaTarifasProfesional.find(
+                  (t) => t.nombreServicio === selectedValue
+                );
+                if (tarifa) {
+                  onPopupFormChange("motivo_reserva", tarifa.nombreServicio);
+                  onPopupFormChange("monto_reserva", tarifa.precio);
+                }
+              }}
+              className={inputClass}
+              style={{ colorScheme: "light" }}
+            >
+              <option value="">— Seleccione un servicio —</option>
+              {listaTarifasProfesional.map((t) => (
+                <option key={t.id_tarifaProfesional} value={t.nombreServicio}>
+                  {t.nombreServicio} - ${Number(t.precio).toLocaleString("es-CL")}
+                </option>
+              ))}
+            </select>
+          </div>
+          {popupForm.monto_reserva && (
+            <p className="text-[12px] text-slate-500">
+              Monto: <span className="font-semibold text-slate-700">${Number(popupForm.monto_reserva).toLocaleString("es-CL")}</span>
+            </p>
+          )}
+        </div>
+      )}
+
       {/* ── Tipo de consulta + Modalidad ── PENDIENTE BD ──
           Descomentar cuando estén aplicadas las migraciones:
           1. ALTER TABLE reservaciones ADD COLUMN nombre_prestacion VARCHAR(255) NULL;
           2. ALTER TABLE reservaciones ADD COLUMN modalidad VARCHAR(20) DEFAULT 'presencial';
           3. Actualizar endpoints insertarReserva y actualizarReservacion para aceptar estos campos.
           4. Retornar ambos campos en todos los SELECTs de reservas.
-
-           ── Fin bloque comentado ── */}
 
       {mode !== "bloqueo" && (
         <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3 space-y-3">
@@ -423,7 +466,7 @@ function FormSection({
           </div>
         </div>
       )}
-     
+      ── Fin bloque comentado ── */}
 
       {/* Bloqueo rápido */}
       {mode === "create" && (
@@ -484,6 +527,7 @@ export function AppointmentDrawer({
   // Se obtiene del endpoint GET /serviciosProfesionales/seleccionarTodosServiciosProfesionales
   // y se pasa desde calendario/page.jsx.
   listaPrestaciones = [],
+  listaTarifasProfesional = [],
   id_profesional,
   selectionDraft,
   // popupForm ahora incluye: prestacion y modalidad además de los campos base
@@ -584,6 +628,7 @@ export function AppointmentDrawer({
               onBloquear={onBloquear}
               onCambiarEstado={onCambiarEstado}
               listaPrestaciones={listaPrestaciones}
+              listaTarifasProfesional={listaTarifasProfesional}
             />
           )}
         </div>

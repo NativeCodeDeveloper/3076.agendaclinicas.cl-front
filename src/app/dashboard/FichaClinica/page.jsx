@@ -141,6 +141,15 @@ export default function FichaClinica() {
                     </div>
                     <div className="flex items-center gap-3">
                         <InfoButton informacion={'Busca al paciente para gestionar sus fichas de atención. Cada carpeta contiene el registro cronológico de sus consultas y documentos adjuntos.'}/>
+                        <button
+                            onClick={() => router.push("/dashboard")}
+                            className="h-10 px-5 rounded-2xl bg-[#6E56CF] text-white flex items-center gap-2 shadow-sm hover:bg-[#5b45bc] transition-all"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span className="text-[10px] font-bold">Ver Reservaciones</span>
+                        </button>
                     </div>
                 </div>
 

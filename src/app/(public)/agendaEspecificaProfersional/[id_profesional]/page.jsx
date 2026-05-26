@@ -394,6 +394,15 @@ export default function CalendarioMensualHoras() {
                     }
                 } catch (err) { console.error("[Agenda] revalidar vecinos:", err); }
             })();
+
+            const params = new URLSearchParams({
+                fechaInicio: ymd,
+                fechaFinalizacion: ymd,
+                horaInicio: hora,
+                horaFin,
+            });
+
+            router.push(`/formularioReservaProfesional/${id_profesional}?${params.toString()}`);
         }
     }
 

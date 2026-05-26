@@ -646,6 +646,16 @@ export default function Paciente() {
                                             <ShadcnInput value={rut} onChange={(e) => setRut(e.target.value)} className="h-11 rounded-xl border-slate-200 focus:ring-violet-50 focus:border-[#6E56CF]" />
                                         </div>
                                         <div className="space-y-2">
+                                            <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Fecha de nacimiento</label>
+                                            <div className="w-full [&_button]:h-11 [&_button]:w-full [&_button]:justify-between [&_button]:rounded-xl [&_button]:border-slate-200 [&_button]:bg-white [&_button]:text-sm [&_label]:hidden">
+                                                <ShadcnDatePicker
+                                                    label="Fecha de nacimiento"
+                                                    value={nacimiento}
+                                                    onChange={(fecha) => setNacimiento(fecha)}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="space-y-2">
                                             <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Sexo</label>
                                             <ShadcnInput value={sexo} onChange={(e) => setSexo(e.target.value)} className="h-11 rounded-xl border-slate-200 focus:ring-violet-50 focus:border-[#6E56CF]" />
                                         </div>

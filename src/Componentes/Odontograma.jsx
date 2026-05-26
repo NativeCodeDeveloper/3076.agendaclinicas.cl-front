@@ -201,9 +201,9 @@ function ToothSVG({ number, data, tool, onClickSurface, onClickWhole, isTemporar
 
                 {/* ── X roja (resto radicular) ── */}
                 {showRedX && (
-                    <g stroke="#ef4444" strokeWidth={3} strokeLinecap="round">
-                        <line x1={half - outer + 4} y1={half - outer + 4} x2={half + outer - 4} y2={half + outer - 4} />
-                        <line x1={half + outer - 4} y1={half - outer + 4} x2={half - outer + 4} y2={half + outer - 4} />
+                    <g stroke="#ef4444" strokeWidth={2.5} strokeLinecap="round" pointerEvents="none">
+                        <line x1={half - inner + 2} y1={half - inner + 2} x2={half + inner - 2} y2={half + inner - 2} />
+                        <line x1={half + inner - 2} y1={half - inner + 2} x2={half - inner + 2} y2={half + inner - 2} />
                     </g>
                 )}
 
