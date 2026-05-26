@@ -20,7 +20,7 @@ import UserMenu from "./UserMenu";
 
 // ── Mapa de rutas por acordeón ─────────────────────────────────────────────
 const ACCORDION_ROUTES = {
-    agenda:       ["/dashboard/calendario", "/dashboard/calendarioGeneral", "/dashboard/bloqueosAgenda"],
+    agenda:       ["/dashboard/calendario", "/dashboard/bloqueosAgenda"],
     pacientes:    ["/dashboard/listaPacientes", "/dashboard/GestionPaciente", "/dashboard/FichaClinica"],
     documentos:   ["/dashboard/recetaRapida", "/dashboard/recetaLentes", "/dashboard/examenDocumento"],
     presupuestos: ["/dashboard/presupuestoTratamiento", "/dashboard/ingresoProductos", "/dashboard/categoriasProductos"],
@@ -227,7 +227,6 @@ export default function SidebarNav() {
                 {/* ══ AGENDA ══ */}
                 <NavAccordion id="agenda" label="Agenda Clínica" icon={IcoCalendar} {...accProps}>
                     <SubNavItem href="/dashboard/calendario" label="Nueva Reserva" />
-                    <SubNavItem href="/dashboard/calendarioGeneral" label="Vista General" />
                     <SubNavItem href="/dashboard/bloqueosAgenda" label="Bloqueos" />
                 </NavAccordion>
 

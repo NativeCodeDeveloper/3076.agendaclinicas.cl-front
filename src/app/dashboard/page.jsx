@@ -489,24 +489,24 @@ export default function AgendaCitas() {
         const estadoNormalizado = normalizarEstadoReserva(estadoReserva);
 
         if (estadoNormalizado === "reservada" || estadoNormalizado === "reservado") {
-            return { backgroundColor: "rgba(180, 132, 108, 0.24)", color: "#6b4f3f", accentColor: "#8b5e3c", borderColor: "rgba(139, 94, 60, 0.30)" };
-        }
-        if (estadoNormalizado === "asiste") {
-            return { backgroundColor: "rgba(34, 211, 238, 0.20)", color: "#0f766e", accentColor: "#0891b2", borderColor: "rgba(6, 182, 212, 0.30)" };
-        }
-        if (estadoNormalizado === "no asiste" || estadoNormalizado === "no asistio" || estadoNormalizado === "no asistste") {
-            return { backgroundColor: "rgba(251, 146, 60, 0.18)", color: "#9a3412", accentColor: "#ea580c", borderColor: "rgba(249, 115, 22, 0.28)" };
-        }
-        if (estadoNormalizado === "finalizado") {
-            return { backgroundColor: "rgba(37, 99, 235, 0.22)", color: "#1d4ed8", accentColor: "#1e40af", borderColor: "rgba(37, 99, 235, 0.32)" };
+            return { backgroundColor: "rgba(245, 158, 11, 0.12)", color: "#92400e", accentColor: "#F59E0B", borderColor: "rgba(245, 158, 11, 0.35)" };
         }
         if (estadoNormalizado === "confirmada" || estadoNormalizado === "confirmado") {
-            return { backgroundColor: "rgba(34, 197, 94, 0.22)", color: "#14532d", accentColor: "#166534", borderColor: "rgba(34, 197, 94, 0.30)" };
+            return { backgroundColor: "rgba(16, 185, 129, 0.12)", color: "#065f46", accentColor: "#10B981", borderColor: "rgba(16, 185, 129, 0.30)" };
+        }
+        if (estadoNormalizado === "asiste") {
+            return { backgroundColor: "rgba(14, 165, 233, 0.12)", color: "#0c4a6e", accentColor: "#0EA5E9", borderColor: "rgba(14, 165, 233, 0.30)" };
+        }
+        if (estadoNormalizado === "no asiste" || estadoNormalizado === "no asistio" || estadoNormalizado === "no asistste") {
+            return { backgroundColor: "rgba(249, 115, 22, 0.12)", color: "#9a3412", accentColor: "#F97316", borderColor: "rgba(249, 115, 22, 0.30)" };
+        }
+        if (estadoNormalizado === "finalizado") {
+            return { backgroundColor: "rgba(15, 118, 110, 0.12)", color: "#134e4a", accentColor: "#0F766E", borderColor: "rgba(15, 118, 110, 0.30)" };
         }
         if (estadoNormalizado === "anulada" || estadoNormalizado === "anulado") {
-            return { backgroundColor: "rgba(220, 38, 38, 0.20)", color: "#991b1b", accentColor: "#b91c1c", borderColor: "rgba(220, 38, 38, 0.30)" };
+            return { backgroundColor: "rgba(239, 68, 68, 0.12)", color: "#991b1b", accentColor: "#EF4444", borderColor: "rgba(239, 68, 68, 0.30)" };
         }
-        return { backgroundColor: "rgba(124, 58, 237, 0.20)", color: "#5b21b6", accentColor: "#5b21b6", borderColor: "rgba(124, 58, 237, 0.28)" };
+        return { backgroundColor: "rgba(245, 158, 11, 0.12)", color: "#92400e", accentColor: "#F59E0B", borderColor: "rgba(245, 158, 11, 0.35)" };
     }
 
     function obtenerEstiloBadgeEstado(estadoReserva = "") {
