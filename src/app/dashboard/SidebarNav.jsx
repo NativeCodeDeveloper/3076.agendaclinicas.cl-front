@@ -226,7 +226,7 @@ export default function SidebarNav() {
 
                 {/* ══ AGENDA ══ */}
                 <NavAccordion id="agenda" label="Agenda Clínica" icon={IcoCalendar} {...accProps}>
-                    <SubNavItem href="/dashboard/calendario" label="Nueva Reserva" />
+                    <SubNavItem href="/dashboard/calendario" label="Calendario y Reservas" />
                     <SubNavItem href="/dashboard/bloqueosAgenda" label="Bloqueos" />
                 </NavAccordion>
 
