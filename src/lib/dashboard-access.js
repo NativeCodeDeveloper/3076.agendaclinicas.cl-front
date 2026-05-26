@@ -4,6 +4,7 @@ const DASHBOARD_ROLES = [
   "super-usuario-nativecode",
   "recepcionista",
   "secretaria",
+  "cancelado",
   "basico",
   "centro-estetico",
   "clinico-medico",
@@ -14,6 +15,9 @@ const DASHBOARD_ROLES = [
 ];
 
 const DASHBOARD_ROLE_SET = new Set(DASHBOARD_ROLES);
+const globallyDeniedDashboardMatchers = [
+  /^\/dashboard\/agendaCitas$/,
+];
 
 const routeMatchersByRole = {
   "super-usuario-nativecode": [
@@ -26,7 +30,6 @@ const routeMatchersByRole = {
     /^\/dashboard\/no-access$/,
     /^\/dashboard\/calendario$/,
     /^\/dashboard\/calendarioGeneral$/,
-    /^\/dashboard\/agendaCitas$/,
     /^\/dashboard\/bloqueosAgenda$/,
     /^\/dashboard\/AgendaDetalle\/[^/]+$/,
     /^\/dashboard\/GestionPaciente$/,
@@ -37,11 +40,13 @@ const routeMatchersByRole = {
     /^\/dashboard\/no-access$/,
     /^\/dashboard\/calendario$/,
     /^\/dashboard\/calendarioGeneral$/,
-    /^\/dashboard\/agendaCitas$/,
     /^\/dashboard\/bloqueosAgenda$/,
     /^\/dashboard\/AgendaDetalle\/[^/]+$/,
     /^\/dashboard\/GestionPaciente$/,
     /^\/dashboard\/paciente\/[^/]+$/,
+  ],
+  cancelado: [
+    /^\/dashboard\/suscripcion-cancelada$/,
   ],
   basico: [
     /^\/dashboard$/,
@@ -211,6 +216,18 @@ const routeMatchersByRole = {
   ],
 };
 
+const routeDenyMatchersByRole = {
+  secretaria: [
+    /^\/dashboard\/FichaClinica$/,
+    /^\/dashboard\/fichasClinicasCategorias\/[^/]+$/,
+    /^\/dashboard\/fichasClinicasPlantillas$/,
+    /^\/dashboard\/FichasPacientes\/[^/]+$/,
+    /^\/dashboard\/ingresoProductos$/,
+    /^\/dashboard\/NuevaFicha\/[^/]+$/,
+    /^\/dashboard\/odontogramasPaciente\/[^/]+$/,
+  ],
+};
+
 const DASHBOARD_NAV_SECTIONS = [
   {
     id: "principal",
@@ -228,7 +245,6 @@ const DASHBOARD_NAV_SECTIONS = [
     items: [
       { label: "Calendario General", href: "/dashboard/calendarioGeneral", icon: "panels" },
       { label: "Calendario y Reservas", href: "/dashboard/calendario", icon: "calendarDays" },
-      { label: "Estado de Reservaciones", href: "/dashboard/agendaCitas", icon: "clipboard" },
       { label: "Bloqueos", href: "/dashboard/bloqueosAgenda", icon: "lock" },
     ],
   },
@@ -316,6 +332,10 @@ const DASHBOARD_ROLE_DETAILS = {
     label: "Secretaria",
     description: "Gestiona agenda y flujo administrativo de reservas.",
   },
+  cancelado: {
+    label: "Cancelado",
+    description: "Suscripcion cancelada, acceso suspendido hasta regularizar pagos.",
+  },
   basico: {
     label: "Basico",
     description: "Acceso clinico y operativo limitado, sin recetas ni examenes.",
@@ -378,11 +398,21 @@ function canAccessDashboardPath(role, pathname) {
     return true;
   }
 
+  if (globallyDeniedDashboardMatchers.some((matcher) => matcher.test(pathname))) {
+    return false;
+  }
+
   if (hasFullDashboardAccess(role)) {
     return true;
   }
 
   const normalizedRole = normalizeDashboardRole(role);
+  const denyMatchers = routeDenyMatchersByRole[normalizedRole] || [];
+
+  if (denyMatchers.some((matcher) => matcher.test(pathname))) {
+    return false;
+  }
+
   const matchers = routeMatchersByRole[normalizedRole] || [];
   return matchers.some((matcher) => matcher.test(pathname));
 }
@@ -461,7 +491,9 @@ export {
   getDashboardRoleLabel,
   getAssignableDashboardRoles,
   getVisibleDashboardSections,
+  globallyDeniedDashboardMatchers,
   hasFullDashboardAccess,
   normalizeDashboardRole,
+  routeDenyMatchersByRole,
   routeMatchersByRole,
 };

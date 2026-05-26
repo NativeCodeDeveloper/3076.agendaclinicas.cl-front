@@ -4,6 +4,7 @@ import { canAccessDashboardPath, getDashboardRoleFromClaims } from "@/lib/dashbo
 
 const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
 const isDashboardApiRoute = createRouteMatcher(["/api/dashboard(.*)"]);
+const SUBSCRIPTION_CANCELLED_PATH = "/dashboard/suscripcion-cancelada";
 
 export default clerkMiddleware(async (auth, req) => {
   if (!isDashboardRoute(req) && !isDashboardApiRoute(req)) {
@@ -18,6 +19,10 @@ export default clerkMiddleware(async (auth, req) => {
 
   const role = getDashboardRoleFromClaims(sessionClaims);
   const pathname = req.nextUrl.pathname;
+
+  if (isDashboardRoute(req) && role === "cancelado" && pathname !== SUBSCRIPTION_CANCELLED_PATH) {
+    return NextResponse.redirect(new URL(SUBSCRIPTION_CANCELLED_PATH, req.url));
+  }
 
   if (isDashboardRoute(req) && !canAccessDashboardPath(role, pathname)) {
     return NextResponse.redirect(new URL("/dashboard/no-access", req.url));
