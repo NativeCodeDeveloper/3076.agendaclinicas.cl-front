@@ -27,35 +27,51 @@ export function RutInput({
     label = "",
     disabled = false,
 }) {
-    const [display, setDisplay]   = useState(formatRut(value) || "");
+    const [display, setDisplay]   = useState(value || "");
     const [touched, setTouched]   = useState(false);
     const [error,   setError]     = useState("");
 
     // Sincroniza display cuando el padre cambia el valor (reset de form, carga desde BD)
     useEffect(() => {
-        const f = formatRut(value);
-        setDisplay(f || (value ? value : ""));
+        const clean = cleanRut(value);
+        setDisplay(clean || (value ? value : ""));
     }, [value]);
 
     function validate(clean) {
         if (!clean) return "";
-        if (clean.length < 9) return `Faltan ${9 - clean.length} carácter(es) — debe tener 9 en total`;
+        if (clean.length < 9) return `Faltan ${9 - clean.length} caracter(es) — debe tener 9 en total`;
         return "";
     }
 
     function handleChange(e) {
         const raw = e.target.value;
-        // Conserva solo dígitos y K (límite 9 chars)
+        // Conserva solo digitos y K (limite 9 chars)
         const clean = raw.replace(/[^0-9kK]/g, "").toUpperCase().slice(0, 9);
 
-        // Actualiza display formateado
-        const formatted = clean.length >= 2 ? formatRut(clean) : clean;
-        setDisplay(formatted);
+        // Muestra el valor limpio sin formato
+        setDisplay(clean);
 
         // Propaga valor limpio al padre
         onChange?.(clean);
 
-        // Valida solo si ya tocó el campo
+        // Valida solo si ya toco el campo
+        if (touched) setError(validate(clean));
+    }
+
+    function handleBeforeInput(e) {
+        const data = e.data ?? "";
+        if (!data) return;
+        if (!/^[0-9kK]+$/.test(data)) {
+            e.preventDefault();
+        }
+    }
+
+    function handlePaste(e) {
+        const pasted = e.clipboardData?.getData("text") ?? "";
+        const clean = pasted.replace(/[^0-9kK]/g, "").toUpperCase().slice(0, 9);
+        e.preventDefault();
+        setDisplay(clean);
+        onChange?.(clean);
         if (touched) setError(validate(clean));
     }
 
@@ -88,12 +104,17 @@ export function RutInput({
                     type="text"
                     value={display}
                     onChange={handleChange}
+                    onBeforeInput={handleBeforeInput}
+                    onPaste={handlePaste}
                     onBlur={handleBlur}
                     placeholder={placeholder}
                     disabled={disabled}
                     className={`${baseClass} ${className}`}
                     inputMode="text"
                     autoComplete="off"
+                    autoCapitalize="characters"
+                    style={{ textTransform: "uppercase" }}
+                    maxLength={9}
                 />
                 {/* Indicador de validez */}
                 {isOk && (

@@ -4,7 +4,7 @@ import ShadcnInput from "@/Componentes/shadcnInput2";
 import ShadcnButton2 from "@/Componentes/shadcnButton2";
 import {useAgenda} from "@/ContextosGlobales/AgendaContext";
 import {toast} from "react-hot-toast";
-import {useParams, useRouter} from "next/navigation";
+import {useParams, useRouter, useSearchParams} from "next/navigation";
 import {SelectDinamic} from "@/Componentes/SelectDinamic";
 import {RutInput} from "@/Componentes/RutInput";
 import {PhoneInput} from "@/Componentes/PhoneInput";
@@ -24,6 +24,7 @@ export default function FormularioReservaProfesional() {
     const API = process.env.NEXT_PUBLIC_API_URL;
     const {id_profesional} = useParams();
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     /* ── Datos del paciente ── */
     const [nombrePaciente,   setNombrePaciente]   = useState("");
@@ -48,7 +49,17 @@ export default function FormularioReservaProfesional() {
     const [totalPago,             setTotalPago]             = useState("");
 
     /* ── Contexto global (fecha, hora y servicio vienen del calendario) ── */
-    const {horaInicio, horaFin, fechaInicio, fechaFinalizacion, servicio} = useAgenda();
+    const {
+        horaInicio,
+        horaFin,
+        fechaInicio,
+        fechaFinalizacion,
+        servicio,
+        setHoraInicio,
+        setHoraFin,
+        setFechaInicio,
+        setFechaFinalizacion,
+    } = useAgenda();
 
     /*
      * Al montar, si el contexto ya tiene un servicio elegido en el calendario
@@ -61,6 +72,28 @@ export default function FormularioReservaProfesional() {
             setTotalPago(servicio.precio);
         }
     }, [servicio]);
+
+    useEffect(() => {
+        const fechaInicioQuery = searchParams.get("fechaInicio");
+        const fechaFinalizacionQuery = searchParams.get("fechaFinalizacion");
+        const horaInicioQuery = searchParams.get("horaInicio");
+        const horaFinQuery = searchParams.get("horaFin");
+
+        if (!fechaInicio && fechaInicioQuery) setFechaInicio(fechaInicioQuery);
+        if (!fechaFinalizacion && fechaFinalizacionQuery) setFechaFinalizacion(fechaFinalizacionQuery);
+        if (!horaInicio && horaInicioQuery) setHoraInicio(horaInicioQuery);
+        if (!horaFin && horaFinQuery) setHoraFin(horaFinQuery);
+    }, [
+        searchParams,
+        fechaInicio,
+        fechaFinalizacion,
+        horaInicio,
+        horaFin,
+        setFechaInicio,
+        setFechaFinalizacion,
+        setHoraInicio,
+        setHoraFin,
+    ]);
 
     /* ── Carga datos del profesional ── */
     useEffect(() => {
@@ -127,9 +160,16 @@ export default function FormularioReservaProfesional() {
      *  2. Todos los campos del paciente deben estar completos.
      */
     async function agendarSinPago() {
+        const motivoReserva = (servicio?.nombre || servicioNombre || "").trim();
+        const montoReserva = String(servicio?.precio ?? totalPago ?? "").trim();
+
         /* ── Validaciones de guard ── */
         if (!fechaInicio || !horaInicio || !horaFin) {
             toast.error("Debes seleccionar fecha y hora antes de completar el formulario. Vuelve al calendario.");
+            return;
+        }
+        if (!motivoReserva || !montoReserva) {
+            toast.error("Debes seleccionar un servicio antes de continuar.");
             return;
         }
         if (!nombrePaciente.trim() || !apellidoPaciente.trim() || !rut.trim() || !telefono.trim() || !email.trim()) {
@@ -144,6 +184,7 @@ export default function FormularioReservaProfesional() {
                 body: JSON.stringify({
                     nombrePaciente:    nombrePaciente.trim(),
                     apellidoPaciente:  apellidoPaciente.trim(),
+                    nombreProfesional: profesionalNombre || "",
                     rut:               rut.trim(),
                     telefono:          telefono.trim(),
                     email:             email.trim(),
@@ -151,12 +192,10 @@ export default function FormularioReservaProfesional() {
                     horaInicio,
                     fechaFinalizacion,
                     horaFinalizacion:  horaFin,
+                    monto_reserva:     montoReserva,
+                    motivo_reserva:    motivoReserva,
                     estadoReserva:     "reservada",
                     id_profesional,
-                    // Campos de servicio — el backend los usa para correo/WhatsApp aunque no los persista en BD aún
-                    nombre_prestacion: servicioNombre || null,
-                    precio_prestacion: totalPago      || null,
-                    modalidad:         "presencial",
                 }),
             });
 

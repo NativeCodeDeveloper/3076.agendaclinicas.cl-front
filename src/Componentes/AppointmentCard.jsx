@@ -102,6 +102,38 @@ export function AppointmentCard({ event, currentView }) {
     );
   }
 
+  if (currentView === "agenda") {
+    return (
+      <div
+        className="flex h-full w-full min-w-0 flex-col gap-0.5 overflow-hidden rounded-md px-3 py-2"
+        style={{
+          borderLeft: `4px solid ${token.accent}`,
+          background: token.bg,
+          boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.4)",
+        }}
+      >
+        <span className="text-[11px] font-bold tabular-nums leading-none" style={{ color: token.accent }}>
+          {horaInicio} – {horaFin}
+        </span>
+        <span
+          className="truncate text-[13px] font-bold leading-snug"
+          style={{ color: token.text }}
+        >
+          {nombreCompleto || event.title}
+        </span>
+        {profesional && (
+          <span className="truncate text-[11px] font-semibold text-slate-400 leading-tight">
+            {profesional}
+          </span>
+        )}
+        <div className="flex flex-wrap gap-1 pt-0.5">
+          <StatusBadge estado={estado} size="xs" />
+          {pago && <StatusBadge estado={pago} size="xs" />}
+        </div>
+      </div>
+    );
+  }
+
   // ── Vista SEMANA / DÍA / AGENDA ─────────────────────────────────────────
   // Umbral: slots menores a 25px aprox. corresponden a ~15 min
   const isShort = duracion < 30;
