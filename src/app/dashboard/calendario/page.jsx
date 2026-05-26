@@ -2277,63 +2277,65 @@ function CalendarioContent() {
 
                 {modalBloqueoAbierto && bloqueoSeleccionado && (
                     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-                        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm" onClick={cerrarModalBloqueo} />
-                        <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-300/50 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.18)]">
-                            <div className="relative overflow-hidden bg-[linear-gradient(135deg,#0f172a_0%,#312e81_58%,#0891b2_100%)] px-6 py-5">
-                                <div className="pointer-events-none absolute -top-8 -right-8 h-24 w-24 rounded-full bg-white/10" />
-                                <div className="pointer-events-none absolute -bottom-4 -left-4 h-16 w-16 rounded-full bg-white/5" />
-                                <div className="relative">
-                                    <div className="mb-1 flex items-center gap-2">
-                                        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-white/20 backdrop-blur-sm">
-                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                            </svg>
-                                        </div>
-                                        <h3 className="text-lg font-semibold text-white">Detalle del Bloqueo</h3>
-                                    </div>
-                                    <p className="text-sm text-white/70">Revisa la información del bloqueo y elimínalo si corresponde.</p>
+                        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm" onClick={cerrarModalBloqueo} />
+                        <div className="relative w-full max-w-md overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+
+                            {/* Header */}
+                            <div className="px-6 py-5 border-b border-slate-100 flex items-center gap-3">
+                                <div className="h-10 w-10 rounded-xl bg-violet-50 flex items-center justify-center text-[#6E56CF]">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 className="text-base font-bold text-slate-800">Detalle del Bloqueo</h3>
+                                    <p className="text-[11px] text-slate-400 font-medium">Revisa la información y elimina si corresponde</p>
                                 </div>
                             </div>
+
+                            {/* Body */}
                             <div className="space-y-4 p-6">
-                                <div>
-                                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Profesional</label>
-                                    <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm font-semibold text-slate-700">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Profesional</label>
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-[13px] font-semibold text-slate-700">
                                         {obtenerNombreProfesionalSeleccionado()}
                                     </div>
                                 </div>
-                                <div>
-                                    <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Motivo</label>
-                                    <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
+                                <div className="space-y-1.5">
+                                    <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Motivo</label>
+                                    <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-[13px] text-slate-700">
                                         {bloqueoSeleccionado.motivo || "Sin motivo"}
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                                    <div>
-                                        <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Inicio</label>
-                                        <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
-                                            <span className="block font-semibold">{formatearFechaTabla(bloqueoSeleccionado.fechaInicio)}</span>
-                                            <span className="mt-1 block text-xs font-medium text-slate-500">{bloqueoSeleccionado.horaInicio ?? "--"}</span>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Inicio</label>
+                                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-[13px] text-slate-700">
+                                            <span className="block font-semibold text-slate-800">{formatearFechaTabla(bloqueoSeleccionado.fechaInicio)}</span>
+                                            <span className="mt-0.5 block text-[11px] font-bold text-slate-400">{bloqueoSeleccionado.horaInicio ?? "--"}</span>
                                         </div>
                                     </div>
-                                    <div>
-                                        <label className="mb-2 block text-xs font-semibold uppercase tracking-wider text-slate-500">Fin</label>
-                                        <div className="rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-sm text-slate-700">
-                                            <span className="block font-semibold">{formatearFechaTabla(bloqueoSeleccionado.fechaFinalizacion)}</span>
-                                            <span className="mt-1 block text-xs font-medium text-slate-500">{bloqueoSeleccionado.horaFinalizacion ?? "--"}</span>
+                                    <div className="space-y-1.5">
+                                        <label className="text-[10px] font-bold text-slate-400 uppercase tracking-widest ml-1">Fin</label>
+                                        <div className="rounded-2xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-[13px] text-slate-700">
+                                            <span className="block font-semibold text-slate-800">{formatearFechaTabla(bloqueoSeleccionado.fechaFinalizacion)}</span>
+                                            <span className="mt-0.5 block text-[11px] font-bold text-slate-400">{bloqueoSeleccionado.horaFinalizacion ?? "--"}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex items-center justify-end gap-2.5 border-t border-slate-200 bg-slate-100/50 px-6 py-4">
+
+                            {/* Footer */}
+                            <div className="flex items-center justify-end gap-2.5 border-t border-slate-100 bg-slate-50/50 px-6 py-4">
                                 <button
                                     onClick={cerrarModalBloqueo}
-                                    className="rounded-xl border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-600 transition-all duration-150 hover:bg-slate-50 active:scale-[0.97]"
+                                    className="rounded-2xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-600 transition-all duration-150 hover:bg-slate-50 active:scale-[0.98]"
                                 >
                                     Cerrar
                                 </button>
                                 <button
                                     onClick={() => eliminarBloqueo(bloqueoSeleccionado.id_bloqueo)}
-                                    className="rounded-xl bg-gradient-to-r from-red-600 to-rose-600 px-5 py-2 text-sm font-semibold text-white shadow-sm shadow-red-500/25 transition-all duration-150 hover:from-red-700 hover:to-rose-700 active:scale-[0.97]"
+                                    className="rounded-2xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-all duration-150 hover:bg-rose-700 active:scale-[0.98]"
                                 >
                                     Eliminar Bloqueo
                                 </button>
