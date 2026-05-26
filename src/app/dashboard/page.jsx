@@ -619,6 +619,86 @@ export default function AgendaCitas() {
         toast.success("Archivo Excel exportado correctamente.");
     }
 
+    function renderMenuAccionesReserva(data, opciones = {}) {
+        const { menuPositionClass = "left-0 mt-2" } = opciones;
+        return (
+            <div className="relative">
+                <button
+                    onClick={() => setMenuEstadoAbiertoId(menuEstadoAbiertoId === data.id_reserva ? null : data.id_reserva)}
+                    className="h-9 px-4 rounded-xl flex items-center gap-2 transition-all hover:brightness-95 disabled:opacity-50"
+                    style={obtenerEstiloBotonEstado(data.estadoReserva)}
+                    disabled={actualizandoReservaId === data.id_reserva}
+                >
+                    <span className="text-[11px] font-bold uppercase tracking-wider">
+                        {actualizandoReservaId === data.id_reserva ? "Cargando..." : data.estadoReserva || "Reservada"}
+                    </span>
+                    <svg xmlns="http://www.w3.org/2000/svg" className={`h-3 w-3 opacity-60 transition-transform duration-200 ${menuEstadoAbiertoId === data.id_reserva ? "rotate-180" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                {menuEstadoAbiertoId === data.id_reserva && (
+                    <div className={`absolute ${menuPositionClass} w-56 bg-white rounded-2xl border border-slate-200 shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200`}>
+                        <div className="p-2 grid grid-cols-1 gap-1">
+                            {accionesRapidasEstado.map((accion) => (
+                                <button
+                                    key={accion.valor}
+                                    onClick={() => actualizarEstadoReservaRapido(data.id_reserva, accion.valor)}
+                                    disabled={actualizandoReservaId === data.id_reserva}
+                                    className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left disabled:cursor-not-allowed disabled:opacity-60"
+                                >
+                                    <div className="h-7 w-7 rounded-lg flex items-center justify-center" style={obtenerEstiloBadgeEstado(accion.valor)}>
+                                        {accion.icono}
+                                    </div>
+                                    <span className="text-[12px] font-bold text-slate-700">{accion.etiqueta}</span>
+                                </button>
+                            ))}
+                            <div className="border-t border-slate-100 mt-1 pt-1">
+                                <button
+                                    type="button"
+                                    disabled={eliminandoReservaId === data.id_reserva}
+                                    onClick={() => eliminarReservaDesdeListado(data.id_reserva)}
+                                    className="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 transition-colors text-left disabled:cursor-not-allowed disabled:opacity-60"
+                                >
+                                    <div className="h-7 w-7 rounded-lg flex items-center justify-center bg-rose-50 border border-rose-200 text-rose-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </div>
+                                    <span className="text-[12px] font-bold text-rose-700">
+                                        {eliminandoReservaId === data.id_reserva ? "Eliminando..." : "Eliminar Reserv."}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        );
+    }
+
+    function renderBotonFichaReserva(data) {
+        return (
+            <button
+                onClick={() => verFichaClinicaPaciente(data)}
+                disabled={abriendoFichaReservaId === data.id_reserva}
+                className="h-10 w-10 mx-auto rounded-xl bg-white border border-slate-200 text-[#6E56CF] hover:border-[#6E56CF] hover:bg-violet-50 transition-all flex items-center justify-center shadow-sm disabled:cursor-not-allowed disabled:opacity-60"
+                title="Ver Ficha Clínica"
+            >
+                {abriendoFichaReservaId === data.id_reserva ? (
+                    <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                ) : (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                )}
+            </button>
+        );
+    }
+
     const resumenEstados = dataLista.reduce((acc, item) => {
         const estado = normalizarEstadoReserva(item?.estadoReserva);
         if (estado === "confirmada" || estado === "confirmado") acc.confirmadas += 1;
@@ -662,6 +742,19 @@ export default function AgendaCitas() {
                             <span className="text-[10px] font-bold text-rose-500 uppercase tracking-widest leading-none">Anuladas</span>
                             <span className="text-lg font-bold text-slate-900 mt-1 leading-none">{resumenEstados.anuladas}</span>
                         </div>
+                        <div className="h-16 px-6 rounded-2xl bg-white border border-slate-200 flex flex-col justify-center shadow-sm">
+                            <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest leading-none">Finalizadas</span>
+                            <span className="text-lg font-bold text-slate-900 mt-1 leading-none">{resumenEstados.finalizadas}</span>
+                        </div>
+                        <button
+                            onClick={() => router.push("/dashboard/FichaClinica")}
+                            className="h-16 px-6 rounded-2xl bg-[#6E56CF] text-white flex items-center gap-2 shadow-sm hover:bg-[#5b45bc] transition-all"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            </svg>
+                            <span className="text-[12px] font-bold">Fichas Clínicas</span>
+                        </button>
                         <InfoButton informacion={'Gestiona las citas del día. Usa los filtros para localizar pacientes específicos y actualiza el estado de asistencia con un solo clic.'}/>
                     </div>
                 </div>
@@ -754,22 +847,76 @@ export default function AgendaCitas() {
                             </div>
                         </div>
 
-                        <div className="overflow-x-auto">
-                            <Table className="min-w-[700px]">
+                        {/* Vista móvil: tarjetas */}
+                        <div className="xl:hidden px-4 py-4 sm:px-6">
+                            {dataLista.length === 0 ? (
+                                <div className="py-20 text-center">
+                                    <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    </div>
+                                    <p className="text-[13px] text-slate-400 font-medium">No se han encontrado reservaciones para los criterios seleccionados.</p>
+                                </div>
+                            ) : (
+                                <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-2">
+                                    {dataLista.map((data) => (
+                                        <article key={data.id_reserva} className="self-start overflow-visible rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <span className="inline-flex items-center rounded-lg bg-slate-50 border border-slate-200 px-3 py-1.5 text-[13px] font-bold text-slate-900">
+                                                    {formatearFechaDashboard(data.fechaInicio)}
+                                                </span>
+                                                <span className="inline-flex items-center rounded-lg bg-violet-50 border border-violet-200 px-3 py-1.5 text-[13px] font-bold text-[#6E56CF]">
+                                                    {formatearHoraDashboard(data.horaInicio)}
+                                                </span>
+                                                <span className="inline-flex min-w-[96px] items-center justify-center rounded-full px-2.5 py-1 text-[11px] font-bold" style={obtenerEstiloBadgeEstado(data.estadoReserva)}>
+                                                    {formatearEstadoVisible(data.estadoReserva)}
+                                                </span>
+                                            </div>
+                                            <div className="mt-4 space-y-3">
+                                                <div>
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Paciente</p>
+                                                    <p className="mt-1 text-lg font-bold text-slate-900">{data.nombrePaciente + " " + data.apellidoPaciente}</p>
+                                                    <p className="mt-0.5 text-[11px] font-medium text-slate-400">{formatearRutVisible(data.rut)}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Motivo de Atención</p>
+                                                    <p className="mt-1 text-base font-semibold text-slate-800">{data.motivo_reserva}</p>
+                                                    <p className="mt-0.5 text-[13px] font-bold text-[#6E56CF]">${data.monto_reserva}</p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Profesional</p>
+                                                    <p className="mt-1 text-[13px] font-semibold text-slate-600">{obtenerNombreProfesionalReserva(data)}</p>
+                                                </div>
+                                            </div>
+                                            <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+                                                {renderMenuAccionesReserva(data, { menuPositionClass: "left-0 mt-2" })}
+                                                {renderBotonFichaReserva(data)}
+                                            </div>
+                                        </article>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Vista desktop: tabla */}
+                        <div className="hidden xl:block overflow-x-auto">
+                            <Table className="min-w-[800px]">
                                 <TableHeader>
                                     <TableRow className="bg-slate-50/50 hover:bg-slate-50/50 border-b border-slate-100">
                                         <TableHead className="w-[120px] text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5 pl-8">Horario</TableHead>
                                         <TableHead className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5">Identidad Paciente</TableHead>
-                                        <TableHead className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5">Profesional Asignado</TableHead>
+                                        <TableHead className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5">Profesional</TableHead>
+                                        <TableHead className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5">Motivo</TableHead>
                                         <TableHead className="text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5">Control de Estado</TableHead>
-                                        <TableHead className="w-[100px] text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5 pr-8">Ver ficha Clínica</TableHead>
+                                        <TableHead className="w-[100px] text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest py-5 pr-8">Ficha</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
                                     {dataLista.length === 0 ? (
                                         <TableRow>
-                                            <TableCell colSpan={5} className="py-32 text-center">
-                                                <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4"><svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg></div>
+                                            <TableCell colSpan={6} className="py-32 text-center">
+                                                <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                                </div>
                                                 <p className="text-[13px] text-slate-400 font-medium">No se han encontrado reservaciones para los criterios seleccionados.</p>
                                             </TableCell>
                                         </TableRow>
@@ -777,48 +924,31 @@ export default function AgendaCitas() {
                                         dataLista.map((reserva) => (
                                             <TableRow key={reserva.id_reserva} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
                                                 <TableCell className="py-6 pl-8">
-                                                    <div className="flex flex-col"><span className="text-[13px] font-bold text-slate-900">{formatearHoraDashboard(reserva.horaInicio)} hrs</span><span className="text-[11px] text-slate-400 font-medium mt-1">{formatearFechaDashboard(reserva.fechaInicio)}</span></div>
-                                                </TableCell>
-                                                <TableCell className="py-6">
-                                                    <div className="flex flex-col"><span className="text-[13px] font-bold text-slate-800">{reserva.nombrePaciente} {reserva.apellidoPaciente}</span><span className="text-[11px] text-slate-400 font-medium mt-0.5">{formatearRutVisible(reserva.rut)}</span></div>
-                                                </TableCell>
-                                                <TableCell className="py-6">
-                                                    <div className="flex items-center gap-3"><div className="h-8 w-8 rounded-lg bg-teal-50 text-teal-600 flex items-center justify-center text-[10px] font-bold">{obtenerNombreProfesionalReserva(reserva).charAt(0)}</div><span className="text-[13px] font-semibold text-slate-600">{obtenerNombreProfesionalReserva(reserva)}</span></div>
-                                                </TableCell>
-                                                <TableCell className="py-6">
-                                                    <div className="relative">
-                                                        <button onClick={() => setMenuEstadoAbiertoId(menuEstadoAbiertoId === reserva.id_reserva ? null : reserva.id_reserva)} className="h-9 px-4 rounded-xl flex items-center gap-2 transition-all hover:brightness-95 disabled:opacity-50" style={obtenerEstiloBotonEstado(reserva.estadoReserva)} disabled={actualizandoReservaId === reserva.id_reserva}>
-                                                            <span className="text-[11px] font-bold uppercase tracking-wider">{actualizandoReservaId === reserva.id_reserva ? "Cargando..." : reserva.estadoReserva || "Reservada"}</span>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M19 9l-7 7-7-7" /></svg>
-                                                        </button>
-                                                        {menuEstadoAbiertoId === reserva.id_reserva && (
-                                                            <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl border border-slate-200 shadow-xl z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                                                                <div className="p-2 grid grid-cols-1 gap-1">
-                                                                    {accionesRapidasEstado.map((accion) => (
-                                                                        <button key={accion.valor} onClick={() => actualizarEstadoReservaRapido(reserva.id_reserva, accion.valor)} disabled={actualizandoReservaId === reserva.id_reserva} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 transition-colors text-left disabled:cursor-not-allowed disabled:opacity-60"><div className="h-7 w-7 rounded-lg flex items-center justify-center" style={obtenerEstiloBadgeEstado(accion.valor)}>{accion.icono}</div><span className="text-[12px] font-bold text-slate-700">{accion.etiqueta}</span></button>
-                                                                    ))}
-                                                                    <div className="border-t border-slate-100 mt-1 pt-1">
-                                                                        <button
-                                                                            type="button"
-                                                                            disabled={eliminandoReservaId === reserva.id_reserva}
-                                                                            onClick={() => eliminarReservaDesdeListado(reserva.id_reserva)}
-                                                                            className="flex w-full items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-rose-50 transition-colors text-left disabled:cursor-not-allowed disabled:opacity-60"
-                                                                        >
-                                                                            <div className="h-7 w-7 rounded-lg flex items-center justify-center bg-rose-50 border border-rose-200 text-rose-600">
-                                                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                                                                            </div>
-                                                                            <span className="text-[12px] font-bold text-rose-600">{eliminandoReservaId === reserva.id_reserva ? "Eliminando..." : "Eliminar reserva"}</span>
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )}
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[13px] font-bold text-slate-900">{formatearHoraDashboard(reserva.horaInicio)} hrs</span>
+                                                        <span className="text-[11px] text-slate-400 font-medium mt-1">{formatearFechaDashboard(reserva.fechaInicio)}</span>
                                                     </div>
                                                 </TableCell>
+                                                <TableCell className="py-6">
+                                                    <div className="flex flex-col">
+                                                        <span className="text-[13px] font-bold text-slate-800">{reserva.nombrePaciente} {reserva.apellidoPaciente}</span>
+                                                        <span className="text-[11px] text-slate-400 font-medium mt-0.5">{formatearRutVisible(reserva.rut)}</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="py-6">
+                                                    <span className="text-[13px] font-semibold text-slate-600">{obtenerNombreProfesionalReserva(reserva)}</span>
+                                                </TableCell>
+                                                <TableCell className="py-6">
+                                                    <div className="flex flex-col max-w-[180px]">
+                                                        <span className="text-[13px] font-semibold text-slate-700 truncate">{reserva.motivo_reserva}</span>
+                                                        <span className="text-[13px] font-bold text-[#6E56CF] mt-0.5">${reserva.monto_reserva}</span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="py-6 overflow-visible">
+                                                    {renderMenuAccionesReserva(reserva)}
+                                                </TableCell>
                                                 <TableCell className="py-6 pr-8 text-center">
-                                                    <button onClick={() => verFichaClinicaPaciente(reserva)} className="h-10 w-10 mx-auto rounded-xl bg-white border border-slate-200 text-[#6E56CF] hover:border-[#6E56CF] hover:bg-violet-50 transition-all flex items-center justify-center shadow-sm" title="Ver Ficha Clínica">
-                                                        {abriendoFichaReservaId === reserva.id_reserva ? (<svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>) : (<svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>)}
-                                                    </button>
+                                                    {renderBotonFichaReserva(reserva)}
                                                 </TableCell>
                                             </TableRow>
                                         ))
