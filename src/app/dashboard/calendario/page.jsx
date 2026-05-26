@@ -754,22 +754,24 @@ function CalendarioContent() {
         const [horas, minutos] = valorHora.split(":").map(Number);
         if (Number.isNaN(horas) || Number.isNaN(minutos)) return;
 
+        const duracion = selectionDraft.end.getTime() - selectionDraft.start.getTime();
         const nuevoInicio = new Date(selectionDraft.start);
         const nuevoFin = new Date(selectionDraft.end);
 
         if (campo === "start") {
             nuevoInicio.setHours(horas, minutos, 0, 0);
+            // Arrastra el fin manteniendo la duración original
+            nuevoFin.setTime(nuevoInicio.getTime() + duracion);
         } else {
             nuevoFin.setHours(horas, minutos, 0, 0);
+            if (nuevoFin <= nuevoInicio) {
+                toast.error("La hora de término debe ser posterior al inicio.");
+                return;
+            }
         }
 
         if (!estaDentroHorarioAgenda(nuevoInicio, nuevoFin)) {
-            toast.error("Solo puedes agendar entre 08:00 y 23:00 horas, con un rango valido.");
-            return;
-        }
-
-        if (isOverlapping(nuevoInicio, nuevoFin, selectionDraft?.id_reserva ?? null)) {
-            toast.error("Esta hora tiene un bloqueo u hora preexistente.");
+            toast.error("Horario fuera del rango permitido (08:00 – 23:00).");
             return;
         }
 
