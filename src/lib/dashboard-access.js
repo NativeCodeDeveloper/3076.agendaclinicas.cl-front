@@ -145,6 +145,7 @@ const routeMatchersByRole = {
     /^\/dashboard\/recetaRapida$/,
     /^\/dashboard\/examenDocumento$/,
     /^\/dashboard\/odontogramasPaciente\/[^/]+$/,
+    /^\/dashboard\/presupuestoTratamiento$/,
     /^\/dashboard\/ingresoProductos$/,
     /^\/dashboard\/categoriasProductos$/,
   ],
