@@ -2,6 +2,7 @@
 
 import { useUser, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
+import { getDashboardRoleFromUser } from "@/lib/dashboard-access";
 
 export default function UserMenu() {
     const { user, isLoaded } = useUser();
@@ -22,11 +23,15 @@ export default function UserMenu() {
     }
 
     const name = user?.fullName || user?.firstName || "Usuario";
-    const role = String(
-        user?.publicMetadata?.rol ||
-        user?.publicMetadata?.role ||
-        "Administrador"
-    );
+    const role = getDashboardRoleFromUser(user);
+    const roleLabel =
+        role === "admin"
+            ? "Administrador"
+            : role === "default"
+                ? "Default"
+                : role === "unknown"
+                    ? "Sin permisos"
+                    : role.replace(/-/g, " ");
     const avatar = user?.imageUrl;
 
     return (
@@ -49,7 +54,7 @@ export default function UserMenu() {
                             {name}
                         </p>
                         <p className="truncate text-[11px] text-slate-400 leading-tight mt-0.5 capitalize">
-                            {role}
+                            {roleLabel}
                         </p>
                     </div>
 
