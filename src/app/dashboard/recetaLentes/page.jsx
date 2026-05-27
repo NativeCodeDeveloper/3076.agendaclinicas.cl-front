@@ -129,7 +129,7 @@ function PrescriptionTable({title, dataOd, dataOi, compact = false}) {
 }
 
 export default function RecetaLentesPage() {
-    const PDF_BRAND_TITLE = "AgendaClinica";
+    const PDF_BRAND_TITLE = process.env.NEXT_PUBLIC_EMPRESA_NOMBRE || "AgendaClinica";
     const PDF_BRAND_SUBTITLE = "Healthcare Information System";
     const [formulario, setFormulario] = useState(emptyFormulario);
 
