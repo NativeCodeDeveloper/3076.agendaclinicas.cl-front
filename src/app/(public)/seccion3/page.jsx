@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, CalendarCheck, ArrowRight, BookOpen } from "lucide-react";
 import RevealOnScroll from "@/Componentes/RevealOnScroll";
 
@@ -60,7 +60,6 @@ function SkeletonCard() {
 
 export default function Seccion3() {
   const carouselRef = useRef(null);
-  const controls = useAnimation();
   const [isAtStart, setIsAtStart] = useState(true);
   const [isAtEnd, setIsAtEnd] = useState(false);
   const [listaPublicaciones, setListaPublicaciones] = useState([]);
@@ -107,10 +106,6 @@ export default function Seccion3() {
     const scrollAmount = carouselRef.current.clientWidth * 0.8;
     const newScrollLeft =
       carouselRef.current.scrollLeft + (direction === "right" ? scrollAmount : -scrollAmount);
-    controls.start({
-      x: -newScrollLeft,
-      transition: { type: "spring", stiffness: 300, damping: 30 },
-    });
     carouselRef.current.scrollTo({ left: newScrollLeft, behavior: "smooth" });
   };
 
@@ -171,7 +166,7 @@ export default function Seccion3() {
                 {/* ── Right: carousel ───────────────────────── */}
                 <div className="relative lg:col-span-9">
                   <div ref={carouselRef} className="overflow-x-auto hide-scrollbar">
-                    <motion.div className="flex gap-4 px-1 py-2" animate={controls}>
+                    <motion.div className="flex gap-4 px-1 py-2">
                       {publicaciones.length > 0
                         ? publicaciones.map((item) => (
                             <PublicationCard key={item.id} item={item} />
