@@ -54,6 +54,12 @@ const ICONS = {
       <path strokeLinecap="round" strokeLinejoin="round" d="M12 3l7 4v5c0 5-3.5 8.5-7 9-3.5-.5-7-4-7-9V7l7-4z" />
     </svg>
   ),
+  academy: (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l9-5-9-5-9 5 9 5z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M12 14l6.16-3.42A12.08 12.08 0 0119 15.12V18m-7-4l-6.16-3.42A12.08 12.08 0 005 15.12V18m7-4v6" />
+    </svg>
+  ),
 };
 
 function getActiveAccordion(pathname, sections) {
@@ -83,11 +89,14 @@ function SectionLabel({ label }) {
 
 function NavItem({ href, icon, label }) {
   const pathname = usePathname();
-  const isActive = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
+  const isExternal = href.startsWith("http");
+  const isActive = !isExternal && (pathname === href || (href !== "/dashboard" && pathname.startsWith(href)));
 
   return (
     <Link
       href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
       className={`group flex items-center gap-2.5 rounded-lg px-3 py-[7px] text-[12.5px] font-medium transition-all duration-150 ${
         isActive
           ? "bg-[#F3F0FF] text-[#6E56CF]"
@@ -110,11 +119,14 @@ function NavItem({ href, icon, label }) {
 
 function SubNavItem({ href, label }) {
   const pathname = usePathname();
-  const isActive = pathname.startsWith(href);
+  const isExternal = href.startsWith("http");
+  const isActive = !isExternal && pathname.startsWith(href);
 
   return (
     <Link
       href={href}
+      target={isExternal ? "_blank" : undefined}
+      rel={isExternal ? "noopener noreferrer" : undefined}
       className={`group flex items-center gap-2 rounded-md px-2 py-[5px] text-[11.5px] font-medium transition-all duration-150 ${
         isActive
           ? "bg-[#EDE9FE]/60 text-[#6E56CF]"

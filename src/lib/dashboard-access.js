@@ -352,6 +352,15 @@ const DASHBOARD_NAV_SECTIONS = [
       { label: "Publicaciones Web", href: "/dashboard/publicaciones", icon: "layout" },
     ],
   },
+  {
+    id: "capacitaciones",
+    title: "CAPACITACIONES",
+    accordionLabel: "Capacitaciones",
+    icon: "academy",
+    items: [
+      { label: "Academia", href: "https://academia.agendaclinicas.cl/dashboard", icon: "academy" },
+    ],
+  },
 ];
 
 const DASHBOARD_ROLE_DETAILS = {
