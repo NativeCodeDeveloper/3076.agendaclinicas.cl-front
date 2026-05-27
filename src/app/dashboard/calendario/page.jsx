@@ -1038,13 +1038,14 @@ function CalendarioContent() {
             }
 
             if (fechaInicio === fechaFinalizacion) {
+                const nombreProfesional = obtenerNombreProfesionalSeleccionado();
                 const res = await fetch(`${API}/reservaPacientes/insertarReservaPacienteFicha`, {
                     method: "POST",
                     headers: { Accept: "application/json", "Content-Type": "application/json" },
                     mode: "cors",
                     // NOTA: nombre_prestacion y modalidad se envían pero el backend
                     // debe tener la migración de BD aplicada para persistirlos.
-                    body: JSON.stringify({ nombrePaciente, apellidoPaciente, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, monto_reserva: monto_reserva || "", motivo_reserva: motivo_reserva || "", estadoReserva: "reservada", id_profesional, nombre_prestacion: prestacion || null, modalidad: modalidad || "presencial" })
+                    body: JSON.stringify({ nombrePaciente, apellidoPaciente, nombreProfesional, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, monto_reserva: monto_reserva || "", motivo_reserva: motivo_reserva || "", estadoReserva: "reservada", id_profesional, nombre_prestacion: prestacion || null, modalidad: modalidad || "presencial" })
                 });
                 const respuestaBackend = await res.json();
                 if (!res.ok && respuestaBackend.message === "conflicto") {
