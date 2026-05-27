@@ -598,9 +598,23 @@ function CalendarioContent() {
         return event?.title || "";
     }
 
-    function obtenerNombreProfesionalSeleccionado() {
-        const profesionalSeleccionado = normalizarIdProfesional(id_profesional);
-        return listaProfesionales.find((p) => normalizarIdProfesional(p.id_profesional) === profesionalSeleccionado)?.nombreProfesional ?? "Sin profesional";
+    function obtenerNombreProfesionalPorId(profesionalId = id_profesional, fallback = "Sin profesional") {
+        const profesionalSeleccionado = normalizarIdProfesional(profesionalId);
+        if (!profesionalSeleccionado) return fallback;
+
+        const nombre = listaProfesionales.find((p) => (
+            normalizarIdProfesional(p.id_profesional) === profesionalSeleccionado
+        ))?.nombreProfesional;
+
+        return String(nombre ?? "").trim() || fallback;
+    }
+
+    function obtenerNombreProfesionalSeleccionado(profesionalId = id_profesional) {
+        return obtenerNombreProfesionalPorId(profesionalId, "Sin profesional");
+    }
+
+    function obtenerNombreProfesionalParaEnvio(profesionalId = id_profesional) {
+        return obtenerNombreProfesionalPorId(profesionalId, "");
     }
 
     function limpiarSeleccionTemporal() {
@@ -1038,7 +1052,11 @@ function CalendarioContent() {
             }
 
             if (fechaInicio === fechaFinalizacion) {
-                const nombreProfesional = obtenerNombreProfesionalSeleccionado();
+                const nombreProfesional = obtenerNombreProfesionalParaEnvio(id_profesional);
+                if (!nombreProfesional) {
+                    toast.error("No fue posible identificar el profesional seleccionado. Vuelve a seleccionar la agenda.");
+                    return false;
+                }
                 const res = await fetch(`${API}/reservaPacientes/insertarReservaPacienteFicha`, {
                     method: "POST",
                     headers: { Accept: "application/json", "Content-Type": "application/json" },
@@ -1169,7 +1187,7 @@ function CalendarioContent() {
             reservaOriginal.estadoReserva,
             reservaOriginal.id_profesional,
             reservaOriginal.id_reserva,
-            reservaOriginal._nombreProfesional || obtenerNombreProfesionalSeleccionado(),
+            reservaOriginal._nombreProfesional || obtenerNombreProfesionalParaEnvio(reservaOriginal.id_profesional),
             reservaOriginal.monto_reserva || "",
             reservaOriginal.motivo_reserva || ""
         );
@@ -1555,12 +1573,17 @@ function CalendarioContent() {
                 toast.error("Debe llenar todos los campos para poder actualizar la reserva");
                 return false;
             }
+            const nombreProfesionalEnvio = String(nombreProfesional || "").trim() || obtenerNombreProfesionalParaEnvio(id_profesional);
+            if (!nombreProfesionalEnvio) {
+                toast.error("No fue posible identificar el profesional seleccionado. Vuelve a seleccionar la agenda.");
+                return false;
+            }
             const correoNormalizado = normalizarCorreoOpcional(email);
             const res = await fetch(`${API}/reservaPacientes/actualizarReservacion`, {
                 method: "POST",
                 headers: { Accept: "application/json", "Content-Type": "application/json" },
                 mode: "cors",
-                body: JSON.stringify({ nombrePaciente, apellidoPaciente, nombreProfesional: nombreProfesional || "", rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, monto_reserva: monto_reserva || "", motivo_reserva: motivo_reserva || "", estadoReserva, id_profesional, id_reserva })
+                body: JSON.stringify({ nombrePaciente, apellidoPaciente, nombreProfesional: nombreProfesionalEnvio, rut: rutLimpio, telefono, email: correoNormalizado, fechaInicio, horaInicio, fechaFinalizacion, horaFinalizacion, monto_reserva: monto_reserva || "", motivo_reserva: motivo_reserva || "", estadoReserva, id_profesional, id_reserva })
             });
             const respuestaBackend = await res.json();
             if (!res.ok && respuestaBackend.message === "conflicto") {
@@ -1646,7 +1669,7 @@ function CalendarioContent() {
             estadoNuevo,
             id_profesional,
             id_reserva,
-            obtenerNombreProfesionalSeleccionado(),
+            obtenerNombreProfesionalParaEnvio(id_profesional),
             monto_reserva,
             motivo_reserva
         );
@@ -1716,7 +1739,7 @@ function CalendarioContent() {
             selectionDraft.estadoReserva || estadoReserva || "reservada",
             id_profesional,
             selectionDraft.id_reserva,
-            obtenerNombreProfesionalSeleccionado(),
+            obtenerNombreProfesionalParaEnvio(id_profesional),
             popupForm.monto_reserva ?? "",
             popupForm.motivo_reserva ?? ""
         );
