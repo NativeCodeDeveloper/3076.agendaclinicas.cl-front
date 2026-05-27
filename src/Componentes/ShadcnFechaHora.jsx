@@ -11,7 +11,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover"
 
-export default function ShadcnFechaHora({onChange}) {
+export default function ShadcnFechaHora({onChange, minDate, onInvalidDate}) {
     const [open, setOpen] = React.useState(false)
     // Guardamos fecha como {year, month, day} para que nunca se pierda al cambiar hora
     const [selectedDate, setSelectedDate] = React.useState(null)
@@ -25,6 +25,11 @@ export default function ShadcnFechaHora({onChange}) {
     const buildDateTime = React.useCallback((d, hh, mm) => {
         if (!d) return null
         return new Date(d.year, d.month, d.day, Number(hh), Number(mm), 0, 0)
+    }, [])
+
+    const normalizeDate = React.useCallback((date) => {
+        if (!date) return null
+        return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }, [])
 
     // Notificar al padre cuando cambia fecha u hora
@@ -41,10 +46,18 @@ export default function ShadcnFechaHora({onChange}) {
 
     const handleDateSelect = React.useCallback((d) => {
         if (!d) return
+        const selected = normalizeDate(d)
+        const min = normalizeDate(minDate)
+
+        if (min && selected < min) {
+            onInvalidDate?.()
+            return
+        }
+
         // Guardamos solo año/mes/día como valores planos
         setSelectedDate({year: d.getFullYear(), month: d.getMonth(), day: d.getDate()})
         setOpen(false)
-    }, [])
+    }, [minDate, normalizeDate, onInvalidDate])
 
     // Texto para mostrar la fecha seleccionada
     const dateLabel = selectedDate
@@ -74,6 +87,7 @@ export default function ShadcnFechaHora({onChange}) {
                                 mode="single"
                                 selected={calendarSelected}
                                 onSelect={handleDateSelect}
+                                disabled={minDate ? {before: normalizeDate(minDate)} : undefined}
                             />
                         </div>
                     </PopoverContent>

@@ -31,7 +31,9 @@ const [id_profesional, setId_profesional] = useState("");
     const [listaBloqueos, setListaBloqueos] = useState([]);
     const [modalBloqueoAbierto, setModalBloqueoAbierto] = useState(false);
     const [bloqueoSeleccionado, setBloqueoSeleccionado] = useState(null);
+    const [selectorFinalizacionKey, setSelectorFinalizacionKey] = useState(0);
 
+    const mensajeFechaFinalizacionInvalida = "La fecha de termino NUNCA puede ser mas antigua que la fecha de inicio.";
 
 
     function formatearFechaTabla(fechaISO) {
@@ -48,13 +50,41 @@ const [id_profesional, setId_profesional] = useState("");
         return `${y}-${m}-${day}`;
     }
 
+    function convertirFechaLocal(fechaISO) {
+        if (!fechaISO) return null;
+        const [year, month, day] = fechaISO.slice(0, 10).split("-").map(Number);
+        return new Date(year, month - 1, day);
+    }
+
+    function fechaFinalizacionEsAnterior(fechaInicioValidar, fechaFinalizacionValidar) {
+        const inicio = convertirFechaLocal(fechaInicioValidar);
+        const finalizacion = convertirFechaLocal(fechaFinalizacionValidar);
+        return Boolean(inicio && finalizacion && finalizacion < inicio);
+    }
+
     const manejarFechaHoraInicio = (dateTime) => {
-        setfechaInicio(formatearFechaLocal(dateTime));
+        const nuevaFechaInicio = formatearFechaLocal(dateTime);
+
+        if (fechaFinalizacionEsAnterior(nuevaFechaInicio, fechaFinalizacion)) {
+            setfechaFinalizacion("");
+            setHoraFinalizacion("");
+            setSelectorFinalizacionKey((prev) => prev + 1);
+            toast.error(mensajeFechaFinalizacionInvalida);
+        }
+
+        setfechaInicio(nuevaFechaInicio);
         setHoraInicio(dateTime.toTimeString().slice(0, 8));
     };
 
     const manejarFechaHoraFinalizacion = (dateTime) => {
-        setfechaFinalizacion(formatearFechaLocal(dateTime));
+        const nuevaFechaFinalizacion = formatearFechaLocal(dateTime);
+
+        if (fechaFinalizacionEsAnterior(fechaInicio, nuevaFechaFinalizacion)) {
+            setSelectorFinalizacionKey((prev) => prev + 1);
+            return toast.error(mensajeFechaFinalizacionInvalida);
+        }
+
+        setfechaFinalizacion(nuevaFechaFinalizacion);
         setHoraFinalizacion(dateTime.toTimeString().slice(0, 8));
     };
 
@@ -110,6 +140,10 @@ const [id_profesional, setId_profesional] = useState("");
 
         if(!fechaInicio ||!fechaFinalizacion||!horaInicio||!horaFinalizacion||!motivo || !id_profesional){
             return toast.error("Deben completarse todos los campos para ingresar el bloqueo al sistema.")
+        }
+
+        if (fechaFinalizacionEsAnterior(fechaInicio, fechaFinalizacion)) {
+            return toast.error(mensajeFechaFinalizacionInvalida);
         }
 
         const res = await fetch(`${API}/bloqueoAgenda/InsertarBloqueo`,{
@@ -286,7 +320,12 @@ const [id_profesional, setId_profesional] = useState("");
                                     </div>
                                     <div className="space-y-2">
                                         <label className="text-[11px] font-bold text-slate-500 uppercase tracking-wider ml-1">Hasta</label>
-                                        <ShadcnFechaHora onChange={manejarFechaHoraFinalizacion} />
+                                        <ShadcnFechaHora
+                                            key={selectorFinalizacionKey}
+                                            onChange={manejarFechaHoraFinalizacion}
+                                            minDate={convertirFechaLocal(fechaInicio)}
+                                            onInvalidDate={() => toast.error(mensajeFechaFinalizacionInvalida)}
+                                        />
                                     </div>
                                 </div>
 
