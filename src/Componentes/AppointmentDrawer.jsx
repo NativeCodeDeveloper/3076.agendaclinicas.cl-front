@@ -39,12 +39,24 @@ import { getStateTokens } from "@/lib/designTokens";
 import { useRouter } from "next/navigation";
 
 const ACCIONES_ESTADO = [
-  { valor: "confirmada", etiqueta: "Confirmar", color: "bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200" },
-  { valor: "asiste", etiqueta: "Asiste", color: "bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200" },
-  { valor: "no asiste", etiqueta: "No asiste", color: "bg-amber-50 text-amber-700 hover:bg-amber-100 border border-amber-200" },
-  { valor: "finalizado", etiqueta: "Finalizar", color: "bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200" },
-  { valor: "anulada", etiqueta: "Anular", color: "bg-red-50 text-red-700 hover:bg-red-100 border border-red-200" },
+  { valor: "confirmada", etiqueta: "Confirmar" },
+  { valor: "asiste", etiqueta: "Asiste" },
+  { valor: "no asiste", etiqueta: "No asiste" },
+  { valor: "finalizado", etiqueta: "Finalizar" },
+  { valor: "anulada", etiqueta: "Anular" },
 ];
+
+function getEstadoActionStyle(estado) {
+  const token = getStateTokens(estado);
+
+  return {
+    backgroundColor: token.bg,
+    color: token.text,
+    border: `1px solid ${token.border}`,
+    borderLeft: `4px solid ${token.accent}`,
+    boxShadow: "inset 0 0 0 1px rgba(255, 255, 255, 0.55)",
+  };
+}
 
 // ─── Sección de información (solo lectura) ────────────────────────────────────
 function InfoSection({ reserva, start, end, formatHora, formatFechaLarga }) {
@@ -181,7 +193,8 @@ function InfoSection({ reserva, start, end, formatHora, formatFechaLarga }) {
               type="button"
               // onCambiarEstado viene del prop del padre
               data-estado={accion.valor}
-              className={`w-full rounded-xl px-4 py-2.5 text-[13px] font-semibold transition-all duration-150 ${accion.color}`}
+              className="w-full rounded-xl px-4 py-2.5 text-[13px] font-semibold transition-all duration-150 hover:brightness-[0.98] active:scale-[0.99]"
+              style={getEstadoActionStyle(accion.valor)}
             >
               {accion.etiqueta}
             </button>
@@ -498,7 +511,8 @@ function FormSection({
                 key={accion.valor}
                 type="button"
                 onClick={() => onCambiarEstado(accion.valor)}
-                className={`w-full rounded-xl px-4 py-2 text-[13px] font-semibold transition-all duration-150 ${accion.color}`}
+                className="w-full rounded-xl px-4 py-2 text-[13px] font-semibold transition-all duration-150 hover:brightness-[0.98] active:scale-[0.99]"
+                style={getEstadoActionStyle(accion.valor)}
               >
                 {accion.etiqueta}
               </button>
