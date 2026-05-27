@@ -43,6 +43,7 @@ export default function GestionPaciente() {
     const [rutBuscado, setRutBuscado] = useState("");
 
     const router = useRouter();
+    const mensajePacienteDuplicado = "Paciente ya Existe. No se puede duplicar rut";
 
     function verDetallePaciente(id_paciente) {
         router.push(`/dashboard/paciente/${id_paciente}`);
@@ -167,11 +168,15 @@ export default function GestionPaciente() {
                 mode: "cors"
             })
 
+            const respuestaBackend = await res.json().catch(() => null);
+
+            if (respuestaBackend?.message === "duplicado") {
+                return toast.error(mensajePacienteDuplicado);
+            }
+
             if (!res.ok) {
                 return toast.error("Problema al Ingresar nuevo paciente en el servidor. Por favor contacte a soporte Tecnico de Medify")
             } else {
-                const respuestaBackend = await res.json();
-
                 if (respuestaBackend.message === true) {
                     setNombre("");
                     setApellido("");
@@ -189,6 +194,8 @@ export default function GestionPaciente() {
                     await listarPacientes();
                     return toast.success("Paciente ingresado correctamente.");
                 }
+
+                return toast.error("Problema al Ingresar nuevo paciente en el servidor. Por favor contacte a soporte Tecnico de Medify")
             }
         } catch (err) {
             console.error(err);

@@ -119,6 +119,7 @@ const routeMatchersByRole = {
     /^\/dashboard\/recetaPacientes\/[^/]+$/,
     /^\/dashboard\/recetaRapida$/,
     /^\/dashboard\/examenDocumento$/,
+    /^\/dashboard\/examenesClinicos$/,
   ],
   odontologico: [
     /^\/dashboard$/,
@@ -144,6 +145,7 @@ const routeMatchersByRole = {
     /^\/dashboard\/recetaPacientes\/[^/]+$/,
     /^\/dashboard\/recetaRapida$/,
     /^\/dashboard\/examenDocumento$/,
+    /^\/dashboard\/examenesClinicos$/,
     /^\/dashboard\/odontogramasPaciente\/[^/]+$/,
     /^\/dashboard\/presupuestoTratamiento$/,
     /^\/dashboard\/ingresoProductos$/,
