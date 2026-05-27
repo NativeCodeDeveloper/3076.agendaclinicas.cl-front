@@ -331,6 +331,7 @@ const DASHBOARD_NAV_SECTIONS = [
       { label: "Profesionales y Agendas", href: "/dashboard/profesionales", icon: "settings" },
       { label: "Servicios Agendables", href: "/dashboard/serviciosAgendamiento", icon: "settings" },
       { label: "Tarifas de Consulta", href: "/dashboard/tarifaServicio", icon: "settings" },
+      { label: "Examenes Clinicos", href: "/dashboard/examenesClinicos", icon: "folder" },
     ],
   },
   {
@@ -340,7 +341,6 @@ const DASHBOARD_NAV_SECTIONS = [
     icon: "folder",
     items: [
       { label: "Modelos de Fichas", href: "/dashboard/fichasClinicasPlantillas", icon: "folder" },
-      { label: "Examenes Clinicos", href: "/dashboard/examenesClinicos", icon: "folder" },
     ],
   },
   {

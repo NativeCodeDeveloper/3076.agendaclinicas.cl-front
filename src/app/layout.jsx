@@ -23,6 +23,7 @@ const lora = Lora({
 });
 
 export const metadataBase = new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://agendaclinica.cl");
+const metadataImage = "/Copia%20de%20logoagendaclinica.png";
 
 export const metadata = {
   title: {
@@ -72,9 +73,9 @@ export const metadata = {
     type: "website",
     images: [
       {
-        url: "/logoagendaclinica.png",
-        width: 1200,
-        height: 630,
+        url: metadataImage,
+        width: 1536,
+        height: 1024,
         alt: "Agenda Clínica - Sistema de Agendamiento Médico Online",
       },
     ],
@@ -83,7 +84,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Agenda Clínica | Agendamiento Médico Online",
     description: "Reserva tu hora médica en segundos. Plataforma de agendamiento clínico online.",
-    images: ["/logoagendaclinica.png"],
+    images: [metadataImage],
   },
 };
 
