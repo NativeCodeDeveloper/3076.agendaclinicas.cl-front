@@ -141,7 +141,7 @@ export default function Publicaciones() {
         const resultado = await res.json();
         if (!res.ok) throw new Error("No fue posible actualizar la publicacion seleccionada.");
         if (resultado.message === "sindato") throw new Error("Debe llenar los campos obligatorios.");
-        if (resultado.message !== "true") throw new Error("El servidor no confirmo la actualizacion.");
+        if (String(resultado.message) !== "true") throw new Error("El servidor no confirmo la actualizacion.");
     }
 
     async function eliminarPublicacion(id_publicaciones) {
@@ -240,7 +240,7 @@ export default function Publicaciones() {
         if (!res.ok) throw new Error("No fue posible guardar la publicacion.");
 
         const data = await res.json();
-        if (data.message !== "true") throw new Error("El servidor no confirmo el guardado.");
+        if (String(data.message) !== "true") throw new Error("El servidor no confirmo el guardado.");
     }
 
     function handlePublicationSelect(event) {
