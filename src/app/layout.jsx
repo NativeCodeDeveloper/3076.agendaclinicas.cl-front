@@ -59,9 +59,9 @@ export const metadata = {
     canonical: metadataBase.href,
   },
   icons: {
-    icon: "/Aclogopro.png",
-    shortcut: "/Aclogopro.png",
-    apple: "/Aclogopro.png",
+    icon: "/logofavcom.png",
+    shortcut: "/logofavcom.png",
+    apple: "/logofavcom.png",
   },
   openGraph: {
     title: "Agenda Clínica | Sistema de Agendamiento Médico Online",
