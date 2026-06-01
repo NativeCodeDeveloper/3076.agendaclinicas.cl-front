@@ -1,6 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Globe, Instagram, Linkedin, Mail, MapPin, MessageCircle, Phone, Shield, Lock, Twitter, Youtube } from "lucide-react";
+/*
+ * CONEXIÓN PENDIENTE — Footer
+ * Todos los datos de este componente vienen de publicContact (src/lib/publicContact.js),
+ * que actualmente lee del .env. Una vez conectado el backend:
+ *   - Hacer fetch de GET /datosEmpresa/seleccionarDatosEmpresa en el servidor (async Server Component)
+ *   - Reemplazar publicContact.phone, .email, .address, .mapsUrl, .whatsappUrl, .socials.*
+ *   - El copyright "© empresa" también usa publicContact.companyName
+ *   - Las redes sociales ya filtran por href vacío: solo mostrar si el campo tiene URL
+ */
 import { publicContact } from "@/lib/publicContact";
 
 const navLinks = [

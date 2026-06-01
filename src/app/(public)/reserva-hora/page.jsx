@@ -1,6 +1,12 @@
 'use client'
 import {Suspense} from "react";
 import {useSearchParams} from "next/navigation";
+/*
+ * CONEXIÓN PENDIENTE — Página de Reserva de Hora
+ * Usa publicContact.companyName (nombre en el título) y publicContact.address (dirección en el formulario).
+ * Una vez conectado el backend, reemplazar con:
+ *   GET /datosEmpresa/seleccionarDatosEmpresa → d.empresaNombre, d.contactoDireccion
+ */
 import { publicContact } from "@/lib/publicContact";
 
 function ReservaHoraContent() {

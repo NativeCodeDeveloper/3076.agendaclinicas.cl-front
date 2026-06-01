@@ -1,3 +1,23 @@
+/*
+ * FUENTE CENTRAL DE DATOS DE CONTACTO Y REDES SOCIALES
+ *
+ * Actualmente estos valores se leen del archivo .env (variables NEXT_PUBLIC_*).
+ * Una vez que el backend esté listo, reemplazar cada constante por el valor
+ * obtenido desde el endpoint: GET /datosEmpresa/seleccionarDatosEmpresa
+ *
+ * Este objeto (publicContact) es consumido por:
+ *   - src/Componentes/Footer.jsx                    (contacto + redes en el footer)
+ *   - src/Componentes/FlotanteInstagram.jsx         (botón flotante Instagram)
+ *   - src/Componentes/FloatingWhatsApp.jsx          (botón flotante WhatsApp)
+ *   - src/Componentes/WhatsAppFloatButton.jsx       (botón flotante WhatsApp alternativo)
+ *   - src/app/(public)/contacto/page.jsx            (página de contacto completa)
+ *   - src/app/(public)/reserva-hora/page.jsx        (nombre y dirección en reserva)
+ *
+ * IMPORTANTE: este archivo es importado por componentes de servidor (Server Components),
+ * por eso no puede hacer fetch() directamente. Para conectar al backend hay que:
+ *   a) Convertir los componentes que lo importan a 'use client' y hacer fetch en useEffect, O
+ *   b) Crear un Server Action / Route Handler en Next.js que lea /datosEmpresa y exponga los datos.
+ */
 const EMPRESA_NOMBRE = process.env.NEXT_PUBLIC_EMPRESA_NOMBRE || "Agenda Clinica";
 const CONTACT_PHONE = process.env.NEXT_PUBLIC_CONTACT_PHONE || "";
 const CONTACT_WHATSAPP = process.env.NEXT_PUBLIC_CONTACT_WHATSAPP || CONTACT_PHONE;

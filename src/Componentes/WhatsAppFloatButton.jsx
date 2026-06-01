@@ -1,4 +1,11 @@
 import { MessageCircle } from "lucide-react";
+/*
+ * CONEXIÓN PENDIENTE — Botón flotante de WhatsApp (alternativo)
+ * Usa publicContact.whatsappUrl y publicContact.companyName.
+ * Si contactoWhatsapp está vacío, el componente ya retorna null (no aparece).
+ * Una vez conectado el backend, estos valores vienen de:
+ *   GET /datosEmpresa/seleccionarDatosEmpresa → d.contactoWhatsapp (construir URL: https://wa.me/NUMERO), d.empresaNombre
+ */
 import { publicContact } from "@/lib/publicContact";
 
 export default function WhatsAppFloatButton() {

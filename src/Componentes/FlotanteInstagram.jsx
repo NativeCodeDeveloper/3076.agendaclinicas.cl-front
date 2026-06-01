@@ -6,6 +6,13 @@ import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import InstagramIcon from '@mui/icons-material/Instagram';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+/*
+ * CONEXIÓN PENDIENTE — Botón flotante de Instagram
+ * Usa publicContact.socials.instagram y publicContact.instagramHandle.
+ * Si socialInstagramUrl está vacío, el componente ya retorna null (no aparece).
+ * Una vez conectado el backend, estos valores vienen de:
+ *   GET /datosEmpresa/seleccionarDatosEmpresa → d.socialInstagramUrl, d.socialInstagramHandle
+ */
 import { publicContact } from "@/lib/publicContact";
 
 export default function FloatingActionButtonExtendedSize() {

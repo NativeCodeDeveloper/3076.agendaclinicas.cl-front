@@ -1,5 +1,12 @@
 "use client";
 import { FloatingWhatsApp } from "react-floating-whatsapp";
+/*
+ * CONEXIÓN PENDIENTE — Botón flotante de WhatsApp (react-floating-whatsapp)
+ * Usa publicContact.whatsappNumber y publicContact.companyName.
+ * Si contactoWhatsapp está vacío, el componente ya retorna null (no aparece).
+ * Una vez conectado el backend, estos valores vienen de:
+ *   GET /datosEmpresa/seleccionarDatosEmpresa → d.contactoWhatsapp, d.empresaNombre
+ */
 import { publicContact } from "@/lib/publicContact";
 
 export default function WhatsAppButton() {

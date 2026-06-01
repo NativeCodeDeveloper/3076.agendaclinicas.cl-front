@@ -18,6 +18,15 @@ const fallbackSlides = [
   { id: "fallback-1", image: "/logoagendaclinica.png", alt: "Centro Médico", titulo: "", descripcion: "" },
 ];
 
+/*
+ * CONEXIÓN PENDIENTE — Redes sociales del Hero / Portada
+ * Estos enlaces están hardcodeados con href:"#".
+ * Deben reemplazarse con los valores de: GET /datosEmpresa/seleccionarDatosEmpresa
+ *   instagram  → d.socialInstagramUrl
+ *   facebook   → d.socialFacebookUrl
+ *   whatsapp   → construir con d.contactoWhatsapp: `https://wa.me/${numero}`
+ * REGLA: si el campo está vacío, no incluir el ítem en el array (no mostrar el ícono).
+ */
 const socialLinks = [
   { icon: Instagram, href: "#", label: "Instagram" },
   { icon: Facebook, href: "#", label: "Facebook" },

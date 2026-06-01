@@ -7,6 +7,15 @@ import RevealOnScroll from "@/Componentes/RevealOnScroll";
 
 export default function Seccion1() {
   const API = process.env.NEXT_PUBLIC_API_URL;
+  /*
+   * CONEXIÓN PENDIENTE — Sección "Sobre nosotros" del inicio
+   * Actualmente los textos se cargan desde dos fuentes:
+   *   1. .env (NEXT_PUBLIC_ABOUT_*) como fallback
+   *   2. Endpoints legacy /titulo (id=3) y /textos (id=1, id=2)
+   * Una vez integrado el nuevo backend, reemplazar ambas fuentes por:
+   *   GET /datosEmpresa/seleccionarDatosEmpresa
+   *   → d.sobreNosotrosTitulo, d.sobreNosotrosParrafo1, d.sobreNosotrosParrafo2
+   */
   const fallbackSobreNosotrosTitulo =
     process.env.NEXT_PUBLIC_ABOUT_TITLE || "Psicologia infantil integral";
   const fallbackPrimerParrafo =

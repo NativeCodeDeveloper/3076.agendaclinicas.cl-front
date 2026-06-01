@@ -5,6 +5,17 @@ import { toast } from "react-hot-toast";
 import { Clock3, Facebook, Globe, Instagram, Linkedin, Mail, MapPin, MessageCircle, Send, Twitter, Youtube } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+/*
+ * CONEXIÓN PENDIENTE — Página de Contacto
+ * Toda la información de contacto y redes sociales viene de publicContact (src/lib/publicContact.js).
+ * Una vez conectado el backend, hacer fetch de:
+ *   GET /datosEmpresa/seleccionarDatosEmpresa
+ * y reemplazar publicContact por los valores del objeto retornado.
+ * Campos usados: address, mapsUrl, phone, whatsappUrl, email, emailUrl,
+ *   instagramHandle, socials.instagram, socials.facebook, socials.linkedin,
+ *   socials.twitter, socials.youtube, socials.other, socials.otherLabel
+ * REGLA: cada ítem ya filtra por .filter(item => item.value) — los vacíos no se muestran.
+ */
 import { publicContact } from "@/lib/publicContact";
 
 export default function ContactoPage() {
