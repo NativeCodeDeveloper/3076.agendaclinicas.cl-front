@@ -7,53 +7,30 @@ import RevealOnScroll from "@/Componentes/RevealOnScroll";
 
 export default function Seccion1() {
   const API = process.env.NEXT_PUBLIC_API_URL;
-  /*
-   * CONEXIÓN PENDIENTE — Sección "Sobre nosotros" del inicio
-   * Actualmente los textos se cargan desde dos fuentes:
-   *   1. .env (NEXT_PUBLIC_ABOUT_*) como fallback
-   *   2. Endpoints legacy /titulo (id=3) y /textos (id=1, id=2)
-   * Una vez integrado el nuevo backend, reemplazar ambas fuentes por:
-   *   GET /datosEmpresa/seleccionarDatosEmpresa
-   *   → d.sobreNosotrosTitulo, d.sobreNosotrosParrafo1, d.sobreNosotrosParrafo2
-   */
-  const fallbackSobreNosotrosTitulo =
-    process.env.NEXT_PUBLIC_ABOUT_TITLE || "Psicologia infantil integral";
-  const fallbackPrimerParrafo =
-    process.env.NEXT_PUBLIC_ABOUT_PARAGRAPH_1 ||
-    "Brindamos acompanamiento psicologico infantil con una mirada cercana, respetuosa y especializada en el desarrollo emocional, conductual y social de ninos y ninas.";
-  const fallbackSegundoParrafo =
-    process.env.NEXT_PUBLIC_ABOUT_PARAGRAPH_2 ||
-    "Trabajamos junto a las familias para fortalecer habilidades, favorecer el bienestar y entregar orientacion profesional en cada etapa del crecimiento.";
   const [sobreNosotros, setSobreNosotros] = useState("");
   const [primerParrafo, setPrimerParrafo] = useState("");
   const [segundoParrafo, setSegundoParrafo] = useState("");
 
   async function cargarContenido() {
     try {
-      const [resTitulos, resTextos] = await Promise.all([
-        fetch(`${API}/titulo`),
-        fetch(`${API}/textos`),
-      ]);
+      const res = await fetch(`${API}/datosempresa/seleccionartodos`, {
+        method: "GET",
+        headers: { Accept: "application/json" },
+        mode: "cors",
+      });
 
-      if (resTitulos.ok) {
-        const data = await resTitulos.json();
-        if (Array.isArray(data)) {
-          const t3 = data.find((i) => Number(i.id_titulo) === 3);
-          if (t3?.titulo) setSobreNosotros(t3.titulo);
-        }
+      if (!res.ok) {
+        return;
       }
 
-      if (resTextos.ok) {
-        const data = await resTextos.json();
-        if (Array.isArray(data)) {
-          const p1 = data.find((i) => Number(i.id_Textos) === 1);
-          const p2 = data.find((i) => Number(i.id_Textos) === 2);
-          if (p1?.contenido) setPrimerParrafo(p1.contenido);
-          if (p2?.contenido) setSegundoParrafo(p2.contenido);
-        }
-      }
+      const data = await res.json();
+      const datosEmpresa = Array.isArray(data) ? data[0] : data;
+
+      setSobreNosotros(datosEmpresa?.sobreNosotrosTitulo || "");
+      setPrimerParrafo(datosEmpresa?.sobreNosotrosParrafo1 || "");
+      setSegundoParrafo(datosEmpresa?.sobreNosotrosParrafo2 || "");
     } catch (err) {
-      console.error("Error cargando contenido sobre nosotros", err);
+      console.error("Error cargando datos de empresa", err);
     }
   }
 
@@ -61,9 +38,13 @@ export default function Seccion1() {
     cargarContenido();
   }, []);
 
-  const tituloSobreNosotros = fallbackSobreNosotrosTitulo || sobreNosotros || "Sobre Nosotros";
-  const descripcionPrincipal = fallbackPrimerParrafo || primerParrafo;
-  const descripcionSecundaria = fallbackSegundoParrafo || segundoParrafo;
+  const tituloSobreNosotros = sobreNosotros || "Sobre Nosotros";
+  const descripcionPrincipal =
+    primerParrafo ||
+    "Brindamos acompanamiento profesional con una mirada cercana, respetuosa y especializada.";
+  const descripcionSecundaria =
+    segundoParrafo ||
+    "Trabajamos para fortalecer el bienestar y entregar orientacion profesional en cada etapa.";
 
   return (
     <section

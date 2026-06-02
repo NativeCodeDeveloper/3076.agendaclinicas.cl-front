@@ -1,16 +1,9 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Globe, Instagram, Linkedin, Mail, MapPin, MessageCircle, Phone, Shield, Lock, Twitter, Youtube } from "lucide-react";
-/*
- * CONEXIÓN PENDIENTE — Footer
- * Todos los datos de este componente vienen de publicContact (src/lib/publicContact.js),
- * que actualmente lee del .env. Una vez conectado el backend:
- *   - Hacer fetch de GET /datosEmpresa/seleccionarDatosEmpresa en el servidor (async Server Component)
- *   - Reemplazar publicContact.phone, .email, .address, .mapsUrl, .whatsappUrl, .socials.*
- *   - El copyright "© empresa" también usa publicContact.companyName
- *   - Las redes sociales ya filtran por href vacío: solo mostrar si el campo tiene URL
- */
-import { publicContact } from "@/lib/publicContact";
 
 const navLinks = [
   { label: "Inicio", href: "#inicio" },
@@ -19,7 +12,94 @@ const navLinks = [
   { label: "Agendar hora", href: "/agendaProfesionales" },
 ];
 
+function normalizeWhatsAppNumber(phone) {
+  return String(phone || "").replace(/[^\d]/g, "");
+}
+
+function extractIframeSrc(value) {
+  const rawValue = String(value || "").trim();
+  const iframeSrc = rawValue.match(/src=["']([^"']+)["']/i)?.[1];
+  return iframeSrc || rawValue;
+}
+
+const initialContact = {
+  companyName: "Agenda Clinica",
+  phone: "",
+  whatsappNumber: "",
+  whatsappUrl: "",
+  email: "",
+  emailUrl: "",
+  address: "",
+  mapsUrl: "",
+  instagramHandle: "",
+  socials: {
+    instagram: "",
+    facebook: "",
+    twitter: "",
+    linkedin: "",
+    tiktok: "",
+    youtube: "",
+    other: "",
+    otherLabel: "Otra red",
+  },
+};
+
 export default function Footer() {
+  const API = process.env.NEXT_PUBLIC_API_URL;
+  const [publicContact, setPublicContact] = useState(initialContact);
+
+  async function cargarDatosEmpresaFooter() {
+    try {
+      const res = await fetch(`${API}/datosempresa/seleccionartodos`, {
+        method: "GET",
+        headers: { Accept: "application/json" },
+        mode: "cors",
+      });
+
+      if (!res.ok) {
+        return;
+      }
+
+      const data = await res.json();
+      const datosEmpresa = Array.isArray(data) ? data[0] : data;
+
+      if (!datosEmpresa) {
+        return;
+      }
+
+      const whatsappNumber = datosEmpresa.contactoWhatsapp || datosEmpresa.contactoTelefono || "";
+      const email = datosEmpresa.contactoEmail || "";
+
+      setPublicContact({
+        companyName: datosEmpresa.empresaNombre || "Agenda Clinica",
+        phone: datosEmpresa.contactoTelefono || "",
+        whatsappNumber,
+        whatsappUrl: whatsappNumber ? `https://wa.me/${normalizeWhatsAppNumber(whatsappNumber)}` : "",
+        email,
+        emailUrl: email ? `mailto:${email}` : "",
+        address: datosEmpresa.contactoDireccion || "",
+        mapsUrl: extractIframeSrc(datosEmpresa.contactoUrlMapa),
+        instagramHandle: datosEmpresa.socialInstagramHandle || "",
+        socials: {
+          instagram: datosEmpresa.socialInstagramUrl || "",
+          facebook: datosEmpresa.socialFacebookUrl || "",
+          twitter: datosEmpresa.socialTwitterUrl || "",
+          linkedin: datosEmpresa.socialLinkedinUrl || "",
+          tiktok: datosEmpresa.socialTiktokUrl || "",
+          youtube: datosEmpresa.socialYoutubeUrl || "",
+          other: datosEmpresa.socialOtraUrl || "",
+          otherLabel: datosEmpresa.socialOtraEtiqueta || "Otra red",
+        },
+      });
+    } catch (error) {
+      console.error("Error cargando datos de empresa para footer", error);
+    }
+  }
+
+  useEffect(() => {
+    cargarDatosEmpresaFooter();
+  }, []);
+
   const socialLinks = [
     { label: "Instagram", href: publicContact.socials.instagram, icon: Instagram },
     { label: "Facebook", href: publicContact.socials.facebook, icon: Facebook },
@@ -30,6 +110,7 @@ export default function Footer() {
     { label: publicContact.socials.otherLabel, href: publicContact.socials.other, icon: Globe },
   ].filter((item) => item.href);
   const hasContactInfo = publicContact.phone || publicContact.email || publicContact.address;
+  const hasMap = publicContact.mapsUrl && publicContact.mapsUrl.startsWith("https://www.google.com/maps/embed");
 
   return (
     <footer id="footer" className="relative overflow-hidden bg-slate-950 text-slate-300 pt-20 pb-10">
@@ -76,7 +157,7 @@ export default function Footer() {
           </div>
 
           {/* Links grid */}
-          <div className="lg:col-span-8 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:w-fit lg:grid-cols-[200px_220px_320px] lg:gap-10">
+          <div className="lg:col-span-8 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:w-fit lg:grid-cols-[200px_220px_360px] lg:gap-10">
 
             {/* Navegación */}
             <div>
@@ -124,7 +205,7 @@ export default function Footer() {
 
               {!hasContactInfo && socialLinks.length === 0 && (
                 <p className="text-sm text-slate-500">
-                  Configura las variables `NEXT_PUBLIC_CONTACT_*` y `NEXT_PUBLIC_SOCIAL_*` en `.env`.
+                  Configura los datos de empresa desde el dashboard.
                 </p>
               )}
             </div>
@@ -179,6 +260,21 @@ export default function Footer() {
                   )}
                 </div>
               </div>
+              {hasMap && (
+                <div className="mt-5 overflow-hidden rounded-2xl border border-slate-800 bg-slate-900">
+                  <iframe
+                    src={publicContact.mapsUrl}
+                    width="600"
+                    height="450"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    className="h-56 w-full"
+                    title={`Ubicacion de ${publicContact.companyName}`}
+                  />
+                </div>
+              )}
             </div>
 
           </div>
@@ -187,7 +283,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-8 flex flex-col gap-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between px-1">
           <p>
-            © {new Date().getFullYear()} Agenda Clínica. Todos los derechos reservados.
+            © {new Date().getFullYear()} {publicContact.companyName}. Todos los derechos reservados.
           </p>
           <p className="flex items-center gap-1.5">
             Desarrollado por{" "}

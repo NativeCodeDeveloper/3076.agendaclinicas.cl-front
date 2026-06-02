@@ -3,12 +3,14 @@
 import { useUser, useClerk } from "@clerk/nextjs";
 import Link from "next/link";
 import { getDashboardRoleFromUser, getDashboardRoleLabel } from "@/lib/dashboard-access";
+import { isLocalClerkBypassEnabled } from "@/lib/local-clerk-bypass";
 
 export default function UserMenu() {
     const { user, isLoaded } = useUser();
     const { signOut } = useClerk();
+    const clerkBypass = isLocalClerkBypassEnabled();
 
-    if (!isLoaded) {
+    if (!clerkBypass && !isLoaded) {
         return (
             <div className="px-3 pb-3 pt-2 border-t border-[#EAEAEC]">
                 <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-3 py-3">
@@ -22,10 +24,10 @@ export default function UserMenu() {
         );
     }
 
-    const name = user?.fullName || user?.firstName || "Usuario";
-    const role = getDashboardRoleFromUser(user);
+    const name = clerkBypass ? "Local Admin" : user?.fullName || user?.firstName || "Usuario";
+    const role = clerkBypass ? "admin" : getDashboardRoleFromUser(user);
     const roleLabel = getDashboardRoleLabel(role);
-    const avatar = user?.imageUrl;
+    const avatar = clerkBypass ? null : user?.imageUrl;
 
     return (
         <div className="px-3 pb-3 pt-2 border-t border-[#EAEAEC]">
@@ -73,13 +75,17 @@ export default function UserMenu() {
                     </Link>
 
                     <button
-                        onClick={() => signOut({ redirectUrl: "/sign-in" })}
+                        onClick={() => {
+                            if (!clerkBypass) {
+                                signOut({ redirectUrl: "/sign-in" });
+                            }
+                        }}
                         className="flex w-full items-center gap-2.5 px-4 py-3 text-[12px] font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                         </svg>
-                        <span>Cerrar Sesión</span>
+                        <span>{clerkBypass ? "Clerk desactivado local" : "Cerrar Sesión"}</span>
                     </button>
                 </div>
             </details>

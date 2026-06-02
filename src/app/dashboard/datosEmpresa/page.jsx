@@ -7,9 +7,10 @@ import { ButtonDinamic } from "@/Componentes/ButtonDinamic";
 /*
  * DATOS DE LA EMPRESA — CRUD
  *
- * Backend esperado:
- *   GET  /datosEmpresa/seleccionarDatosEmpresa      → devuelve un objeto (o array[0]) con todos los campos
- *   POST /datosEmpresa/actualizarDatosEmpresa        → recibe el objeto completo, hace upsert (id=1 fijo)
+ * Backend conectado:
+ *   GET  /datosempresa/seleccionartodos
+ *   POST /datosempresa/seleccionarporid
+ *   POST /datosempresa/actualizar
  *
  * Estos datos alimentan (una vez conectados) los siguientes archivos del frontend:
  *   - src/lib/publicContact.js                           (fuente central de contacto y redes)
@@ -29,6 +30,7 @@ export default function DatosEmpresa() {
     const [cargando, setCargando] = useState(false);
 
     // Datos generales
+    const [id_empresa, setId_empresa] = useState(1);
     const [empresaNombre, setEmpresaNombre] = useState("");
 
     // Contacto
@@ -54,9 +56,33 @@ export default function DatosEmpresa() {
     const [socialOtraUrl, setSocialOtraUrl] = useState("");
     const [socialOtraEtiqueta, setSocialOtraEtiqueta] = useState("");
 
+    function cargarFormulario(d) {
+        if (!d) return;
+
+        setId_empresa(d.id_empresa || 1);
+        setEmpresaNombre(d.empresaNombre || "");
+        setContactoTelefono(d.contactoTelefono || "");
+        setContactoWhatsapp(d.contactoWhatsapp || "");
+        setContactoEmail(d.contactoEmail || "");
+        setContactoDireccion(d.contactoDireccion || "");
+        setContactoUrlMapa(d.contactoUrlMapa || "");
+        setSobreNosotrosTitulo(d.sobreNosotrosTitulo || "");
+        setSobreNosotrosParrafo1(d.sobreNosotrosParrafo1 || "");
+        setSobreNosotrosParrafo2(d.sobreNosotrosParrafo2 || "");
+        setSocialInstagramUrl(d.socialInstagramUrl || "");
+        setSocialInstagramHandle(d.socialInstagramHandle || "");
+        setSocialFacebookUrl(d.socialFacebookUrl || "");
+        setSocialTwitterUrl(d.socialTwitterUrl || "");
+        setSocialLinkedinUrl(d.socialLinkedinUrl || "");
+        setSocialTiktokUrl(d.socialTiktokUrl || "");
+        setSocialYoutubeUrl(d.socialYoutubeUrl || "");
+        setSocialOtraUrl(d.socialOtraUrl || "");
+        setSocialOtraEtiqueta(d.socialOtraEtiqueta || "");
+    }
+
     async function cargarDatosEmpresa() {
         try {
-            const res = await fetch(`${API}/datosEmpresa/seleccionarDatosEmpresa`, {
+            const res = await fetch(`${API}/datosempresa/seleccionartodos`, {
                 method: "GET",
                 headers: { Accept: "application/json" },
                 mode: "cors",
@@ -64,30 +90,45 @@ export default function DatosEmpresa() {
             if (!res.ok) return toast.error("No se pudieron cargar los datos de la empresa.");
             const data = await res.json();
             const d = Array.isArray(data) ? data[0] : data;
-            if (!d) return;
-
-            setEmpresaNombre(d.empresaNombre || "");
-            setContactoTelefono(d.contactoTelefono || "");
-            setContactoWhatsapp(d.contactoWhatsapp || "");
-            setContactoEmail(d.contactoEmail || "");
-            setContactoDireccion(d.contactoDireccion || "");
-            setContactoUrlMapa(d.contactoUrlMapa || "");
-            setSobreNosotrosTitulo(d.sobreNosotrosTitulo || "");
-            setSobreNosotrosParrafo1(d.sobreNosotrosParrafo1 || "");
-            setSobreNosotrosParrafo2(d.sobreNosotrosParrafo2 || "");
-            setSocialInstagramUrl(d.socialInstagramUrl || "");
-            setSocialInstagramHandle(d.socialInstagramHandle || "");
-            setSocialFacebookUrl(d.socialFacebookUrl || "");
-            setSocialTwitterUrl(d.socialTwitterUrl || "");
-            setSocialLinkedinUrl(d.socialLinkedinUrl || "");
-            setSocialTiktokUrl(d.socialTiktokUrl || "");
-            setSocialYoutubeUrl(d.socialYoutubeUrl || "");
-            setSocialOtraUrl(d.socialOtraUrl || "");
-            setSocialOtraEtiqueta(d.socialOtraEtiqueta || "");
+            cargarFormulario(d);
         } catch {
             toast.error("Error de conexión al cargar los datos.");
         } finally {
             setCargandoInicial(false);
+        }
+    }
+
+    async function seleccionarDatosEmpresaPorId() {
+        if (!id_empresa) {
+            toast.error("Ingresa el ID de la empresa.");
+            return;
+        }
+
+        try {
+            setCargando(true);
+            const res = await fetch(`${API}/datosempresa/seleccionarporid`, {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                mode: "cors",
+                body: JSON.stringify({ id_empresa }),
+            });
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            const d = Array.isArray(data) ? data[0] : data;
+            if (!d) {
+                toast.error("No se encontraron datos para ese ID.");
+                return;
+            }
+
+            cargarFormulario(d);
+            toast.success("Datos cargados correctamente.");
+        } catch {
+            toast.error("No se pudieron cargar los datos de la empresa.");
+        } finally {
+            setCargando(false);
         }
     }
 
@@ -96,9 +137,34 @@ export default function DatosEmpresa() {
     }, []);
 
     async function guardarDatosEmpresa() {
+        if (
+            !empresaNombre ||
+            !contactoTelefono ||
+            !contactoWhatsapp ||
+            !contactoEmail ||
+            !contactoDireccion ||
+            !contactoUrlMapa ||
+            !sobreNosotrosTitulo ||
+            !sobreNosotrosParrafo1 ||
+            !sobreNosotrosParrafo2 ||
+            !socialInstagramUrl ||
+            !socialInstagramHandle ||
+            !socialFacebookUrl ||
+            !socialTwitterUrl ||
+            !socialLinkedinUrl ||
+            !socialTiktokUrl ||
+            !socialYoutubeUrl ||
+            !socialOtraUrl ||
+            !socialOtraEtiqueta ||
+            !id_empresa
+        ) {
+            toast.error("Completa todos los campos antes de guardar.");
+            return;
+        }
+
         try {
             setCargando(true);
-            const res = await fetch(`${API}/datosEmpresa/actualizarDatosEmpresa`, {
+            const res = await fetch(`${API}/datosempresa/actualizar`, {
                 method: "POST",
                 headers: {
                     Accept: "application/json",
@@ -124,6 +190,7 @@ export default function DatosEmpresa() {
                     socialYoutubeUrl,
                     socialOtraUrl,
                     socialOtraEtiqueta,
+                    id_empresa,
                 }),
             });
             if (!res.ok) throw new Error();
@@ -176,14 +243,35 @@ export default function DatosEmpresa() {
                                 Nombre de la empresa tal como aparece en la web y en los metadatos del sitio.
                             </p>
                         </div>
-                        <div className="space-y-1.5">
-                            <label className={labelClass}>Nombre de la empresa</label>
-                            <input
-                                value={empresaNombre}
-                                onChange={(e) => setEmpresaNombre(e.target.value)}
-                                className={inputClass}
-                                placeholder="Ej: Clínica San Pedro"
-                            />
+                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-[180px_1fr]">
+                            <div className="space-y-1.5">
+                                <label className={labelClass}>ID empresa</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        value={id_empresa}
+                                        onChange={(e) => setId_empresa(e.target.value)}
+                                        type="number"
+                                        min="1"
+                                        className={inputClass}
+                                        placeholder="1"
+                                    />
+                                    <ButtonDinamic
+                                        onClick={seleccionarDatosEmpresaPorId}
+                                        className="shrink-0 rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
+                                    >
+                                        Cargar
+                                    </ButtonDinamic>
+                                </div>
+                            </div>
+                            <div className="space-y-1.5">
+                                <label className={labelClass}>Nombre de la empresa</label>
+                                <input
+                                    value={empresaNombre}
+                                    onChange={(e) => setEmpresaNombre(e.target.value)}
+                                    className={inputClass}
+                                    placeholder="Ej: Clínica San Pedro"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,9 +309,9 @@ export default function DatosEmpresa() {
                                 <input value={contactoDireccion} onChange={(e) => setContactoDireccion(e.target.value)} className={inputClass} placeholder="Av. Principal 123, Santiago" />
                             </div>
                             <div className="space-y-1.5 sm:col-span-2">
-                                <label className={labelClass}>URL de Google Maps</label>
-                                <input value={contactoUrlMapa} onChange={(e) => setContactoUrlMapa(e.target.value)} className={inputClass} placeholder="https://maps.google.com/..." />
-                                <p className="text-xs text-slate-400">Si se ingresa, la dirección se convierte en enlace al mapa.</p>
+                                <label className={labelClass}>Mapa de Google Maps</label>
+                                <input value={contactoUrlMapa} onChange={(e) => setContactoUrlMapa(e.target.value)} className={inputClass} placeholder="https://www.google.com/maps/embed?pb=..." />
+                                <p className="text-xs text-slate-400">Pega el src del iframe o el iframe completo de Google Maps. Se mostrará en el footer.</p>
                             </div>
                         </div>
                     </div>

@@ -18,20 +18,9 @@ const fallbackSlides = [
   { id: "fallback-1", image: "/logoagendaclinica.png", alt: "Centro Médico", titulo: "", descripcion: "" },
 ];
 
-/*
- * CONEXIÓN PENDIENTE — Redes sociales del Hero / Portada
- * Estos enlaces están hardcodeados con href:"#".
- * Deben reemplazarse con los valores de: GET /datosEmpresa/seleccionarDatosEmpresa
- *   instagram  → d.socialInstagramUrl
- *   facebook   → d.socialFacebookUrl
- *   whatsapp   → construir con d.contactoWhatsapp: `https://wa.me/${numero}`
- * REGLA: si el campo está vacío, no incluir el ítem en el array (no mostrar el ícono).
- */
-const socialLinks = [
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: MessageCircle, href: "#", label: "WhatsApp" },
-];
+function normalizeWhatsAppNumber(phone) {
+  return String(phone || "").replace(/[^\d]/g, "");
+}
 
 export default function Portada() {
   const [dataPortada, setDataPortada] = useState([]);
@@ -39,6 +28,7 @@ export default function Portada() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [titulo, setTitulo] = useState("");
   const [sobreNosotros, setSobreNosotros] = useState("");
+  const [datosEmpresa, setDatosEmpresa] = useState(null);
   const touchStartX = useRef(null);
   const API = process.env.NEXT_PUBLIC_API_URL;
   const fallbackSobreNosotrosTitulo =
@@ -75,9 +65,28 @@ export default function Portada() {
     }
   }
 
+  async function cargarDatosEmpresa() {
+    try {
+      const res = await fetch(`${API}/datosempresa/seleccionartodos`, {
+        method: "GET",
+        headers: { Accept: "application/json" },
+        mode: "cors",
+      });
+
+      if (!res.ok) return;
+
+      const data = await res.json();
+      const empresa = Array.isArray(data) ? data[0] : data;
+      setDatosEmpresa(empresa || null);
+    } catch {
+      setDatosEmpresa(null);
+    }
+  }
+
   useEffect(() => {
     cargarPortada();
     cargarTitulos();
+    cargarDatosEmpresa();
   }, []);
 
   // ── Slides desde el backend ───────────────────────────
@@ -125,6 +134,16 @@ export default function Portada() {
   };
 
   const currentSlide = safeSlides[activeIndex] ?? fallbackSlides[0];
+  const whatsappNumber = datosEmpresa?.contactoWhatsapp || datosEmpresa?.contactoTelefono || "";
+  const socialLinks = [
+    { icon: Instagram, href: datosEmpresa?.socialInstagramUrl, label: "Instagram" },
+    { icon: Facebook, href: datosEmpresa?.socialFacebookUrl, label: "Facebook" },
+    {
+      icon: MessageCircle,
+      href: whatsappNumber ? `https://wa.me/${normalizeWhatsAppNumber(whatsappNumber)}` : "",
+      label: "WhatsApp",
+    },
+  ].filter((item) => item.href);
 
   return (
     <section

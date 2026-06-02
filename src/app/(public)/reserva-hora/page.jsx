@@ -1,15 +1,9 @@
 'use client'
-import {Suspense} from "react";
+import {Suspense, useEffect, useState} from "react";
 import {useSearchParams} from "next/navigation";
-/*
- * CONEXIÓN PENDIENTE — Página de Reserva de Hora
- * Usa publicContact.companyName (nombre en el título) y publicContact.address (dirección en el formulario).
- * Una vez conectado el backend, reemplazar con:
- *   GET /datosEmpresa/seleccionarDatosEmpresa → d.empresaNombre, d.contactoDireccion
- */
-import { publicContact } from "@/lib/publicContact";
 
 function ReservaHoraContent() {
+    const API = process.env.NEXT_PUBLIC_API_URL;
     const searchParams = useSearchParams();
     const fechaInicio   = searchParams.get('fecha')       || '';
     const horaInicio    = searchParams.get('hora')        || '';
@@ -19,6 +13,10 @@ function ReservaHoraContent() {
     const servicio      = searchParams.get('servicio')    || '';
     const duracion      = searchParams.get('duracion')    || '';
     const precio        = searchParams.get('precio')      || '';
+    const [datosEmpresa, setDatosEmpresa] = useState({
+        empresaNombre: "",
+        contactoDireccion: "",
+    });
 
     const formatoCLP = new Intl.NumberFormat("es-CL", {
         style: "currency", currency: "CLP",
@@ -52,7 +50,37 @@ function ReservaHoraContent() {
         return horaTexto ? `${fechaTexto} a las ${horaTexto}` : fechaTexto;
     }
 
+    async function cargarDatosEmpresa() {
+        try {
+            const res = await fetch(`${API}/datosempresa/seleccionartodos`, {
+                method: "GET",
+                headers: { Accept: "application/json" },
+                mode: "cors",
+            });
+
+            if (!res.ok) {
+                return;
+            }
+
+            const data = await res.json();
+            const empresa = Array.isArray(data) ? data[0] : data;
+
+            setDatosEmpresa({
+                empresaNombre: empresa?.empresaNombre || "",
+                contactoDireccion: empresa?.contactoDireccion || "",
+            });
+        } catch (error) {
+            console.error("Error cargando datos de empresa en reserva", error);
+        }
+    }
+
+    useEffect(() => {
+        cargarDatosEmpresa();
+    }, []);
+
     const fechaHoraLegible = formatearFechaHora(fechaInicio, horaInicio);
+    const nombreEmpresa = datosEmpresa.empresaNombre || "Agenda Clinica";
+    const direccionEmpresa = datosEmpresa.contactoDireccion || "";
 
   return (
     <section className="relative min-h-screen w-full px-4 pt-28 pb-12 sm:pt-32 sm:pb-16 flex items-center justify-center bg-gradient-to-b from-slate-100 via-slate-50 to-slate-100">
@@ -92,7 +120,7 @@ function ReservaHoraContent() {
               <p className="mt-2 text-slate-700">
                 Su hora con{" "}
                 <span className="font-semibold text-slate-900">
-                  {profesional || publicContact.companyName}
+                  {profesional || nombreEmpresa}
                 </span>{" "}
                 ha sido reservada con éxito.
               </p>
@@ -179,7 +207,7 @@ function ReservaHoraContent() {
                   <div className="flex-1">
                     <p className="text-sm font-semibold text-slate-900">Ubicación</p>
                     <p className="text-sm text-slate-600">
-                      {[publicContact.companyName, publicContact.address].filter(Boolean).join(", ") || "Ubicacion por confirmar"}
+                      {[nombreEmpresa, direccionEmpresa].filter(Boolean).join(", ") || "Ubicacion por confirmar"}
                     </p>
                   </div>
                 </div>
