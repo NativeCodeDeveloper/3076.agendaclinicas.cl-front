@@ -6,7 +6,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import UserMenu from "./UserMenu";
 import { getDashboardRoleFromUser, getVisibleDashboardSections } from "@/lib/dashboard-access";
-import { isLocalClerkBypassEnabled } from "@/lib/local-clerk-bypass";
 
 const ICONS = {
   home: (
@@ -204,9 +203,7 @@ function NavAccordion({ id, label, icon, children, openAccordions, onToggle }) {
 export default function SidebarNav() {
   const pathname = usePathname();
   const { user, isLoaded } = useUser();
-  const clerkBypass = isLocalClerkBypassEnabled();
-  const menuLoaded = clerkBypass || isLoaded;
-  const role = clerkBypass ? "admin" : getDashboardRoleFromUser(user);
+  const role = getDashboardRoleFromUser(user);
   const sections = useMemo(() => getVisibleDashboardSections(role), [role]);
 
   const [openAccordions, setOpenAccordions] = useState(() => {
@@ -277,7 +274,7 @@ export default function SidebarNav() {
   return (
     <>
       <nav className="flex-1 overflow-y-auto px-2 py-3 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        {!menuLoaded ? (
+        {!isLoaded ? (
           <div className="space-y-2 px-2">
             <div className="h-9 rounded-xl bg-slate-100 animate-pulse" />
             <div className="h-9 rounded-xl bg-slate-100 animate-pulse" />

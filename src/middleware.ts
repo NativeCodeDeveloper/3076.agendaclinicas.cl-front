@@ -1,7 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { canAccessDashboardPath, getDashboardRoleFromClaims } from "@/lib/dashboard-access";
-import { isLocalClerkBypassEnabled } from "@/lib/local-clerk-bypass";
 
 const isDashboardRoute = createRouteMatcher(["/dashboard(.*)"]);
 const isDashboardApiRoute = createRouteMatcher(["/api/dashboard(.*)"]);
@@ -9,10 +8,6 @@ const SUBSCRIPTION_CANCELLED_PATH = "/dashboard/suscripcion-cancelada";
 
 export default clerkMiddleware(async (auth, req) => {
   if (!isDashboardRoute(req) && !isDashboardApiRoute(req)) {
-    return NextResponse.next();
-  }
-
-  if (isLocalClerkBypassEnabled()) {
     return NextResponse.next();
   }
 

@@ -98,40 +98,6 @@ export default function DatosEmpresa() {
         }
     }
 
-    async function seleccionarDatosEmpresaPorId() {
-        if (!id_empresa) {
-            toast.error("Ingresa el ID de la empresa.");
-            return;
-        }
-
-        try {
-            setCargando(true);
-            const res = await fetch(`${API}/datosempresa/seleccionarporid`, {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                },
-                mode: "cors",
-                body: JSON.stringify({ id_empresa }),
-            });
-            if (!res.ok) throw new Error();
-            const data = await res.json();
-            const d = Array.isArray(data) ? data[0] : data;
-            if (!d) {
-                toast.error("No se encontraron datos para ese ID.");
-                return;
-            }
-
-            cargarFormulario(d);
-            toast.success("Datos cargados correctamente.");
-        } catch {
-            toast.error("No se pudieron cargar los datos de la empresa.");
-        } finally {
-            setCargando(false);
-        }
-    }
-
     useEffect(() => {
         cargarDatosEmpresa();
     }, []);
@@ -232,6 +198,45 @@ export default function DatosEmpresa() {
                     </div>
                 </div>
 
+                <details className="rounded-[24px] border border-indigo-100 bg-indigo-50/60 p-5 shadow-sm">
+                    <summary className="cursor-pointer select-none text-sm font-semibold text-indigo-950">
+                        Dónde se usa esta información
+                    </summary>
+                    <div className="mt-4 space-y-3 text-sm leading-relaxed text-slate-700">
+                        <p>
+                            Los datos que ingreses acá se muestran en la web pública de agendamiento y también se usan en flujos internos de la plataforma, como correos, mensajes de WhatsApp, recordatorios y redirecciones del sitio.
+                        </p>
+                        <p>
+                            El correo de contacto será el correo receptor del equipo: ahí llegarán las notificaciones internas.
+                        </p>
+                        <p>
+                            El número de WhatsApp será el teléfono visible en los mensajes enviados a pacientes y en los recordatorios de citas. Si el WhatsApp queda vacío, se usará el teléfono principal como respaldo.
+                        </p>
+                        <p>
+                            El sitio web / otra URL se usa como URL pública del cliente para redirecciones y enlaces generales de la plataforma.
+                        </p>
+                        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-amber-950">
+                            <p className="font-semibold">Importante para el mapa</p>
+                            <p className="mt-2">
+                                Para que el mapa aparezca dentro del footer (la parte final de la página web), no pegues el link normal de la ubicación. El link normal solo abre Google Maps en otra pestaña. Acá debes pegar el código para insertar el mapa, llamado iframe, o al menos el enlace que viene dentro de ese iframe.
+                            </p>
+                            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                                <div className="rounded-xl border border-red-200 bg-white p-3">
+                                    <p className="font-semibold text-red-700">No usar</p>
+                                    <p className="mt-1 text-xs text-slate-600">Un link como google.com/maps/place/... sirve para abrir la ubicación, pero no muestra el mapa insertado.</p>
+                                </div>
+                                <div className="rounded-xl border border-emerald-200 bg-white p-3">
+                                    <p className="font-semibold text-emerald-700">Usar</p>
+                                    <p className="mt-1 text-xs text-slate-600">El código que empieza con &lt;iframe ...&gt; o el enlace que empieza con https://www.google.com/maps/embed?pb=...</p>
+                                </div>
+                            </div>
+                            <p className="mt-3">
+                                Para sacarlo: abre Google Maps, busca la dirección, presiona Compartir, entra a Insertar un mapa, copia el HTML y pégalo en el campo “Mapa de Google Maps”.
+                            </p>
+                        </div>
+                    </div>
+                </details>
+
                 {/* Datos generales */}
                 <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
                     <div className="flex flex-col gap-5">
@@ -243,26 +248,7 @@ export default function DatosEmpresa() {
                                 Nombre de la empresa tal como aparece en la web y en los metadatos del sitio.
                             </p>
                         </div>
-                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-[180px_1fr]">
-                            <div className="space-y-1.5">
-                                <label className={labelClass}>ID empresa</label>
-                                <div className="flex gap-2">
-                                    <input
-                                        value={id_empresa}
-                                        onChange={(e) => setId_empresa(e.target.value)}
-                                        type="number"
-                                        min="1"
-                                        className={inputClass}
-                                        placeholder="1"
-                                    />
-                                    <ButtonDinamic
-                                        onClick={seleccionarDatosEmpresaPorId}
-                                        className="shrink-0 rounded-xl border border-slate-200 bg-white text-slate-700 shadow-sm transition-colors hover:bg-slate-50"
-                                    >
-                                        Cargar
-                                    </ButtonDinamic>
-                                </div>
-                            </div>
+                        <div className="grid grid-cols-1 gap-5">
                             <div className="space-y-1.5">
                                 <label className={labelClass}>Nombre de la empresa</label>
                                 <input
@@ -287,7 +273,7 @@ export default function DatosEmpresa() {
                                     - src/app/(public)/contacto/page.jsx → página de contacto completa
                                     - FloatingWhatsApp.jsx y WhatsAppFloatButton.jsx → botón flotante
                                     Reemplazar las variables NEXT_PUBLIC_CONTACT_* del .env por este endpoint */}
-                                Aparece en el footer, en la página de contacto y en el botón flotante de WhatsApp.
+                                Aparece en el footer (la parte final de la página web), en la página de contacto, en correos internos y en los mensajes de WhatsApp enviados a pacientes.
                             </p>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -311,7 +297,7 @@ export default function DatosEmpresa() {
                             <div className="space-y-1.5 sm:col-span-2">
                                 <label className={labelClass}>Mapa de Google Maps</label>
                                 <input value={contactoUrlMapa} onChange={(e) => setContactoUrlMapa(e.target.value)} className={inputClass} placeholder="https://www.google.com/maps/embed?pb=..." />
-                                <p className="text-xs text-slate-400">Pega el src del iframe o el iframe completo de Google Maps. Se mostrará en el footer.</p>
+                                <p className="text-xs text-slate-400">Pega el iframe completo de Google Maps o el enlace embed que viene dentro del iframe. No uses el link normal de la ubicación.</p>
                             </div>
                         </div>
                     </div>
@@ -394,11 +380,11 @@ export default function DatosEmpresa() {
                                 <input value={socialYoutubeUrl} onChange={(e) => setSocialYoutubeUrl(e.target.value)} className={inputClass} placeholder="https://youtube.com/@tucanal" />
                             </div>
                             <div className="space-y-1.5">
-                                <label className={labelClass}>Otra red — Nombre / Etiqueta</label>
+                                <label className={labelClass}>Sitio web / Otra URL — Nombre / Etiqueta</label>
                                 <input value={socialOtraEtiqueta} onChange={(e) => setSocialOtraEtiqueta(e.target.value)} className={inputClass} placeholder="Ej: Threads, Pinterest..." />
                             </div>
                             <div className="space-y-1.5 sm:col-span-2">
-                                <label className={labelClass}>Otra red — URL del perfil</label>
+                                <label className={labelClass}>Sitio web / Otra URL</label>
                                 <input value={socialOtraUrl} onChange={(e) => setSocialOtraUrl(e.target.value)} className={inputClass} placeholder="https://..." />
                             </div>
                         </div>

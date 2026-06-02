@@ -24,7 +24,6 @@ import {
   X,
 } from "lucide-react";
 import { getDashboardRoleFromUser, getVisibleDashboardSections } from "@/lib/dashboard-access";
-import { isLocalClerkBypassEnabled } from "@/lib/local-clerk-bypass";
 
 const michroma = Michroma({ weight: "400", subsets: ["latin"], display: "swap" });
 
@@ -49,9 +48,7 @@ export default function MobileNav() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const { user, isLoaded } = useUser();
-  const clerkBypass = isLocalClerkBypassEnabled();
-  const menuLoaded = clerkBypass || isLoaded;
-  const role = clerkBypass ? "admin" : getDashboardRoleFromUser(user);
+  const role = getDashboardRoleFromUser(user);
   const sections = getVisibleDashboardSections(role);
 
   return (
@@ -116,7 +113,7 @@ export default function MobileNav() {
             </div>
 
             <nav className="max-h-[72vh] space-y-4 overflow-y-auto px-4 pb-4 pt-4">
-              {!menuLoaded ? (
+              {!isLoaded ? (
                 <div className="space-y-3">
                   <div className="h-24 rounded-2xl bg-slate-100 animate-pulse" />
                   <div className="h-24 rounded-2xl bg-slate-100 animate-pulse" />
