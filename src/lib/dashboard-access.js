@@ -226,6 +226,7 @@ const routeDenyMatchersByRole = {
     /^\/dashboard\/FichaClinica$/,
     /^\/dashboard\/fichasClinicasCategorias\/[^/]+$/,
     /^\/dashboard\/fichasClinicasPlantillas$/,
+    /^\/dashboard\/FichasPacientes$/,
     /^\/dashboard\/FichasPacientes\/[^/]+$/,
     /^\/dashboard\/listaPacientes$/,
     /^\/dashboard\/EdicionFicha\/[^/]+$/,
@@ -536,11 +537,16 @@ function canAccessRecetasEnFicha(role) {
   return hasFullDashboardAccess(role) || ["clinico-medico", "odontologico", "oftalmologia", "agenda"].includes(normalizedRole);
 }
 
+function canAccessFichasClinicas(role) {
+  return canAccessDashboardPath(role, "/dashboard/FichaClinica");
+}
+
 export {
   DASHBOARD_NAV_SECTIONS,
   DASHBOARD_ROLE_DETAILS,
   DASHBOARD_ROLES,
   canAccessDashboardPath,
+  canAccessFichasClinicas,
   canAccessOdontograma,
   canAccessRecetasEnFicha,
   getDashboardRoleFromClaims,

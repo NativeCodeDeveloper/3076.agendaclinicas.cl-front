@@ -37,6 +37,8 @@ import { PhoneInput } from "@/Componentes/PhoneInput";
 import { RutDisplay } from "@/Componentes/RutDisplay";
 import { getStateTokens } from "@/lib/designTokens";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
+import { canAccessFichasClinicas, getDashboardRoleFromUser } from "@/lib/dashboard-access";
 
 const ACCIONES_ESTADO = [
   { valor: "confirmada", etiqueta: "Confirmar" },
@@ -61,6 +63,9 @@ function getEstadoActionStyle(estado) {
 // ─── Sección de información (solo lectura) ────────────────────────────────────
 function InfoSection({ reserva, start, end, formatHora, formatFechaLarga }) {
   const router = useRouter();
+  const { user, isLoaded } = useUser();
+  const dashboardRole = getDashboardRoleFromUser(user);
+  const canSeeFichasClinicas = isLoaded && canAccessFichasClinicas(dashboardRole);
   const nombre = (reserva?.nombrePaciente ?? "").trim();
   const apellido = (reserva?.apellidoPaciente ?? "").trim();
   const nombreCompleto = [nombre, apellido].filter(Boolean).join(" ");
@@ -148,7 +153,7 @@ function InfoSection({ reserva, start, end, formatHora, formatFechaLarga }) {
       )}
 
       {/* Accesos rápidos */}
-      {reserva?.rut && (
+      {reserva?.rut && canSeeFichasClinicas && (
         <div className="flex flex-col gap-2">
           <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
             Accesos rápidos

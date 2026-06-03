@@ -4,8 +4,10 @@ import ShadcnInput from "@/Componentes/shadcnInput2";
 import ToasterClient from "@/Componentes/ToasterClient";
 import toast from "react-hot-toast";
 import {useRouter} from "next/navigation";
+import {useUser} from "@clerk/nextjs";
 import {Calendar28} from "@/Componentes/shadcnCalendarSelector";
 import {InfoButton} from "@/Componentes/InfoButton";
+import {canAccessFichasClinicas, getDashboardRoleFromUser} from "@/lib/dashboard-access";
 
 import {
     Table,
@@ -38,6 +40,9 @@ const STORAGE_KEYS = {
 export default function AgendaCitas() {
     const API = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
+    const {user, isLoaded} = useUser();
+    const dashboardRole = getDashboardRoleFromUser(user);
+    const canSeeFichasClinicas = isLoaded && canAccessFichasClinicas(dashboardRole);
     const [dataLista, setdataLista] = useState([]);
     const [dataListaBase, setDataListaBase] = useState([]);
     const [nombrePaciente, setnombrePaciente] = useState("");
@@ -327,6 +332,10 @@ export default function AgendaCitas() {
 
     async function verFichaClinicaPaciente(reserva) {
         try {
+            if (!canSeeFichasClinicas) {
+                return toast.error("Tu perfil no tiene acceso a fichas clínicas.");
+            }
+
             if (!reserva?.rut) {
                 return toast.error("No se ha podido identificar al paciente de esta reserva");
             }
@@ -684,6 +693,10 @@ export default function AgendaCitas() {
     }
 
     function renderBotonFichaReserva(data) {
+        if (!canSeeFichasClinicas) {
+            return null;
+        }
+
         return (
             <button
                 onClick={() => verFichaClinicaPaciente(data)}
@@ -753,15 +766,17 @@ export default function AgendaCitas() {
                             <span className="text-[10px] font-bold text-blue-500 uppercase tracking-widest leading-none">Finalizadas</span>
                             <span className="text-lg font-bold text-slate-900 mt-1 leading-none">{resumenEstados.finalizadas}</span>
                         </div>
-                        <button
-                            onClick={() => router.push("/dashboard/FichaClinica")}
-                            className="h-16 px-6 rounded-2xl bg-[#6E56CF] text-white flex items-center gap-2 shadow-sm hover:bg-[#5b45bc] transition-all"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                            </svg>
-                            <span className="text-[12px] font-bold">Fichas Clínicas</span>
-                        </button>
+                        {canSeeFichasClinicas && (
+                            <button
+                                onClick={() => router.push("/dashboard/FichaClinica")}
+                                className="h-16 px-6 rounded-2xl bg-[#6E56CF] text-white flex items-center gap-2 shadow-sm hover:bg-[#5b45bc] transition-all"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                </svg>
+                                <span className="text-[12px] font-bold">Fichas Clínicas</span>
+                            </button>
+                        )}
                         <InfoButton informacion={'Gestiona las citas del día. Usa los filtros para localizar pacientes específicos y actualiza el estado de asistencia con un solo clic.'}/>
                     </div>
                 </div>

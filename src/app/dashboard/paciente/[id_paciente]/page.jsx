@@ -2,6 +2,7 @@
 import {useParams, useSearchParams} from "next/navigation";
 import {useState, useEffect, useRef} from "react";
 import {toast} from "react-hot-toast";
+import {useUser} from "@clerk/nextjs";
 import ToasterClient from "@/Componentes/ToasterClient";
 import formatearFecha from "@/FuncionesTranversales/funcionesTranversales.js"
 import {ShadcnButton} from "@/Componentes/shadcnButton";
@@ -15,6 +16,7 @@ import {Textarea} from "@/components/ui/textarea";
 import { RutInput } from "@/Componentes/RutInput";
 import { PhoneInput } from "@/Componentes/PhoneInput";
 import { formatRut } from "@/lib/designTokens";
+import {canAccessFichasClinicas, getDashboardRoleFromUser} from "@/lib/dashboard-access";
 
 
 
@@ -27,10 +29,17 @@ export default function Paciente(){
     const [detallePaciente, setDetallePaciente] = useState([])
     const API = process.env.NEXT_PUBLIC_API_URL;
     const router = useRouter();
+    const {user, isLoaded} = useUser();
+    const dashboardRole = getDashboardRoleFromUser(user);
+    const canSeeFichasClinicas = isLoaded && canAccessFichasClinicas(dashboardRole);
     const [mostrarFormulario, setMostrarFormulario] = useState(false);
     const formularioRef = useRef(null);
 
     function volverAFichas() {
+        if (!canSeeFichasClinicas) {
+            return toast.error("Tu perfil no tiene acceso a fichas clínicas.");
+        }
+
         router.push(`/dashboard/FichasPacientes/${id_paciente}`);
     }
 
@@ -271,15 +280,17 @@ export default function Paciente(){
 
                 {/* ── Acciones ── */}
                 <div className="mb-6 flex flex-wrap items-center gap-2">
-                    <button
-                        onClick={volverAFichas}
-                        className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-[#6E56CF] hover:bg-[#5B47B0] shadow-sm transition-all"
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
-                        </svg>
-                        Carpeta del Paciente
-                    </button>
+                    {canSeeFichasClinicas && (
+                        <button
+                            onClick={volverAFichas}
+                            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white rounded-xl bg-[#6E56CF] hover:bg-[#5B47B0] shadow-sm transition-all"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/>
+                            </svg>
+                            Carpeta del Paciente
+                        </button>
+                    )}
                     <button
                         type="button"
                         onClick={() => {
@@ -313,7 +324,9 @@ export default function Paciente(){
                         </svg>
                         Eliminar
                     </button>
-                    <InfoButton informacion={"⚠️ Si un paciente es eliminado, no será posible acceder a sus fichas clínicas."}/>
+                    {canSeeFichasClinicas && (
+                        <InfoButton informacion={"⚠️ Si un paciente es eliminado, no será posible acceder a sus fichas clínicas."}/>
+                    )}
                 </div>
 
                 {/* ── Estado vacío ── */}
