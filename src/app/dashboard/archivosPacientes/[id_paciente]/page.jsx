@@ -5,67 +5,6 @@ import { toast } from "react-hot-toast";
 import ToasterClient from "@/Componentes/ToasterClient";
 import { formatRut } from "@/lib/designTokens";
 
-// ── Mock Data ──────────────────────────────────────────────
-const MOCK_PACIENTE = {
-    nombre: "Valentina",
-    apellido: "Muñoz Herrera",
-    rut: "191684087",
-    telefono: "+56 9 8765 4321",
-    correo: "valentina.munoz@email.com",
-};
-
-const MOCK_ARCHIVOS = [
-    {
-        id: 1,
-        fechaSubida: "2025-06-01",
-        tipoArchivo: "PDF",
-        profesional: "Dr. Andrés Soto",
-        nombreDocumento: "Radiografía Panorámica",
-        url: "/Radiografia-dental.png.webp",
-    },
-    {
-        id: 2,
-        fechaSubida: "2025-05-20",
-        tipoArchivo: "Imagen",
-        profesional: "Dra. Carolina Reyes",
-        nombreDocumento: "Fotografía Intraoral Superior",
-        url: "/Radiografia-dental.png.webp",
-    },
-    {
-        id: 3,
-        fechaSubida: "2025-05-10",
-        tipoArchivo: "PDF",
-        profesional: "Dr. Andrés Soto",
-        nombreDocumento: "Informe de Evaluación Periodontal",
-        url: "/Radiografia-dental.png.webp",
-    },
-    {
-        id: 4,
-        fechaSubida: "2025-04-28",
-        tipoArchivo: "Word",
-        profesional: "Dra. María López",
-        nombreDocumento: "Consentimiento Informado Cirugía",
-        url: "/Radiografia-dental.png.webp",
-    },
-    {
-        id: 5,
-        fechaSubida: "2025-04-15",
-        tipoArchivo: "Imagen",
-        profesional: "Dr. Andrés Soto",
-        nombreDocumento: "Tomografía Computarizada Maxilar",
-        url: "/Radiografia-dental.png.webp",
-    },
-    {
-        id: 6,
-        fechaSubida: "2025-03-22",
-        tipoArchivo: "PDF",
-        profesional: "Dra. Carolina Reyes",
-        nombreDocumento: "Presupuesto Tratamiento Ortodoncia",
-        url: "/Radiografia-dental.png.webp",
-    },
-];
-// ──────────────────────────────────────────────────────────
-
 function formatearFechaCorta(fecha) {
     if (!fecha) return "-";
     const d = new Date(fecha);
@@ -154,7 +93,6 @@ function ImageViewer({ src, nombre, onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex flex-col bg-[#0a0a0f]">
-            {/* ── Toolbar ── */}
             <div className="flex items-center justify-between px-6 py-3 bg-[#111118] border-b border-white/10">
                 <div className="flex items-center gap-3 min-w-0">
                     <div className="h-8 w-8 rounded-lg bg-[#6E56CF]/20 text-[#a78bfa] flex items-center justify-center shrink-0">
@@ -162,51 +100,33 @@ function ImageViewer({ src, nombre, onClose }) {
                     </div>
                     <span className="text-[13px] font-semibold text-white truncate">{nombre}</span>
                 </div>
-
                 <div className="flex items-center gap-1.5">
-                    {/* Zoom out */}
                     <button onClick={() => setZoom((z) => clampZoom(z - ZOOM_STEP))} className="h-8 w-8 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white flex items-center justify-center transition-colors" title="Alejar">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" /></svg>
                     </button>
-
-                    {/* Zoom indicator */}
                     <div className="h-8 px-3 rounded-lg bg-white/5 flex items-center justify-center min-w-[64px]">
                         <span className="text-[11px] font-bold text-white/80 font-mono">{zoomPct}%</span>
                     </div>
-
-                    {/* Zoom in */}
                     <button onClick={() => setZoom((z) => clampZoom(z + ZOOM_STEP))} className="h-8 w-8 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white flex items-center justify-center transition-colors" title="Acercar">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" /></svg>
                     </button>
-
                     <div className="w-px h-5 bg-white/10 mx-1" />
-
-                    {/* Fit */}
                     <button onClick={fitToScreen} className="h-8 w-8 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white flex items-center justify-center transition-colors" title="Ajustar a pantalla">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" /></svg>
                     </button>
-
-                    {/* Reset */}
                     <button onClick={resetView} className="h-8 w-8 rounded-lg bg-white/5 hover:bg-white/10 text-white/70 hover:text-white flex items-center justify-center transition-colors" title="Resetear vista">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
                     </button>
-
-                    {/* Invertir (negativo radiológico) */}
                     <button onClick={() => setInverted((v) => !v)} className={`h-8 px-3 rounded-lg flex items-center gap-1.5 text-[11px] font-bold transition-colors ${inverted ? "bg-[#6E56CF] text-white" : "bg-white/5 hover:bg-white/10 text-white/70 hover:text-white"}`} title="Invertir colores (negativo)">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
                         INV
                     </button>
-
                     <div className="w-px h-5 bg-white/10 mx-1" />
-
-                    {/* Cerrar */}
                     <button onClick={onClose} className="h-8 w-8 rounded-lg bg-red-500/20 hover:bg-red-500/30 text-red-400 hover:text-red-300 flex items-center justify-center transition-colors" title="Cerrar visor">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
             </div>
-
-            {/* ── Canvas de imagen ── */}
             <div
                 ref={containerRef}
                 className="flex-1 overflow-hidden relative select-none"
@@ -216,9 +136,7 @@ function ImageViewer({ src, nombre, onClose }) {
                 onPointerUp={handlePointerUp}
                 onPointerCancel={handlePointerUp}
             >
-                {/* Grid de fondo sutil */}
                 <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "24px 24px" }} />
-
                 <div
                     className="absolute inset-0 flex items-center justify-center"
                     style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transition: dragging ? "none" : "transform 0.15s ease-out" }}
@@ -231,8 +149,6 @@ function ImageViewer({ src, nombre, onClose }) {
                         draggable={false}
                     />
                 </div>
-
-                {/* Indicadores esquina inferior */}
                 <div className="absolute bottom-4 left-4 flex items-center gap-2">
                     <div className="h-7 px-3 rounded-lg bg-black/50 backdrop-blur-sm flex items-center">
                         <span className="text-[10px] font-bold text-white/60 uppercase tracking-wider">Scroll = Zoom &middot; Drag = Mover</span>
@@ -247,32 +163,165 @@ function ImageViewer({ src, nombre, onClose }) {
 export default function ArchivosPaciente() {
     const { id_paciente } = useParams();
     const router = useRouter();
+    const API = process.env.NEXT_PUBLIC_API_URL;
+    const fileInputRef = useRef(null);
 
-    // TODO: Reemplazar mock por fetch real al backend
-    const paciente = MOCK_PACIENTE;
-    const [archivos, setArchivos] = useState(MOCK_ARCHIVOS);
+    const [paciente, setPaciente] = useState(null);
+    const [archivos, setArchivos] = useState([]);
     const [visorAbierto, setVisorAbierto] = useState(null);
     const [confirmarEliminar, setConfirmarEliminar] = useState(null);
+    const [subiendo, setSubiendo] = useState(false);
 
+    // ── Cargar datos al montar ──
+    useEffect(() => {
+        if (!id_paciente) return;
+        cargarPaciente();
+        cargarArchivos();
+    }, [id_paciente]);
+
+    async function cargarPaciente() {
+        try {
+            const res = await fetch(`${API}/pacientes/pacientesEspecifico`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id_paciente }),
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            const p = Array.isArray(data) ? data[0] : data;
+            setPaciente(p);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function cargarArchivos() {
+        try {
+            const res = await fetch(`${API}/archivoPaciente/listar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id_paciente }),
+            });
+            if (!res.ok) return;
+            const data = await res.json();
+            setArchivos(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // ── Subir archivo ──
+    function abrirSelectorArchivo() {
+        fileInputRef.current?.click();
+    }
+
+    async function handleFileSeleccionado(e) {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        setSubiendo(true);
+        try {
+            const formData = new FormData();
+            formData.append("archivo", file);
+            formData.append("id_paciente", id_paciente);
+            formData.append("profesional", "Sin asignar");
+            formData.append("nombre_documento", file.name);
+
+            const res = await fetch(`${API}/archivoPaciente/subir`, {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await res.json();
+
+            if (data.ok) {
+                toast.success("Archivo subido correctamente");
+                await cargarArchivos();
+            } else {
+                toast.error("No se pudo subir el archivo");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Error al subir el archivo");
+        } finally {
+            setSubiendo(false);
+            e.target.value = "";
+        }
+    }
+
+    // ── Eliminar ──
     function handleEliminar(id) {
         setConfirmarEliminar(id);
     }
 
-    function confirmarEliminacion() {
-        // TODO: Conectar con endpoint de eliminación
-        setArchivos((prev) => prev.filter((a) => a.id !== confirmarEliminar));
-        toast.success("Documento eliminado correctamente");
+    async function confirmarEliminacion() {
+        try {
+            const res = await fetch(`${API}/archivoPaciente/eliminar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id_archivo: confirmarEliminar }),
+            });
+            const data = await res.json();
+
+            if (data.message === true) {
+                setArchivos((prev) => prev.filter((a) => a.id_archivo !== confirmarEliminar));
+                toast.success("Documento eliminado correctamente");
+            } else {
+                toast.error("No se pudo eliminar el documento");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Error al eliminar el documento");
+        }
         setConfirmarEliminar(null);
     }
 
-    function handleDescargar(archivo) {
-        // TODO: Conectar con endpoint de descarga real
-        toast.success(`Descargando: ${archivo.nombreDocumento}`);
+    // ── Descargar ──
+    async function handleDescargar(archivo) {
+        try {
+            const res = await fetch(`${API}/archivoPaciente/descargar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id_archivo: archivo.id_archivo }),
+            });
+            const data = await res.json();
+
+            if (data.ok && data.url) {
+                const link = document.createElement("a");
+                link.href = data.url;
+                link.download = archivo.nombre_documento;
+                link.target = "_blank";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
+                toast.error("No se pudo generar la descarga");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Error al descargar el archivo");
+        }
     }
 
-    function handleVisualizar(archivo) {
-        // TODO: Conectar con URL real del archivo
-        setVisorAbierto(archivo);
+    // ── Visualizar ──
+    async function handleVisualizar(archivo) {
+        try {
+            const res = await fetch(`${API}/archivoPaciente/descargar`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id_archivo: archivo.id_archivo }),
+            });
+            const data = await res.json();
+
+            if (data.ok && data.url) {
+                setVisorAbierto({ ...archivo, url: data.url });
+            } else {
+                toast.error("No se pudo cargar la vista previa");
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Error al cargar la vista previa");
+        }
     }
 
     function volverAFicha() {
@@ -283,14 +332,14 @@ export default function ArchivosPaciente() {
         router.push("/dashboard");
     }
 
-    // ── Si el visor está abierto, renderizar fullscreen ──
+    // ── Visor fullscreen ──
     if (visorAbierto) {
         return (
             <>
                 <ToasterClient />
                 <ImageViewer
                     src={visorAbierto.url}
-                    nombre={visorAbierto.nombreDocumento}
+                    nombre={visorAbierto.nombre_documento}
                     onClose={() => setVisorAbierto(null)}
                 />
             </>
@@ -300,6 +349,15 @@ export default function ArchivosPaciente() {
     return (
         <div className="min-h-screen bg-[#FAFAFB] flex flex-col">
             <ToasterClient />
+
+            {/* Input oculto para subir archivos */}
+            <input
+                type="file"
+                ref={fileInputRef}
+                className="hidden"
+                accept="image/*,.pdf,.doc,.docx"
+                onChange={handleFileSeleccionado}
+            />
 
             <div className="flex-1 mx-auto w-full max-w-[1600px] px-4 py-6 md:px-8 md:py-10 2xl:max-w-none">
 
@@ -340,44 +398,58 @@ export default function ArchivosPaciente() {
                 </div>
 
                 {/* ── Tarjeta Información del Paciente ── */}
-                <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden mb-8 transition-all hover:shadow-md">
-                    <div className="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center gap-4">
-                        <div className="h-14 w-14 rounded-[20px] bg-[#6E56CF] text-white flex items-center justify-center text-lg font-bold shadow-lg shadow-indigo-100">
-                            {paciente.nombre?.charAt(0)}{paciente.apellido?.charAt(0)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                            <h2 className="text-lg font-bold text-slate-900 leading-tight">{paciente.nombre} {paciente.apellido}</h2>
-                            <p className="text-[12px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">ID Paciente #{id_paciente}</p>
-                        </div>
-                        <div className="hidden sm:flex items-center gap-6">
-                            <div className="space-y-0.5 text-right">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">RUT</span>
-                                <span className="text-[13px] font-bold text-slate-900 font-mono">{formatRut(paciente.rut) || "-"}</span>
+                {paciente && (
+                    <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden mb-8 transition-all hover:shadow-md">
+                        <div className="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center gap-4">
+                            <div className="h-14 w-14 rounded-[20px] bg-[#6E56CF] text-white flex items-center justify-center text-lg font-bold shadow-lg shadow-indigo-100">
+                                {paciente.nombre?.charAt(0)}{paciente.apellido?.charAt(0)}
                             </div>
-                            <div className="h-8 w-px bg-slate-200" />
-                            <div className="space-y-0.5 text-right">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Teléfono</span>
-                                <span className="text-[13px] font-semibold text-slate-700">{paciente.telefono || "-"}</span>
+                            <div className="flex-1 min-w-0">
+                                <h2 className="text-lg font-bold text-slate-900 leading-tight">{paciente.nombre} {paciente.apellido}</h2>
+                                <p className="text-[12px] text-slate-400 font-medium uppercase tracking-wider mt-0.5">ID Paciente #{id_paciente}</p>
                             </div>
-                            <div className="h-8 w-px bg-slate-200" />
-                            <div className="space-y-0.5 text-right">
-                                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Correo</span>
-                                <span className="text-[13px] font-semibold text-slate-700">{paciente.correo || "-"}</span>
+                            <div className="hidden sm:flex items-center gap-6">
+                                <div className="space-y-0.5 text-right">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">RUT</span>
+                                    <span className="text-[13px] font-bold text-slate-900 font-mono">{formatRut(paciente.rut) || "-"}</span>
+                                </div>
+                                <div className="h-8 w-px bg-slate-200" />
+                                <div className="space-y-0.5 text-right">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Teléfono</span>
+                                    <span className="text-[13px] font-semibold text-slate-700">{paciente.telefono || "-"}</span>
+                                </div>
+                                <div className="h-8 w-px bg-slate-200" />
+                                <div className="space-y-0.5 text-right">
+                                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block">Correo</span>
+                                    <span className="text-[13px] font-semibold text-slate-700">{paciente.correo || "-"}</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
 
                 {/* ── Tabla de Documentos ── */}
                 <div className="bg-white rounded-[32px] border border-slate-200 shadow-sm overflow-hidden">
                     <div className="px-8 py-5 border-b border-slate-100 bg-slate-50/30 flex items-center justify-between">
                         <h3 className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Archivos Clínicos</h3>
-                        {/* TODO: Conectar subida de archivos */}
-                        <button className="h-10 px-5 rounded-xl bg-[#6E56CF] text-white text-[13px] font-bold hover:bg-[#5B45B0] transition-all shadow-lg shadow-indigo-100 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                            </svg>
-                            Subir Archivo
+                        <button
+                            onClick={abrirSelectorArchivo}
+                            disabled={subiendo}
+                            className="h-10 px-5 rounded-xl bg-[#6E56CF] text-white text-[13px] font-bold hover:bg-[#5B45B0] transition-all shadow-lg shadow-indigo-100 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {subiendo ? (
+                                <>
+                                    <svg className="h-4 w-4 animate-spin" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" /></svg>
+                                    Subiendo...
+                                </>
+                            ) : (
+                                <>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                                    </svg>
+                                    Subir Archivo
+                                </>
+                            )}
                         </button>
                     </div>
 
@@ -398,33 +470,24 @@ export default function ArchivosPaciente() {
                                 <tbody>
                                     {archivos.map((archivo, idx) => (
                                         <tr
-                                            key={archivo.id}
+                                            key={archivo.id_archivo}
                                             className={`border-b border-slate-50 hover:bg-slate-50/60 transition-colors ${idx % 2 === 0 ? "bg-white" : "bg-slate-50/20"}`}
                                         >
-                                            {/* Fecha */}
                                             <td className="px-8 py-4">
-                                                <span className="text-[13px] font-semibold text-slate-700">{formatearFechaCorta(archivo.fechaSubida)}</span>
+                                                <span className="text-[13px] font-semibold text-slate-700">{formatearFechaCorta(archivo.fecha_subida)}</span>
                                             </td>
-
-                                            {/* Tipo de Archivo — ancho fijo uniforme */}
                                             <td className="px-4 py-4">
-                                                <span className={`inline-flex items-center justify-center gap-1.5 w-[88px] py-1.5 rounded-lg border text-[11px] font-bold ${getBadgeColor(archivo.tipoArchivo)}`}>
-                                                    {getFileIcon(archivo.tipoArchivo)}
-                                                    {archivo.tipoArchivo}
+                                                <span className={`inline-flex items-center justify-center gap-1.5 w-[88px] py-1.5 rounded-lg border text-[11px] font-bold ${getBadgeColor(archivo.tipo_archivo)}`}>
+                                                    {getFileIcon(archivo.tipo_archivo)}
+                                                    {archivo.tipo_archivo}
                                                 </span>
                                             </td>
-
-                                            {/* Profesional */}
                                             <td className="px-4 py-4">
                                                 <span className="text-[13px] text-slate-600">{archivo.profesional}</span>
                                             </td>
-
-                                            {/* Nombre Documento */}
                                             <td className="px-4 py-4">
-                                                <span className="text-[13px] font-medium text-slate-900">{archivo.nombreDocumento}</span>
+                                                <span className="text-[13px] font-medium text-slate-900">{archivo.nombre_documento}</span>
                                             </td>
-
-                                            {/* Descargar */}
                                             <td className="px-4 py-4">
                                                 <div className="flex justify-center">
                                                     <button
@@ -438,12 +501,10 @@ export default function ArchivosPaciente() {
                                                     </button>
                                                 </div>
                                             </td>
-
-                                            {/* Eliminar */}
                                             <td className="px-4 py-4">
                                                 <div className="flex justify-center">
                                                     <button
-                                                        onClick={() => handleEliminar(archivo.id)}
+                                                        onClick={() => handleEliminar(archivo.id_archivo)}
                                                         className="inline-flex items-center justify-center h-9 w-9 rounded-xl bg-red-50 text-red-500 hover:bg-red-100 border border-red-100 transition-all hover:shadow-sm"
                                                         title="Eliminar archivo"
                                                     >
@@ -453,8 +514,6 @@ export default function ArchivosPaciente() {
                                                     </button>
                                                 </div>
                                             </td>
-
-                                            {/* Visualizar */}
                                             <td className="px-4 py-4">
                                                 <div className="flex justify-center">
                                                     <button
@@ -475,7 +534,6 @@ export default function ArchivosPaciente() {
                             </table>
                         </div>
                     ) : (
-                        /* ── Empty State ── */
                         <div className="py-20 flex flex-col items-center justify-center">
                             <div className="h-16 w-16 bg-slate-50 rounded-full mx-auto mb-4 flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
