@@ -252,11 +252,17 @@ export default function ArchivosPaciente() {
     const paciente = MOCK_PACIENTE;
     const [archivos, setArchivos] = useState(MOCK_ARCHIVOS);
     const [visorAbierto, setVisorAbierto] = useState(null);
+    const [confirmarEliminar, setConfirmarEliminar] = useState(null);
 
     function handleEliminar(id) {
+        setConfirmarEliminar(id);
+    }
+
+    function confirmarEliminacion() {
         // TODO: Conectar con endpoint de eliminación
-        setArchivos((prev) => prev.filter((a) => a.id !== id));
+        setArchivos((prev) => prev.filter((a) => a.id !== confirmarEliminar));
         toast.success("Documento eliminado correctamente");
+        setConfirmarEliminar(null);
     }
 
     function handleDescargar(archivo) {
@@ -482,6 +488,39 @@ export default function ArchivosPaciente() {
                     )}
                 </div>
             </div>
+
+            {/* ── Modal Confirmar Eliminación ── */}
+            {confirmarEliminar !== null && (
+                <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4" onClick={() => setConfirmarEliminar(null)}>
+                    <div className="bg-white rounded-[32px] border border-slate-200 shadow-xl max-w-sm w-full overflow-hidden" onClick={(e) => e.stopPropagation()}>
+                        <div className="p-8 flex flex-col items-center text-center">
+                            <div className="h-14 w-14 rounded-2xl bg-red-50 border border-red-100 flex items-center justify-center mb-5">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </div>
+                            <h3 className="text-lg font-bold text-slate-900 mb-2">Eliminar documento</h3>
+                            <p className="text-[13px] text-slate-500 leading-relaxed">
+                                ¿Está seguro de que desea eliminar este documento? Una vez eliminado <span className="font-semibold text-slate-700">no podrá ser recuperado</span>.
+                            </p>
+                        </div>
+                        <div className="px-8 pb-8 flex gap-3">
+                            <button
+                                onClick={() => setConfirmarEliminar(null)}
+                                className="flex-1 h-11 rounded-2xl border border-slate-200 text-[13px] font-bold text-slate-600 hover:bg-slate-50 transition-all"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={confirmarEliminacion}
+                                className="flex-1 h-11 rounded-2xl bg-red-500 text-white text-[13px] font-bold hover:bg-red-600 transition-all shadow-lg shadow-red-100"
+                            >
+                                Sí, eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

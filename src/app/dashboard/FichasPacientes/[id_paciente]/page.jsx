@@ -492,6 +492,10 @@ export default function Paciente() {
         router.push(`/dashboard/recetaPacientes/${id_paciente}`);
     }
 
+    function irADocumentos() {
+        router.push(`/dashboard/archivosPacientes/${id_paciente}`);
+    }
+
 
 
     return (
@@ -605,7 +609,7 @@ export default function Paciente() {
                     <div className="xl:col-span-8 space-y-8">
                         
                         {/* Acciones Rápidas */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
                             <button onClick={() => nuevaFichaClinica(id_paciente)} className="h-28 bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between hover:border-[#6E56CF] hover:shadow-lg hover:shadow-indigo-50/50 transition-all group text-left">
                                 <div className="h-10 w-10 rounded-xl bg-violet-50 text-[#6E56CF] flex items-center justify-center group-hover:bg-[#6E56CF] group-hover:text-white transition-colors">
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
@@ -634,6 +638,12 @@ export default function Paciente() {
                                     <span className="text-[13px] font-bold text-slate-700">Receta Médica</span>
                                 </button>
                             )}
+                            <button onClick={irADocumentos} className="h-28 bg-white border border-slate-200 rounded-[28px] p-6 flex flex-col justify-between hover:border-[#6E56CF] hover:shadow-lg hover:shadow-indigo-50/50 transition-all group text-left">
+                                <div className="h-10 w-10 rounded-xl bg-violet-50 text-[#6E56CF] flex items-center justify-center group-hover:bg-[#6E56CF] group-hover:text-white transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                                </div>
+                                <span className="text-[13px] font-bold text-slate-700">Adjuntar Documentos</span>
+                            </button>
                         </div>
 
                         {/* Formulario de Edición (Cerrable) */}
