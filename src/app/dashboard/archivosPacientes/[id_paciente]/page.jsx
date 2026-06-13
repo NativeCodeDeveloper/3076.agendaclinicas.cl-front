@@ -460,7 +460,6 @@ export default function ArchivosPaciente() {
                                     <tr className="border-b border-slate-100">
                                         <th className="px-8 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Fecha Subida</th>
                                         <th className="px-4 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest w-[120px]">Tipo</th>
-                                        <th className="px-4 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Profesional</th>
                                         <th className="px-4 py-4 text-left text-[10px] font-bold text-slate-400 uppercase tracking-widest">Nombre Documento</th>
                                         <th className="px-4 py-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest w-[80px]">Descargar</th>
                                         <th className="px-4 py-4 text-center text-[10px] font-bold text-slate-400 uppercase tracking-widest w-[80px]">Eliminar</th>
@@ -481,9 +480,6 @@ export default function ArchivosPaciente() {
                                                     {getFileIcon(archivo.tipo_archivo)}
                                                     {archivo.tipo_archivo}
                                                 </span>
-                                            </td>
-                                            <td className="px-4 py-4">
-                                                <span className="text-[13px] text-slate-600">{archivo.profesional}</span>
                                             </td>
                                             <td className="px-4 py-4">
                                                 <span className="text-[13px] font-medium text-slate-900">{archivo.nombre_documento}</span>
